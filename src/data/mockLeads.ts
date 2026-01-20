@@ -7,11 +7,8 @@ export const mockLeadLists: LeadList[] = [
     source: 'linkedin',
     memberCount: 0,
     totalCapacity: 0,
-    duplicates: null,
-    match: null,
     importedAt: '',
-    enrichedEmails: '',
-    status: 'active',
+    status: 'not_started',
   },
   {
     id: '2',
@@ -19,11 +16,8 @@ export const mockLeadLists: LeadList[] = [
     source: 'linkedin',
     memberCount: 40,
     totalCapacity: 1000,
-    duplicates: null,
-    match: null,
     importedAt: 'January 20, 2026 3:59 ...',
-    enrichedEmails: 'To enrich',
-    status: 'paused',
+    status: 'sending',
   },
 ];
 
