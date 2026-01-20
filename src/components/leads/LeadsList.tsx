@@ -53,11 +53,6 @@ export function LeadsList() {
           />
         </div>
 
-        <div className="ml-auto">
-          <span className="text-sm text-primary cursor-pointer hover:underline">
-            Upgrade to boost your leads import limits!
-          </span>
-        </div>
       </div>
 
       {/* Stats Bar */}
