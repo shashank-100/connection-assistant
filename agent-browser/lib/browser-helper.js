@@ -25,7 +25,7 @@ class BrowserHelper {
       const result = execSync(fullCommand, {
         encoding: 'utf-8',
         stdio: options.silent ? 'pipe' : 'inherit',
-        cwd: process.cwd()
+        cwd: process.cwd(),
       });
 
       return options.json ? JSON.parse(result) : result;
@@ -45,7 +45,7 @@ class BrowserHelper {
     const variation = this.delays.delayVariation;
     const actualDelay = baseDelay + Math.random() * variation;
 
-    return new Promise(resolve => setTimeout(resolve, actualDelay));
+    return new Promise((resolve) => setTimeout(resolve, actualDelay));
   }
 
   // Open URL
@@ -122,7 +122,7 @@ class BrowserHelper {
         if (refMatch) {
           results.push({
             line,
-            ref: '@' + refMatch[1]
+            ref: '@' + refMatch[1],
           });
         }
       }
@@ -157,13 +157,23 @@ class BrowserHelper {
       // Look for name in links
       if (line.includes('link') && !line.includes('Connect') && !line.includes('Message')) {
         const match = line.match(/link "([^"]+)"/);
-        if (match && match[1].length > 5 && !match[1].includes('LinkedIn') && !match[1].includes('View')) {
+        if (
+          match &&
+          match[1].length > 5 &&
+          !match[1].includes('LinkedIn') &&
+          !match[1].includes('View')
+        ) {
           currentPerson = { name: match[1] };
         }
       }
 
       // Look for headline
-      if (currentPerson && line.includes('text') && !line.includes('button') && !line.includes('link')) {
+      if (
+        currentPerson &&
+        line.includes('text') &&
+        !line.includes('button') &&
+        !line.includes('link')
+      ) {
         const match = line.match(/text "([^"]+)"/);
         if (match && match[1].length > 10) {
           currentPerson.headline = match[1];
@@ -177,7 +187,7 @@ class BrowserHelper {
           people.push({
             ...currentPerson,
             connectRef: '@' + refMatch[1],
-            foundDate: new Date().toISOString()
+            foundDate: new Date().toISOString(),
           });
           currentPerson = null;
         }
@@ -214,7 +224,7 @@ class BrowserHelper {
       console.log('Please enter your LinkedIn credentials manually.');
       console.log('Press Enter after you have logged in successfully...');
 
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         process.stdin.once('data', resolve);
       });
     } else {
@@ -235,21 +245,28 @@ class BrowserHelper {
 
   // Ensure logged in
   async ensureLoggedIn() {
+    console.log('🔍 Checking LinkedIn login status...');
+
     const { existsSync } = await import('fs');
-
     if (existsSync(this.config.authFile)) {
-      console.log('📂 Loading saved auth state...');
       this.loadAuth();
-      this.open('https://www.linkedin.com/feed/');
-      await this.wait(3000);
-
-      if (await this.isLoggedIn()) {
-        console.log('✅ Logged in from saved session');
-        return true;
-      }
     }
 
-    return await this.login();
+    this.open('https://www.linkedin.com/feed/');
+    await this.wait(3000);
+
+    if (await this.isLoggedIn()) {
+      console.log('✅ Already logged in!');
+      return true;
+    }
+
+    console.log('\n❌ Not logged in.');
+    console.log('⚠️  ACTION REQUIRED:');
+    console.log('1. Please log in to LinkedIn manually in the browser window.');
+    console.log('2. Run this command again once logged in.');
+
+    this.open('https://www.linkedin.com/login');
+    return false;
   }
 }
 

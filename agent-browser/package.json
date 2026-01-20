@@ -3,10 +3,6 @@
   "version": "0.6.0",
   "description": "Headless browser automation CLI for AI agents",
   "type": "module",
-  "main": "dist/daemon.js",
-  "workspaces": [
-    "frontend"
-  ],
   "files": [
     "dist",
     "bin",
@@ -30,9 +26,6 @@
     "release": "npm run version:sync && npm run build && npm run build:all-platforms && npm publish",
     "start": "node dist/daemon.js",
     "dev": "tsx src/daemon.ts",
-    "frontend:dev": "npm run dev --workspace=frontend",
-    "frontend:build": "npm run build --workspace=frontend",
-    "frontend:start": "npm run start --workspace=frontend",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write 'src/**/*.ts'",
     "format:check": "prettier --check 'src/**/*.ts'",

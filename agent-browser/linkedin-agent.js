@@ -15,7 +15,8 @@ const CONFIG = {
   delayBetweenActions: 3000, // 3 seconds delay between actions
   searchTerm: process.argv[2] || 'software engineer',
   resultsFile: 'linkedin-results.json',
-  auto: process.argv.includes('--auto') || process.argv.includes('--yes')
+  auto: process.argv.includes('--auto') || process.argv.includes('--yes'),
+  loginOnly: process.argv.includes('--login-only'),
 };
 
 // Helper to run agent-browser commands
@@ -26,7 +27,7 @@ function runBrowser(command, options = {}) {
       {
         encoding: 'utf-8',
         stdio: options.silent ? 'pipe' : 'inherit',
-        cwd: process.cwd()
+        cwd: process.cwd(),
       }
     );
     return options.json ? JSON.parse(result) : result;
@@ -40,175 +41,34 @@ function runBrowser(command, options = {}) {
 
 // Helper to wait
 function wait(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function loginToLinkedIn() {
-  console.log('🔐 Starting LinkedIn login...');
+async function checkLogin() {
+  console.log('🔍 Checking LinkedIn login status...');
 
-  // Open LinkedIn login page
-  runBrowser('open https://www.linkedin.com/login');
+  // Try to go to feed
+  runBrowser('open https://www.linkedin.com/feed/');
   await wait(3000);
-
-  // Take a screenshot so user can see the page
-  runBrowser('screenshot linkedin-login.png');
-  console.log('📸 Screenshot saved to linkedin-login.png');
-
-  // Get snapshot to see login form
-  console.log('\n📋 Getting page snapshot...');
-  const snapshot = runBrowser('snapshot -i', { json: true });
-
-  if (snapshot && snapshot.data) {
-    console.log('\nAvailable interactive elements:');
-    console.log(snapshot.data.snapshot);
-  }
-
-  if (!CONFIG.auto) {
-    console.log('\n⚠️  MANUAL STEP REQUIRED:');
-    console.log('Please enter your LinkedIn credentials manually.');
-    console.log('Press Enter after you have logged in successfully...');
-
-    await new Promise(resolve => {
-      process.stdin.once('data', resolve);
-    });
-  } else {
-    console.log('🤖 Auto-mode: Skipping manual login check. Ensure auth state is valid.');
-    await wait(5000); 
-  }
 
   // Verify we're logged in by checking the URL
   const currentUrl = runBrowser('get url', { silent: true, json: false }).trim();
   console.log(`Current URL: ${currentUrl}`);
 
   if (currentUrl.includes('feed') || currentUrl.includes('mynetwork')) {
-    console.log('✅ Successfully logged in!');
-    // Save auth state for future use
-    runBrowser('state save linkedin-auth.json');
-    console.log('💾 Auth state saved to linkedin-auth.json');
+    console.log('✅ Already logged in!');
     return true;
-  } else {
-    console.log('❌ Login failed or incomplete');
-    return false;
-  }
-}
-
-async function searchPeople(searchTerm) {
-  console.log(`\n🔍 Searching LinkedIn for: "${searchTerm}"`);
-
-  // Navigate to LinkedIn search for people
-  const searchUrl = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(searchTerm)}`;
-  runBrowser(`open "${searchUrl}"`);
-
-  await wait(5000); // Wait for search results to load
-
-  // Take screenshot of search results
-  runBrowser('screenshot linkedin-search-results.png --full');
-  console.log('📸 Search results screenshot saved');
-
-  // Scroll down to load more results
-  console.log('📜 Scrolling to load more results...');
-  for (let i = 0; i < 3; i++) {
-    runBrowser('scroll down 1000');
-    await wait(2000);
   }
 
-  // Get snapshot of the page
-  console.log('\n📋 Extracting people from search results...');
-  const snapshot = runBrowser('snapshot -i', { json: true });
+  console.log('\n❌ Not logged in.');
+  console.log('⚠️  ACTION REQUIRED:');
+  console.log('1. Please log in to LinkedIn manually in the browser window.');
+  console.log('2. Run this command again once logged in.');
 
-  if (!snapshot || !snapshot.data) {
-    console.error('Failed to get snapshot');
-    return [];
-  }
+  // Open login page for the user
+  runBrowser('open https://www.linkedin.com/login');
 
-  // Parse the snapshot to find people profiles
-  const snapshotText = snapshot.data.snapshot;
-  const refs = snapshot.data.refs || {};
-
-  console.log('\n=== SEARCH RESULTS SNAPSHOT ===');
-  console.log(snapshotText);
-  console.log('=== END SNAPSHOT ===\n');
-
-  // Find all "Connect" buttons
-  const connectButtons = [];
-  const lines = snapshotText.split('\n');
-
-  let currentPerson = null;
-  for (const line of lines) {
-    // Look for names (typically in links or headings)
-    if (line.includes('link') && !line.includes('Connect') && !line.includes('Message')) {
-      const match = line.match(/link "([^"]+)"/);
-      if (match && match[1].length > 5 && !match[1].includes('LinkedIn')) {
-        currentPerson = { name: match[1] };
-      }
-    }
-
-    // Look for Connect buttons with refs
-    if (line.includes('button "Connect"') && line.includes('[ref=')) {
-      const refMatch = line.match(/\[ref=(\w+)\]/);
-      if (refMatch && currentPerson) {
-        connectButtons.push({
-          ...currentPerson,
-          connectRef: '@' + refMatch[1],
-          fullLine: line
-        });
-        currentPerson = null;
-      }
-    }
-  }
-
-  console.log(`\n✅ Found ${connectButtons.length} people with "Connect" buttons`);
-
-  return connectButtons;
-}
-
-async function sendConnectionRequests(people, maxRequests = CONFIG.maxConnections) {
-  console.log(`\n📨 Preparing to send connection requests...`);
-  console.log(`Limit: ${Math.min(people.length, maxRequests)} requests\n`);
-
-  const results = [];
-  const limit = Math.min(people.length, maxRequests);
-
-  for (let i = 0; i < limit; i++) {
-    const person = people[i];
-    console.log(`[${i + 1}/${limit}] Connecting with: ${person.name || 'Unknown'}`);
-
-    try {
-      // Click the Connect button
-      runBrowser(`click ${person.connectRef}`);
-      await wait(2000);
-
-      // Check if there's a modal to send note (sometimes LinkedIn asks)
-      const modalSnapshot = runBrowser('snapshot -i', { json: true });
-
-      if (modalSnapshot && modalSnapshot.data.snapshot.includes('Send now')) {
-        // Find and click "Send now" or "Send without a note"
-        const lines = modalSnapshot.data.snapshot.split('\n');
-        for (const line of lines) {
-          if ((line.includes('Send now') || line.includes('Send without')) && line.includes('[ref=')) {
-            const refMatch = line.match(/\[ref=(\w+)\]/);
-            if (refMatch) {
-              console.log('  → Clicking "Send now"');
-              runBrowser(`click @${refMatch[1]}`);
-              break;
-            }
-          }
-        }
-      }
-
-      results.push({ ...person, status: 'sent', timestamp: new Date().toISOString() });
-      console.log(`  ✅ Connection request sent\n`);
-
-      // Delay between requests to avoid rate limiting
-      await wait(CONFIG.delayBetweenActions);
-
-    } catch (error) {
-      console.error(`  ❌ Failed to send request: ${error.message}\n`);
-      results.push({ ...person, status: 'failed', error: error.message, timestamp: new Date().toISOString() });
-    }
-  }
-
-  return results;
+  return false;
 }
 
 async function main() {
@@ -217,19 +77,136 @@ async function main() {
   console.log(`Max connections: ${CONFIG.maxConnections}\n`);
 
   try {
-    // Check if we have saved auth state
-    if (existsSync('linkedin-auth.json')) {
-      console.log('📂 Found saved auth state, loading...');
-      runBrowser('state load linkedin-auth.json');
-      runBrowser('open https://www.linkedin.com/feed/');
-      await wait(3000);
-    } else {
-      // Login
-      const loggedIn = await loginToLinkedIn();
-      if (!loggedIn) {
-        console.error('❌ Could not log in to LinkedIn. Exiting.');
-        process.exit(1);
+    // Check login status first
+    const loggedIn = await checkLogin();
+    if (!loggedIn || CONFIG.loginOnly) {
+      process.exit(0);
+    }
+
+    async function searchPeople(searchTerm) {
+      console.log(`\n🔍 Searching LinkedIn for: "${searchTerm}"`);
+
+      // Navigate to LinkedIn search for people
+      const searchUrl = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(searchTerm)}`;
+      runBrowser(`open "${searchUrl}"`);
+
+      await wait(5000); // Wait for search results to load
+
+      // Take screenshot of search results
+      runBrowser('screenshot linkedin-search-results.png --full');
+      console.log('📸 Search results screenshot saved');
+
+      // Scroll down to load more results
+      console.log('📜 Scrolling to load more results...');
+      for (let i = 0; i < 3; i++) {
+        runBrowser('scroll down 1000');
+        await wait(2000);
       }
+
+      // Get snapshot of the page
+      console.log('\n📋 Extracting people from search results...');
+      const snapshot = runBrowser('snapshot -i', { json: true });
+
+      if (!snapshot || !snapshot.data) {
+        console.error('Failed to get snapshot');
+        return [];
+      }
+
+      // Parse the snapshot to find people profiles
+      const snapshotText = snapshot.data.snapshot;
+      const refs = snapshot.data.refs || {};
+
+      console.log('\n=== SEARCH RESULTS SNAPSHOT ===');
+      console.log(snapshotText);
+      console.log('=== END SNAPSHOT ===\n');
+
+      // Find all "Connect" buttons
+      const connectButtons = [];
+      const lines = snapshotText.split('\n');
+
+      let currentPerson = null;
+      for (const line of lines) {
+        // Look for names (typically in links or headings)
+        if (line.includes('link') && !line.includes('Connect') && !line.includes('Message')) {
+          const match = line.match(/link "([^"]+)"/);
+          if (match && match[1].length > 5 && !match[1].includes('LinkedIn')) {
+            currentPerson = { name: match[1] };
+          }
+        }
+
+        // Look for Connect buttons with refs
+        if (line.includes('button "Connect"') && line.includes('[ref=')) {
+          const refMatch = line.match(/\[ref=(\w+)\]/);
+          if (refMatch && currentPerson) {
+            connectButtons.push({
+              ...currentPerson,
+              connectRef: '@' + refMatch[1],
+              fullLine: line,
+            });
+            currentPerson = null;
+          }
+        }
+      }
+
+      console.log(`\n✅ Found ${connectButtons.length} people with "Connect" buttons`);
+
+      return connectButtons;
+    }
+
+    async function sendConnectionRequests(people, maxRequests = CONFIG.maxConnections) {
+      console.log(`\n📨 Preparing to send connection requests...`);
+      console.log(`Limit: ${Math.min(people.length, maxRequests)} requests\n`);
+
+      const results = [];
+      const limit = Math.min(people.length, maxRequests);
+
+      for (let i = 0; i < limit; i++) {
+        const person = people[i];
+        console.log(`[${i + 1}/${limit}] Connecting with: ${person.name || 'Unknown'}`);
+
+        try {
+          // Click the Connect button
+          runBrowser(`click ${person.connectRef}`);
+          await wait(2000);
+
+          // Check if there's a modal to send note (sometimes LinkedIn asks)
+          const modalSnapshot = runBrowser('snapshot -i', { json: true });
+
+          if (modalSnapshot && modalSnapshot.data.snapshot.includes('Send now')) {
+            // Find and click "Send now" or "Send without a note"
+            const lines = modalSnapshot.data.snapshot.split('\n');
+            for (const line of lines) {
+              if (
+                (line.includes('Send now') || line.includes('Send without')) &&
+                line.includes('[ref=')
+              ) {
+                const refMatch = line.match(/\[ref=(\w+)\]/);
+                if (refMatch) {
+                  console.log('  → Clicking "Send now"');
+                  runBrowser(`click @${refMatch[1]}`);
+                  break;
+                }
+              }
+            }
+          }
+
+          results.push({ ...person, status: 'sent', timestamp: new Date().toISOString() });
+          console.log(`  ✅ Connection request sent\n`);
+
+          // Delay between requests to avoid rate limiting
+          await wait(CONFIG.delayBetweenActions);
+        } catch (error) {
+          console.error(`  ❌ Failed to send request: ${error.message}\n`);
+          results.push({
+            ...person,
+            status: 'failed',
+            error: error.message,
+            timestamp: new Date().toISOString(),
+          });
+        }
+      }
+
+      return results;
     }
 
     // Search for people
@@ -252,9 +229,11 @@ async function main() {
     });
 
     if (!CONFIG.auto) {
-      console.log(`\n⚠️  Ready to send ${Math.min(people.length, CONFIG.maxConnections)} connection requests.`);
+      console.log(
+        `\n⚠️  Ready to send ${Math.min(people.length, CONFIG.maxConnections)} connection requests.`
+      );
       console.log('Press Enter to continue or Ctrl+C to cancel...');
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         process.stdin.once('data', resolve);
       });
     }
@@ -267,8 +246,8 @@ async function main() {
       searchTerm: CONFIG.searchTerm,
       timestamp: new Date().toISOString(),
       totalFound: people.length,
-      totalSent: results.filter(r => r.status === 'sent').length,
-      results
+      totalSent: results.filter((r) => r.status === 'sent').length,
+      results,
     };
 
     writeFileSync('linkedin-connections-sent.json', JSON.stringify(resultsWithTimestamp, null, 2));
@@ -276,12 +255,11 @@ async function main() {
     console.log('\n✅ COMPLETE!');
     console.log(`📊 Results saved to linkedin-connections-sent.json`);
     console.log(`   Total found: ${people.length}`);
-    console.log(`   Requests sent: ${results.filter(r => r.status === 'sent').length}`);
-    console.log(`   Failed: ${results.filter(r => r.status === 'failed').length}`);
+    console.log(`   Requests sent: ${results.filter((r) => r.status === 'sent').length}`);
+    console.log(`   Failed: ${results.filter((r) => r.status === 'failed').length}`);
 
     // Close browser
     runBrowser('close');
-
   } catch (error) {
     console.error('\n❌ Error:', error);
     runBrowser('close');

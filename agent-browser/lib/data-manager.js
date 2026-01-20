@@ -4,7 +4,7 @@
  * Data Manager - Centralized data storage and retrieval
  */
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from 'fs';
 import { dirname } from 'path';
 
 class DataManager {
@@ -15,7 +15,7 @@ class DataManager {
 
   ensureDataDirectory() {
     const dirs = ['linkedin-data', 'linkedin-data/logs'];
-    dirs.forEach(dir => {
+    dirs.forEach((dir) => {
       if (!existsSync(dir)) {
         mkdirSync(dir, { recursive: true });
       }
@@ -65,8 +65,8 @@ class DataManager {
         connections: { sent: 0, accepted: 0, pending: 0, acceptanceRate: 0 },
         messages: { sent: 0, responses: 0, responseRate: 0 },
         visits: { total: 0 },
-        lastUpdated: null
-      }
+        lastUpdated: null,
+      },
     };
     return defaults[key] || {};
   }
@@ -77,7 +77,7 @@ class DataManager {
     data.requests.push({
       ...person,
       sentDate: new Date().toISOString(),
-      status: 'pending'
+      status: 'pending',
     });
     data.total = data.requests.length;
     data.lastUpdated = new Date().toISOString();
@@ -92,7 +92,7 @@ class DataManager {
       message,
       response,
       sentDate: new Date().toISOString(),
-      hasResponse: !!response
+      hasResponse: !!response,
     });
     data.total = data.messages.length;
     data.lastUpdated = new Date().toISOString();
@@ -105,7 +105,7 @@ class DataManager {
     data.visits.push({
       profileUrl,
       name,
-      visitDate: new Date().toISOString()
+      visitDate: new Date().toISOString(),
     });
     data.total = data.visits.length;
     data.lastUpdated = new Date().toISOString();
@@ -117,19 +117,19 @@ class DataManager {
     const data = this.readData('profilesScraped');
 
     // Check if profile already exists
-    const existingIndex = data.profiles.findIndex(p => p.profileUrl === profile.profileUrl);
+    const existingIndex = data.profiles.findIndex((p) => p.profileUrl === profile.profileUrl);
 
     if (existingIndex >= 0) {
       // Update existing profile
       data.profiles[existingIndex] = {
         ...profile,
-        scrapedDate: new Date().toISOString()
+        scrapedDate: new Date().toISOString(),
       };
     } else {
       // Add new profile
       data.profiles.push({
         ...profile,
-        scrapedDate: new Date().toISOString()
+        scrapedDate: new Date().toISOString(),
       });
     }
 
@@ -144,26 +144,28 @@ class DataManager {
     const messagesSent = this.readData('messagesSent');
     const profileVisits = this.readData('profileVisits');
 
-    const accepted = sentRequests.requests.filter(r => r.status === 'accepted').length;
-    const pending = sentRequests.requests.filter(r => r.status === 'pending').length;
-    const responses = messagesSent.messages.filter(m => m.hasResponse).length;
+    const accepted = sentRequests.requests.filter((r) => r.status === 'accepted').length;
+    const pending = sentRequests.requests.filter((r) => r.status === 'pending').length;
+    const responses = messagesSent.messages.filter((m) => m.hasResponse).length;
 
     const analytics = {
       connections: {
         sent: sentRequests.total,
         accepted,
         pending,
-        acceptanceRate: sentRequests.total > 0 ? (accepted / sentRequests.total * 100).toFixed(2) : 0
+        acceptanceRate:
+          sentRequests.total > 0 ? ((accepted / sentRequests.total) * 100).toFixed(2) : 0,
       },
       messages: {
         sent: messagesSent.total,
         responses,
-        responseRate: messagesSent.total > 0 ? (responses / messagesSent.total * 100).toFixed(2) : 0
+        responseRate:
+          messagesSent.total > 0 ? ((responses / messagesSent.total) * 100).toFixed(2) : 0,
       },
       visits: {
-        total: profileVisits.total
+        total: profileVisits.total,
       },
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString(),
     };
 
     this.writeData('analytics', analytics);
@@ -178,23 +180,19 @@ class DataManager {
     const messagesSent = this.readData('messagesSent');
     const profileVisits = this.readData('profileVisits');
 
-    const connectionsToday = sentRequests.requests.filter(r =>
+    const connectionsToday = sentRequests.requests.filter((r) =>
       r.sentDate.startsWith(today)
     ).length;
 
-    const messagesToday = messagesSent.messages.filter(m =>
-      m.sentDate.startsWith(today)
-    ).length;
+    const messagesToday = messagesSent.messages.filter((m) => m.sentDate.startsWith(today)).length;
 
-    const visitsToday = profileVisits.visits.filter(v =>
-      v.visitDate.startsWith(today)
-    ).length;
+    const visitsToday = profileVisits.visits.filter((v) => v.visitDate.startsWith(today)).length;
 
     return {
       connections: connectionsToday,
       messages: messagesToday,
       visits: visitsToday,
-      date: today
+      date: today,
     };
   }
 
@@ -206,13 +204,13 @@ class DataManager {
     const limitMap = {
       connection: limits.maxConnectionsPerDay,
       message: limits.maxMessagesPerDay,
-      visit: limits.maxProfileVisitsPerDay
+      visit: limits.maxProfileVisitsPerDay,
     };
 
     const countMap = {
       connection: counts.connections,
       message: counts.messages,
-      visit: counts.visits
+      visit: counts.visits,
     };
 
     return countMap[actionType] < limitMap[actionType];
@@ -226,7 +224,7 @@ class DataManager {
     return {
       connections: limits.maxConnectionsPerDay - counts.connections,
       messages: limits.maxMessagesPerDay - counts.messages,
-      visits: limits.maxProfileVisitsPerDay - counts.visits
+      visits: limits.maxProfileVisitsPerDay - counts.visits,
     };
   }
 
@@ -239,8 +237,7 @@ class DataManager {
     const logFile = `linkedin-data/logs/${today}.log`;
 
     try {
-      const fs = await import('fs');
-      fs.appendFileSync(logFile, logMessage);
+      appendFileSync(logFile, logMessage);
     } catch (error) {
       console.error('Failed to write log:', error.message);
     }
