@@ -87,11 +87,10 @@ export function LeadsList() {
       </div>
 
       {/* Table Header */}
-      <div className="grid grid-cols-[1fr_100px_140px_120px_100px_40px] gap-4 items-center px-6 py-2 border-b border-border bg-surface text-xs font-medium text-muted-foreground uppercase tracking-wide">
+      <div className="grid grid-cols-[1fr_100px_140px_100px_40px] gap-4 items-center px-6 py-2 border-b border-border bg-surface text-xs font-medium text-muted-foreground uppercase tracking-wide">
         <div>Name</div>
         <div>Members</div>
         <div>Date</div>
-        <div>Enriched emails</div>
         <div>Status</div>
         <div></div>
       </div>
@@ -115,8 +114,22 @@ export function LeadsList() {
 function LeadListRow({ list }: { list: LeadList }) {
   const isAllLeads = list.name === 'All leads';
 
+  const getStatusBadge = () => {
+    switch (list.status) {
+      case 'sent':
+        return <Badge variant="outline" className="bg-success/10 text-success border-success/20 text-xs">Sent</Badge>;
+      case 'sending':
+        return <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs">Sending</Badge>;
+      case 'paused':
+        return <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20 text-xs">Paused</Badge>;
+      case 'not_started':
+      default:
+        return <Badge variant="outline" className="bg-muted text-muted-foreground border-border text-xs">Not started</Badge>;
+    }
+  };
+
   return (
-    <div className="grid grid-cols-[1fr_100px_140px_120px_100px_40px] gap-4 items-center px-6 py-3 border-b border-border hover:bg-row-hover transition-colors">
+    <div className="grid grid-cols-[1fr_100px_140px_100px_40px] gap-4 items-center px-6 py-3 border-b border-border hover:bg-row-hover transition-colors">
       <div className="flex items-center gap-3">
         {isAllLeads ? (
           <div className="w-6 h-6 rounded bg-muted flex items-center justify-center">
@@ -137,15 +150,8 @@ function LeadListRow({ list }: { list: LeadList }) {
       <div className="text-sm text-muted-foreground truncate">
         {list.importedAt || '-'}
       </div>
-      <div className="text-sm text-muted-foreground">
-        {list.enrichedEmails || '-'}
-      </div>
       <div>
-        {list.status === 'paused' && (
-          <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20 text-xs">
-            Paused (Quota)
-          </Badge>
-        )}
+        {getStatusBadge()}
       </div>
       <div>
         <Button variant="ghost" size="icon" className="h-8 w-8">

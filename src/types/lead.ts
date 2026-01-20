@@ -4,11 +4,8 @@ export interface LeadList {
   source: 'linkedin' | 'csv' | 'search';
   memberCount: number;
   totalCapacity: number;
-  duplicates: number | null;
-  match: number | null;
   importedAt: string;
-  enrichedEmails: string;
-  status: 'active' | 'paused' | 'to_enrich';
+  status: 'sent' | 'sending' | 'paused' | 'not_started';
 }
 
 export interface LeadStats {
