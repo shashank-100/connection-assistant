@@ -87,11 +87,9 @@ export function LeadsList() {
       </div>
 
       {/* Table Header */}
-      <div className="grid grid-cols-[1fr_100px_100px_80px_140px_120px_100px_40px] gap-4 items-center px-6 py-2 border-b border-border bg-surface text-xs font-medium text-muted-foreground uppercase tracking-wide">
+      <div className="grid grid-cols-[1fr_100px_140px_120px_100px_40px] gap-4 items-center px-6 py-2 border-b border-border bg-surface text-xs font-medium text-muted-foreground uppercase tracking-wide">
         <div>Name</div>
         <div>Members</div>
-        <div>Duplicates *</div>
-        <div>Match</div>
         <div>Date</div>
         <div>Enriched emails</div>
         <div>Status</div>
@@ -118,7 +116,7 @@ function LeadListRow({ list }: { list: LeadList }) {
   const isAllLeads = list.name === 'All leads';
 
   return (
-    <div className="grid grid-cols-[1fr_100px_100px_80px_140px_120px_100px_40px] gap-4 items-center px-6 py-3 border-b border-border hover:bg-row-hover transition-colors">
+    <div className="grid grid-cols-[1fr_100px_140px_120px_100px_40px] gap-4 items-center px-6 py-3 border-b border-border hover:bg-row-hover transition-colors">
       <div className="flex items-center gap-3">
         {isAllLeads ? (
           <div className="w-6 h-6 rounded bg-muted flex items-center justify-center">
@@ -135,12 +133,6 @@ function LeadListRow({ list }: { list: LeadList }) {
         {list.memberCount > 0 ? (
           <span className="text-primary">{list.memberCount} / {list.totalCapacity}</span>
         ) : null}
-      </div>
-      <div className="text-sm text-muted-foreground">
-        {list.duplicates !== null ? list.duplicates : 'NA'}
-      </div>
-      <div className="text-sm text-muted-foreground">
-        {list.match !== null ? list.match : 'NA'}
       </div>
       <div className="text-sm text-muted-foreground truncate">
         {list.importedAt || '-'}
