@@ -6,21 +6,33 @@ export class LinkedInMessageService extends BaseLinkedInService {
     await page.goto(profileUrl, { waitUntil: "networkidle" });
     await this.wait(3000);
 
-    const messageButton = page.locator('button:has-text("Message")').first();
-    if (await messageButton.isVisible()) {
-      await messageButton.click();
+    const snapshot = await this.browser.getSnapshot({ interactive: true });
+    const messageButton = Object.values(snapshot.refs).find(el => 
+      el.role === 'button' && el.name === 'Message'
+    );
+
+    if (messageButton) {
+      await this.browser.getLocator(`@${Object.keys(snapshot.refs).find(key => snapshot.refs[key] === messageButton)}`).click();
       await this.wait(2000);
 
-      const messageBox = page
-        .locator('.msg-form__contenteditable[role="textbox"]')
-        .first();
-      if (await messageBox.isVisible()) {
-        await messageBox.fill(message);
+      const modalSnapshot = await this.browser.getSnapshot({ interactive: true });
+      const messageBox = Object.values(modalSnapshot.refs).find(el => 
+        el.role === 'textbox' && el.name?.toLowerCase().includes('message')
+      );
+
+      if (messageBox) {
+        const messageBoxRef = Object.keys(modalSnapshot.refs).find(key => modalSnapshot.refs[key] === messageBox);
+        await this.browser.getLocator(`@${messageBoxRef}`).fill(message);
         await this.wait(1000);
 
-        const sendButton = page.locator("button.msg-form__send-button").first();
-        await sendButton.click();
-        return { success: true, message: "Message sent successfully." };
+        const sendButton = Object.values(modalSnapshot.refs).find(el => 
+          el.role === 'button' && el.name === 'Send'
+        );
+        if (sendButton) {
+          const sendButtonRef = Object.keys(modalSnapshot.refs).find(key => modalSnapshot.refs[key] === sendButton);
+          await this.browser.getLocator(`@${sendButtonRef}`).click();
+          return { success: true, message: "Message sent successfully." };
+        }
       }
     }
 

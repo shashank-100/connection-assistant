@@ -6,29 +6,26 @@ export class LinkedInConnectService extends BaseLinkedInService {
     await page.goto(profileUrl, { waitUntil: "load" });
     await this.wait(3000);
 
-    console.log("Searching for 'Connect' button...");
-    const connectButton = page.locator('button:has-text("Connect")').first();
-    const connectButtonCount = await connectButton.count();
+    const snapshot = await this.browser.getSnapshot({ interactive: true });
+    
+    const connectRef = Object.entries(snapshot.refs).find(([id, el]) => 
+      el.role === 'button' && el.name === 'Connect'
+    );
 
-    if (connectButtonCount === 0) {
-      console.log("Could not find 'Connect' button. Checking for 'Pending' or other states...");
-      throw new Error('Could not find a "Connect" button on the profile page. The user may already be a connection or a request may be pending.');
+    if (!connectRef) {
+      throw new Error('Could not find a "Connect" button on the profile page.');
     }
     
-    console.log("'Connect' button found. Clicking it...");
-    await connectButton.click();
-
-    console.log("Waiting for connection modal...");
+    await this.browser.getLocator(`@${connectRef[0]}`).click();
     await this.wait(2000);
 
-    console.log("Searching for 'Send now' button...");
-    const sendButton = page.locator('button[aria-label="Send now"]');
-    if (await sendButton.isVisible()) {
-      console.log("'Send now' button is visible. Clicking it...");
-      await sendButton.click();
-      console.log("Connection request sent.");
-    } else {
-      console.log("'Send now' button not found or not visible. The request might have been sent automatically after clicking 'Connect', or the modal did not appear as expected.");
+    const modalSnapshot = await this.browser.getSnapshot({ interactive: true });
+    const sendRef = Object.entries(modalSnapshot.refs).find(([id, el]) => 
+      el.role === 'button' && el.name === 'Send now'
+    );
+
+    if (sendRef) {
+      await this.browser.getLocator(`@${sendRef[0]}`).click();
     }
 
     return { success: true };

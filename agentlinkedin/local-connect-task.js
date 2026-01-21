@@ -43,8 +43,7 @@ async function runLocalConnect() {
                 const cookies = JSON.parse(cookiesData);
                 if (cookies.length > 0) {
                     console.log('Loading cookies from file...');
-                    const page = await browser.getPage();
-                    await page.context().addCookies(cookies);
+                    await browser.getPage().context().addCookies(cookies);
                     console.log('Cookies loaded successfully.');
                 }
             }

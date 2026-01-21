@@ -8,45 +8,26 @@ export class LinkedInVisitService extends BaseLinkedInService {
     await this.wait(3000);
 
     for (let i = 0; i < 3; i++) {
-      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      await this.browser.getPage().evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       await this.wait(2000);
     }
 
-    const results = await page.evaluate(() => {
-      const people = [];
-      const resultItems = document.querySelectorAll(
-        "li.reusable-search__result-container",
-      );
-
-      resultItems.forEach((item) => {
-        const nameElement = item.querySelector('span[aria-hidden="true"]');
-        const linkElement = item.querySelector("a.app-aware-link");
-        const buttonElement = item.querySelector(
-          ".reusable-search__result-card .artdeco-button",
-        );
-
-        if (nameElement && linkElement && buttonElement) {
-          const name = nameElement.textContent?.trim();
-          const profileUrl = linkElement.getAttribute("href");
-          const actionText = buttonElement.textContent?.trim();
-
-          if (
-            name &&
-            profileUrl &&
-            actionText?.toLowerCase().includes("connect")
-          ) {
-            people.push({
-              name,
-              profileUrl,
-              action: actionText,
-            });
-          }
+    const snapshot = await this.browser.getSnapshot({ interactive: true });
+    const people = [];
+    
+    Object.entries(snapshot.refs).forEach(([id, el]) => {
+      if (el.role === 'link' && el.name && !el.name.includes('LinkedIn')) {
+        if (el.selector.includes('reusable-search__result-container')) {
+           people.push({
+             name: el.name,
+             profileUrl: el.selector,
+             ref: `@${id}`
+           });
         }
-      });
-      return people;
+      }
     });
 
-    return results;
+    return people;
   }
 
   async visitProfiles(searchTerm, max) {
