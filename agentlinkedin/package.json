@@ -1,0 +1,15 @@
+{
+  "name": "agentlinkedin",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@sparticuz/chromium-min": "132.0.0",
+    "agent-browser": "0.6.0",
+    "csv-parse": "^6.1.0",
+    "playwright": "1.50.0",
+    "playwright-core": "1.50.0"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}

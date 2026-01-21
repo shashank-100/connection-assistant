@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "env": {
+    "NODE_OPTIONS": "--experimental-modules"
+  },
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  }
+}
