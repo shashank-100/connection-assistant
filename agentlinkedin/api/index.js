@@ -28,9 +28,9 @@ export default async function handler(req, res) {
     }
 
     await browser.launch({
-      headless: true,
+      headless: chromium.headless,
       executablePath,
-      args: [...chromium.args, "--no-sandbox", "--disable-setuid-sandbox"],
+      args: chromium.args,
     });
 
     const page = browser.getPage();
