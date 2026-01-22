@@ -23,14 +23,19 @@ export default async function handler(req, res) {
 
   try {
     let executablePath;
+    let args = [];
+    let headless = true;
+
     if (process.env.VERCEL) {
       executablePath = await chromium.executablePath();
+      args = chromium.args;
+      headless = chromium.headless;
     }
 
     await browser.launch({
-      headless: !!chromium.headless,
+      headless,
       executablePath,
-      args: chromium.args,
+      args,
     });
 
     const page = browser.getPage();
