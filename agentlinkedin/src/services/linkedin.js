@@ -43,52 +43,52 @@ export class LinkedInAgentService {
     return people;
   }
 
-
-    const results = await page.evaluate(() => {
-      const people = [];
-      const resultItems = document.querySelectorAll('li.reusable-search__result-container');
-
-      resultItems.forEach(item => {
-        const nameElement = item.querySelector('span[aria-hidden="true"]');
-        const linkElement = item.querySelector('a.app-aware-link');
-        const buttonElement = item.querySelector('.reusable-search__result-card .artdeco-button');
-        
-        if (nameElement && linkElement && buttonElement) {
-          const name = nameElement.textContent?.trim();
-          const profileUrl = linkElement.getAttribute('href');
-          const actionText = buttonElement.textContent?.trim();
-
-          if (name && profileUrl && actionText?.toLowerCase().includes('connect')) {
-            people.push({
-              name,
-              profileUrl,
-              action: actionText
-            });
-          }
-        }
-      });
-      return people;
-    });
-    
-    return results;
-  }
-
   async sendConnectRequest(profileUrl) {
-    const page = this.browser.getPage();
-    await page.goto(profileUrl, { waitUntil: 'networkidle' });
+    await this.browser.getPage().goto(profileUrl, { waitUntil: 'load' });
     await this.wait(3000);
 
-    const connectButton = page.locator('button:has-text("Connect")').first();
-    if (!connectButton) {
-      throw new Error('Could not find "Connect" button on profile page.');
+    const snapshot = await this.browser.getSnapshot({ interactive: true });
+    const connectButtonRef = Object.keys(snapshot.refs).find(id => {
+      const el = snapshot.refs[id];
+      return el.role === 'button' && (el.name === 'Connect' || el.name?.includes('Connect'));
+    });
+
+    if (connectButtonRef) {
+      await this.browser.getLocator(`@${connectButtonRef}`).click();
+    } else {
+      const moreButtonRef = Object.keys(snapshot.refs).find(id => {
+        const el = snapshot.refs[id];
+        return el.role === 'button' && (el.name === 'More' || el.name === 'More actions');
+      });
+      if (moreButtonRef) {
+        await this.browser.getLocator(`@${moreButtonRef}`).click();
+        await this.wait(2000);
+        
+        const dropdownSnapshot = await this.browser.getSnapshot({ interactive: true });
+        const dropdownConnectRef = Object.keys(dropdownSnapshot.refs).find(id => {
+          const el = dropdownSnapshot.refs[id];
+          return el.name?.includes('Connect');
+        });
+        if (dropdownConnectRef) {
+          await this.browser.getLocator(`@${dropdownConnectRef}`).click();
+        } else {
+          throw new Error('Could not find Connect button in "More" dropdown.');
+        }
+      } else {
+        throw new Error('Could not find "Connect" or "More" button.');
+      }
     }
-    await connectButton.click();
     
     await this.wait(2000);
 
-    const sendButton = page.locator('button[aria-label="Send now"]');
-    if (await sendButton.isVisible()) {
-      await sendButton.click();
+    const modalSnapshot = await this.browser.getSnapshot({ interactive: true });
+    const sendButtonRef = Object.keys(modalSnapshot.refs).find(id => {
+      const el = modalSnapshot.refs[id];
+      return el.role === 'button' && (el.name === 'Send without a note' || el.name === 'Send now');
+    });
+
+    if (sendButtonRef) {
+      await this.browser.getLocator(`@${sendButtonRef}`).click();
     }
     
     return { success: true };
@@ -101,11 +101,10 @@ export class LinkedInAgentService {
     const visitLimit = Math.min(people.length, max);
     for (let i = 0; i < visitLimit; i++) {
       const person = people[i];
-      if (person.profileUrl) {
-        const page = this.browser.getPage();
-        await page.goto(person.profileUrl, { waitUntil: 'networkidle' });
+      if (person.selector) {
+        await this.browser.getPage().goto(person.selector, { waitUntil: 'load' });
         await this.wait(3000);
-        visited.push(person.profileUrl);
+        visited.push(person.selector);
       }
     }
 

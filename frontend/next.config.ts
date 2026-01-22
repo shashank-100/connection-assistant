@@ -1,0 +1,9 @@
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
+  /* config options here */
+  reactCompiler: true,
+  serverExternalPackages: ['playwright', 'playwright-core', '@sparticuz/chromium-min'],
+};
+
+export default nextConfig;

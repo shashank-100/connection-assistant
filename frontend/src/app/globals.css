@@ -1,0 +1,164 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --color-surface: hsl(var(--surface));
+  --color-surface-hover: hsl(var(--surface-hover));
+  --color-text-primary: hsl(var(--text-primary));
+  --color-text-secondary: hsl(var(--text-secondary));
+  --color-text-tertiary: hsl(var(--text-tertiary));
+  --color-link: hsl(var(--link));
+  --color-success: hsl(var(--success));
+  --color-warning: hsl(var(--warning));
+  --color-row-hover: hsl(var(--row-hover));
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 220 13% 18%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 18%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 18%;
+
+    --primary: 228 45% 52%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 13% 18%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 228 45% 96%;
+    --accent-foreground: 228 45% 52%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 228 45% 52%;
+
+    --radius: 0.5rem;
+
+    /* Custom tokens for outreach tool */
+    --surface: 220 14% 98%;
+    --surface-hover: 220 14% 95%;
+    --text-primary: 220 13% 18%;
+    --text-secondary: 220 9% 46%;
+    --text-tertiary: 220 9% 64%;
+    --link: 228 45% 52%;
+    --success: 142 71% 45%;
+    --warning: 38 92% 50%;
+    --row-hover: 220 14% 98%;
+  }
+
+  .dark {
+    --background: 224 20% 10%;
+    --foreground: 220 14% 96%;
+
+    --card: 224 20% 12%;
+    --card-foreground: 220 14% 96%;
+
+    --popover: 224 20% 12%;
+    --popover-foreground: 220 14% 96%;
+
+    --primary: 228 55% 62%;
+    --primary-foreground: 224 20% 10%;
+
+    --secondary: 224 20% 16%;
+    --secondary-foreground: 220 14% 96%;
+
+    --muted: 224 20% 16%;
+    --muted-foreground: 220 9% 60%;
+
+    --accent: 228 45% 20%;
+    --accent-foreground: 228 55% 62%;
+
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 224 20% 20%;
+    --input: 224 20% 20%;
+    --ring: 228 55% 62%;
+
+    --surface: 224 20% 14%;
+    --surface-hover: 224 20% 18%;
+    --text-primary: 220 14% 96%;
+    --text-secondary: 220 9% 60%;
+    --text-tertiary: 220 9% 45%;
+    --link: 228 55% 62%;
+    --row-hover: 224 20% 14%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

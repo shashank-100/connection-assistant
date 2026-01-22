@@ -1,0 +1,11 @@
+var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/_global-error/page.js")
+R.c("server/chunks/ssr/[root-of-the-server]__da6d7afe._.js")
+R.c("server/chunks/ssr/geodo-vercel-agent-browser_frontend_07eaec07._.js")
+R.c("server/chunks/ssr/eec6e_next_dist_ee16dd45._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__dc0cdc05._.js")
+R.c("server/chunks/ssr/eec6e_next_dist_550650f6._.js")
+R.c("server/chunks/ssr/eec6e_next_dist_571dab46._.js")
+R.c("server/chunks/ssr/geodo-vercel-agent-browser_frontend_src_app_de5f024a._.js")
+R.c("server/chunks/ssr/cc970_frontend__next-internal_server_app__global-error_page_actions_3bd79cdc.js")
+R.m(46740)
+module.exports=R.m(46740).exports

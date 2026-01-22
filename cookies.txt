@@ -1,0 +1,412 @@
+[
+  {
+    "name": "bcookie",
+    "value": "\"v=2&c8032746-d5f8-4db5-8c26-4963332a1080\"",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1800503844,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "bscookie",
+    "value": "\"v=1&202601070517496e46bc1b-f2b9-4741-8f28-302f2453bae5AQE3XSF8lEYvQC3botcWID0fNjHuxF5T\"",
+    "domain": ".www.linkedin.com",
+    "path": "/",
+    "expires": 1800496897,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "timezone",
+    "value": "Asia/Calcutta",
+    "domain": ".www.linkedin.com",
+    "path": "/",
+    "expires": 1770177439,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "li_theme",
+    "value": "light",
+    "domain": ".www.linkedin.com",
+    "path": "/",
+    "expires": 1784519839,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "li_theme_set",
+    "value": "app",
+    "domain": ".www.linkedin.com",
+    "path": "/",
+    "expires": 1784519839,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "li_sugr",
+    "value": "aac5a2b2-5b67-43e4-8c00-4049c440d911",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1776743843,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "_guid",
+    "value": "de4e1b01-a2b8-4e3a-97ba-4af779f51fe0",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1775539091,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "dfpfpt",
+    "value": "45d622946d3949a98f3507a391bc8ab3",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1799299107,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "_pxvid",
+    "value": "39183aaf-eb88-11f0-9eb6-7e368b228959",
+    "domain": "www.linkedin.com",
+    "path": "/",
+    "expires": 1800503488,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "bitmovin_analytics_uuid",
+    "value": "8b51c166-4705-4667-8c2a-5ef8072026da",
+    "domain": "www.linkedin.com",
+    "path": "/",
+    "expires": 1800458374,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "fptctx2",
+    "value": "taBcrIH61PuCVH7eNCyH0APzNoEiOrOqF4FbdtfiWWJmCZW5PUCJBlQfnDABZubeio3q6fsXp1sUHHuu%252bob9wKMEpZY8o5FHwgaadmZ1rFhvRNwDWNAom4Y4MU7tYQx1lOzsr20baYcWOqFtyNHbMwe%252baD3FtQSZxml4P25%252bUQtLVscsaW8I12sy85575Cf6KCHnS682k3Q35EbfhaM%252b1Ch%252fu9fNCb6qxdAf%252f2L%252fLlSiekVTwr5ez1JPQpVKvfl5biVqxugkenpz9RXn%252f6ZOp1falnjaXYnLmDIaKd%252b8sm6nB2bdyDFPiK7bRimUqBvrlyZdjEdWkWViDIREL%252b3KxSUkvz7v2FuDiheOQ0aN8HnrN1wV6HVc%252blaFduiT3VehwduB85rkL5%252fL8WgJcltPeA%253d%253d",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": -1,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "at_check",
+    "value": "true",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": -1,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "s_fid",
+    "value": "607B2B66DCCB751C-1973103AB084D4D0",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1784456729,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "s_cc",
+    "value": "true",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": -1,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "s_sq",
+    "value": "%5B%5BB%5D%5D",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": -1,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "s_ips",
+    "value": "867",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1784456729,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "mbox",
+    "value": "PC#3ce79f4da0d14141ad6b0ae05b33809e.41_0#1784454150|session#735519f2788945d3b71024ac1b727984#1768904010",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1784454150,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "gpv_pn",
+    "value": "www.linkedin.com%2Fpremium%2Fproducts%2F",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1784456729,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "PLAY_LANG",
+    "value": "en",
+    "domain": "www.linkedin.com",
+    "path": "/",
+    "expires": -1,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "s_plt",
+    "value": "1.62",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": -1,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "s_pltp",
+    "value": "www.linkedin.com%2Fpremium%2Fproducts%2F",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": -1,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "s_tp",
+    "value": "1337",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1784456729,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "s_ppv",
+    "value": "www.linkedin.com%2Fpremium%2Fproducts%2F%2C65%2C65%2C867%2C1%2C1",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": -1,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "s_tslv",
+    "value": "1768904729122",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1784456729,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "li_rm",
+    "value": "AQERIEWzk2hovQAAAZvbBbSfAlys7EHFlxCkOnhzWD7i5y9v0wqDUnr9Q9DqzOIUpSOaIW1Fr2ubYlE8kX6W81LiVHHxONvGruXc6lRegtVVKkp2wzyVj-ZH",
+    "domain": ".www.linkedin.com",
+    "path": "/",
+    "expires": 1800442702,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "visit",
+    "value": "v=1&M",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1803466196,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "AMCVS_14215E3D5995C57C0A495C55%40AdobeOrg",
+    "value": "1",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": -1,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "AMCV_14215E3D5995C57C0A495C55%40AdobeOrg",
+    "value": "-637568504%7CMCIDTS%7C20474%7CvVersion%7C5.1.1%7CMCMID%7C04702936986642512990840106435794536993%7CMCAAMLH-1769510950%7C12%7CMCAAMB-1769510950%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1768913350s%7CNONE",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1784458150,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "aam_uuid",
+    "value": "04531731842349333520821774331657812458",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1771498686,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "lang",
+    "value": "v=2&lang=en-us",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": -1,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "g_state",
+    "value": "{\"i_l\":0}",
+    "domain": "www.linkedin.com",
+    "path": "/",
+    "expires": 1784458701,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "liap",
+    "value": "true",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1776682702,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "li_at",
+    "value": "AQEDASgZjt8E9IT-AAABm9sOOxMAAAGb_xq_E04AO1GrzqjR80Y6PsR07SWfXCr3yUbfMan7OrZNerKny-xsaNZx7e1a1ZeJBzG2e82s5xsJoPws1VUcjsKfjjKJ7daNf-lws9SoyTSoLj3Mir7Dou3X",
+    "domain": ".www.linkedin.com",
+    "path": "/",
+    "expires": 1800442702,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "JSESSIONID",
+    "value": "\"ajax:1849305005458482706\"",
+    "domain": ".www.linkedin.com",
+    "path": "/",
+    "expires": 1776682702,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "AnalyticsSyncHistory",
+    "value": "AQKuuQHWdOhM6gAAAZvbRzxRLy8Zv-bUFxu8xOlQHSxVRdJaV3eaZxgpsMxGvi4YB8iBgyugJ1XrSTHz9DrCdw",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1771502438,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "lms_ads",
+    "value": "AQFxKw7n_9uI0wAAAZvbRz3QARbTv7gjcbELK8gaaSQhVpxRbGfIWlKiV40rMZYluA0eLhECIio-tb2YgZsRekLwWLRC0MMy",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1771502438,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "lms_analytics",
+    "value": "AQFxKw7n_9uI0wAAAZvbRz3QARbTv7gjcbELK8gaaSQhVpxRbGfIWlKiV40rMZYluA0eLhECIio-tb2YgZsRekLwWLRC0MMy",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1771502438,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "sdui_ver",
+    "value": "sdui-flagship:0.1.24807+SduiFlagship0",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1800496897,
+    "secure": false,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "UserMatchHistory",
+    "value": "AQLU4RsFYkEMfAAAAZveSS5c7-1aDaE_gANTsnhnaDZ12osWWI-kYZMhfLcMdsfumegvVHTY8_usGhJbqZQp5-MnsyuJWcx8PCcaAHzq2HHwoRcHamSuDxS_7GAsL98eTskOLQ2fkoE8SEAt5JpmBGDfD3S1cT5X5zBDrlDBX4va0qLXMWdE50QJ1S8lNFOgp6wOGvZyz4Kmny-MHFf95suHIcTirLep7f7RMmU7GYNNGBzpvHwgt3V2SSK2dJCEAbXFjTy5eY0DxaWDKgATLjsJ2Rn9D5Z_lk911TLO-7C_dFOetWrhI9lIFqYXJNAmBzYRxNLkDziztaS8NemO6pwWuIkEIfcRvF-HYn_B5i3C5_WoMw",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1771552897,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "__cf_bm",
+    "value": "RLHjUNCsK6bXn74tm3l6.k1SS_9GM9zaf1.kH99VyYg-1768967613-1.0.1.1-mIjQbzvK8m1B.j6nLPu9n_0_2y5DOa8Uk7cbRFhf59ezWk6uluflgxwEre.3OTCoKpNCKYmeYGIY8IXdzeTdQeMckdlnASCv2taPcCWrhlQ",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1768969413,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "lidc",
+    "value": "\"b=TB15:s=T:r=T:a=T:p=T:g=6047:u=1093:x=1:i=1768967844:t=1769046426:v=2:sig=AQFVE54jXF9z6vvawTYpEKJwPSlFQJal\"",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1769046427,
+    "secure": true,
+    "httpOnly": false,
+    "sameSite": "Lax"
+  }
+]

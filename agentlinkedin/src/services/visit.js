@@ -2,9 +2,8 @@ import { BaseLinkedInService } from "./base.js";
 
 export class LinkedInVisitService extends BaseLinkedInService {
   async searchPeople(searchTerm) {
-    const page = await this.getPage();
     const searchUrl = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(searchTerm)}`;
-    await page.goto(searchUrl, { waitUntil: "networkidle" });
+    await this.browser.getPage().goto(searchUrl, { waitUntil: "networkidle" });
     await this.wait(3000);
 
     for (let i = 0; i < 3; i++) {
@@ -15,12 +14,13 @@ export class LinkedInVisitService extends BaseLinkedInService {
     const snapshot = await this.browser.getSnapshot({ interactive: true });
     const people = [];
     
-    Object.entries(snapshot.refs).forEach(([id, el]) => {
+    Object.keys(snapshot.refs).forEach(id => {
+      const el = snapshot.refs[id];
       if (el.role === 'link' && el.name && !el.name.includes('LinkedIn')) {
         if (el.selector.includes('reusable-search__result-container')) {
            people.push({
              name: el.name,
-             profileUrl: el.selector,
+             profileUrl: el.href,
              ref: `@${id}`
            });
         }
@@ -38,8 +38,7 @@ export class LinkedInVisitService extends BaseLinkedInService {
     for (let i = 0; i < visitLimit; i++) {
       const person = people[i];
       if (person.profileUrl) {
-        const page = await this.getPage();
-        await page.goto(person.profileUrl, { waitUntil: "networkidle" });
+        await this.browser.getPage().goto(person.profileUrl, { waitUntil: "networkidle" });
         await this.wait(3000);
         visited.push(person.profileUrl);
       }

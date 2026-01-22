@@ -10,14 +10,14 @@ export default async function handler(req, res) {
   }
 
   const {
-    url,
     action = "snapshot",
+    url,
     searchTerm,
     max = 5,
     profileUrl,
     message,
     cookies: userCookies,
-  } = req.body;
+  } = req.body || {};
 
   const browser = new BrowserManager();
 
@@ -32,90 +32,90 @@ export default async function handler(req, res) {
       headless = chromium.headless;
     }
 
+    console.log("Launching browser…");
     await browser.launch({
       headless,
       executablePath,
       args,
     });
 
-    const page = browser.getPage();
-    browser.startRequestTracking();
+    /* =========================
+       🔑 COOKIE INJECTION FIRST
+       ========================= */
+    if (Array.isArray(userCookies)) {
+      await browser.loadCookies(userCookies);
+    }
 
-    if (userCookies && Array.isArray(userCookies)) {
-      await page.context().addCookies(userCookies);
+    /* =========================
+       🔐 AUTH VALIDATION
+       ========================= */
+    await browser.open("https://www.linkedin.com/feed/");
+    await browser.waitForLoad();
+
+    const page = browser.getPage();
+    const currentUrl = page.url();
+
+    if (currentUrl.includes("login")) {
+      throw new Error("Cookies invalid or expired");
     }
 
     let result;
 
     switch (action) {
       case "snapshot":
-        if (url) await page.goto(url, { waitUntil: "load" });
+        if (url) {
+          await browser.open(url);
+          await browser.waitForLoad();
+        }
         result = await browser.getSnapshot({ interactive: true });
         break;
-      case "click":
-        const locator = browser.getLocator(req.body.selector);
-        await locator.click();
-        result = { success: true, action: "click", selector: req.body.selector };
-        break;
-      case "fill":
-        const fillLocator = browser.getLocator(req.body.selector);
-        await fillLocator.fill(req.body.text);
-        result = { success: true, action: "fill", text: req.body.text };
-        break;
+
       case "linkedin-me":
-        await page.goto("https://www.linkedin.com/feed/", { waitUntil: "domcontentloaded" });
-        if (page.url().includes("login")) {
-          result = { authenticated: false };
-        } else {
-          const snapshot = await browser.getSnapshot({ interactive: true });
-          result = { authenticated: true, snapshot };
-        }
+        result = { authenticated: true };
         break;
-      case "linkedin-search":
+
+      case "linkedin-search": {
         if (!searchTerm) throw new Error("searchTerm is required");
         const visitService = new LinkedInVisitService(browser);
         result = await visitService.searchPeople(searchTerm);
         break;
-      case "linkedin-connect":
+      }
+
+      case "linkedin-connect": {
         if (!profileUrl) throw new Error("profileUrl is required");
         const connectService = new LinkedInConnectService(browser);
         result = await connectService.sendConnectRequest(profileUrl);
         break;
-      case "linkedin-visit":
+      }
+
+      case "linkedin-visit": {
         if (!searchTerm) throw new Error("searchTerm is required");
-        const visitService2 = new LinkedInVisitService(browser);
-        result = await visitService2.visitProfiles(searchTerm, max);
+        const visitService = new LinkedInVisitService(browser);
+        result = await visitService.visitProfiles(searchTerm, max);
         break;
-      case "linkedin-message":
+      }
+
+      case "linkedin-message": {
         if (!profileUrl) throw new Error("profileUrl is required");
         if (!message) throw new Error("message is required");
         const messageService = new LinkedInMessageService(browser);
         result = await messageService.sendMessage(profileUrl, message);
         break;
+      }
+
       case "get-cookies":
-        const pageCookies = browser.getPage();
-        result = await pageCookies.context().cookies();
+        result = await browser.getPage().context().cookies();
         break;
+
       case "get-storage":
         result = await browser.getPage().evaluate(() => ({
           local: { ...localStorage },
           session: { ...sessionStorage },
         }));
         break;
-      case "get-network":
-        result = browser.getRequests(searchTerm);
-        break;
-      case "clear-network":
-        browser.clearRequests();
-        result = { message: "Network logs cleared" };
-        break;
+
       default:
-        if (url) {
-          await browser.getPage().goto(url, { waitUntil: "load" });
-          result = { message: "Navigation successful to " + url };
-        } else {
-          result = { message: "No action performed" };
-        }
+        throw new Error(`Unknown action: ${action}`);
     }
 
     await browser.close();
@@ -124,13 +124,14 @@ export default async function handler(req, res) {
       success: true,
       data: result,
     });
+
   } catch (error) {
-    console.error("Browser error:", error);
+    console.error("Browser error:", error.message);
+
     try {
       await browser.close();
-    } catch (e) {
-      console.error("Error closing browser:", e);
-    }
+    } catch {}
+
     return res.status(500).json({
       success: false,
       error: error.message,
