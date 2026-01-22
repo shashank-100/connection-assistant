@@ -24,15 +24,13 @@ export default async function handler(req, res) {
   try {
     let executablePath;
     if (process.env.VERCEL) {
-      executablePath = await chromium.executablePath(
-        "https://github.com/Sparticuz/chromium/releases/download/v132.0.0/chromium-v132.0.0-pack.tar"
-      );
+      executablePath = await chromium.executablePath('https://github.com/Sparticuz/chromium/releases/download/v132.0.0/chromium-v132.0.0-pack.tar');
     }
 
     await browser.launch({
       headless: true,
       executablePath,
-      args: chromium.args,
+      args: [...chromium.args, "--no-sandbox", "--disable-setuid-sandbox"],
     });
 
     const page = browser.getPage();
@@ -69,13 +67,6 @@ export default async function handler(req, res) {
         }
         break;
       case "linkedin-search":
-        const visitService = new LinkedInVisitService(browser);
-        result = await visitService.searchPeople(searchTerm);
-        break;
-      default:
-        result = { message: "Action not recognized" };
-    }
-
         if (!searchTerm) throw new Error("searchTerm is required");
         const visitService = new LinkedInVisitService(browser);
         result = await visitService.searchPeople(searchTerm);
@@ -95,11 +86,6 @@ export default async function handler(req, res) {
         if (!message) throw new Error("message is required");
         const messageService = new LinkedInMessageService(browser);
         result = await messageService.sendMessage(profileUrl, message);
-        break;
-      case "snapshot":
-        if (!url) throw new Error("URL is required");
-        await browser.getPage().goto(url, { waitUntil: "load" });
-        result = await browser.getSnapshot({ interactive: true });
         break;
       case "get-cookies":
         const pageCookies = browser.getPage();
