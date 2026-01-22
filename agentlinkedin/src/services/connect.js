@@ -9,7 +9,7 @@ export class LinkedInConnectService extends BaseLinkedInService {
   async humanIdle() {
     await sleep(2500 + Math.random() * 2000);
     try {
-      const page = await this.getPage();
+      const page = this.browser.getPage();
       await page.mouse.move(200, 300);
       await sleep(700);
       await page.mouse.move(450, 420);
@@ -20,20 +20,15 @@ export class LinkedInConnectService extends BaseLinkedInService {
   }
 
   async sendConnectRequest(profileUrl) {
-    const page = await this.getPage();
-
     console.log(`Opening profile: ${profileUrl}`);
 
     try {
-      await page.goto(profileUrl, {
-        waitUntil: "domcontentloaded",
-        timeout: 120000
-      });
+      await this.browser.getPage().goto(profileUrl, { waitUntil: 'load', timeout: 60000 });
     } catch (e) {
-      console.log(`Page goto warning: ${e.message}`);
+      console.log(`Navigation warning: ${e.message}`);
     }
 
-    await this.wait(10000);
+    await sleep(2000);
     await this.humanIdle();
 
     const snapshot = await this.browser.getSnapshot({ interactive: true });

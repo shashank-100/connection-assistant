@@ -130,7 +130,7 @@ export default async function runLinkedInConnect({
 }
 
 async function main() {
-  const cookies = JSON.parse(fs.readFileSync('cookies.txt', 'utf-8'));
+  const cookies = JSON.parse(fs.readFileSync('cookies.json', 'utf-8'));
   const profileUrl = 'https://www.linkedin.com/in/vedant-pimprikar-3ba760246/';
   console.log(`Attempting to send connection request to ${profileUrl}`);
   const result = await runLinkedInConnect({ profileUrl, cookies });
