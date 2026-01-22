@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     }
 
     await browser.launch({
-      headless: chromium.headless,
+      headless: !!chromium.headless,
       executablePath,
       args: chromium.args,
     });
@@ -121,6 +121,11 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error("Browser error:", error);
+    try {
+      await browser.close();
+    } catch (e) {
+      console.error("Error closing browser:", e);
+    }
     return res.status(500).json({
       success: false,
       error: error.message,
