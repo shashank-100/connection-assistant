@@ -4,7 +4,7 @@
   "type": "module",
   "dependencies": {
     "@sparticuz/chromium": "^131.0.1",
-    "@sparticuz/chromium-min": "132.0.0",
+    "@sparticuz/chromium": "132.0.0",
     "agent-browser": "0.6.0",
     "csv-parse": "^6.1.0",
     "playwright-core": "1.50.0"

@@ -1,4 +1,4 @@
-import chromium from "@sparticuz/chromium-min";
+import chromium from "@sparticuz/chromium";
 import { BrowserManager } from "agent-browser/dist/browser.js";
 import { LinkedInVisitService } from "../src/services/visit.js";
 import { LinkedInConnectService } from "../src/services/connect.js";
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   try {
     let executablePath;
     if (process.env.VERCEL) {
-      executablePath = await chromium.executablePath('https://github.com/Sparticuz/chromium/releases/download/v132.0.0/chromium-v132.0.0-pack.tar');
+      executablePath = await chromium.executablePath();
     }
 
     await browser.launch({
