@@ -7,12 +7,12 @@ function sleep(ms) {
 export class LinkedInConnectService extends BaseLinkedInService {
 
   async humanIdle() {
-    await sleep(2500 + Math.random() * 2000);
+    await sleep(2000 + Math.random() * 2000);
     try {
       const page = this.browser.getPage();
       await page.mouse.move(200, 300);
-      await sleep(700);
-      await page.mouse.move(450, 420);
+      await sleep(600);
+      await page.mouse.move(400, 500);
       await sleep(1200);
     } catch (e) {
       console.log("Mouse move failed", e.message);
@@ -23,7 +23,7 @@ export class LinkedInConnectService extends BaseLinkedInService {
     console.log(`Opening profile: ${profileUrl}`);
 
     try {
-      await this.browser.getPage().goto(profileUrl, { waitUntil: 'load', timeout: 60000 });
+      await this.browser.getPage().goto(profileUrl, { waitUntil: 'load', timeout: 120000 });
     } catch (e) {
       console.log(`Navigation warning: ${e.message}`);
     }
@@ -32,11 +32,6 @@ export class LinkedInConnectService extends BaseLinkedInService {
     await this.humanIdle();
 
     const snapshot = await this.browser.getSnapshot({ interactive: true });
-
-    if (snapshot.tree?.includes('"1st"')) {
-      console.log("Already connected (1st degree)");
-      return { success: true, status: "already_connected" };
-    }
 
     const pendingPrimary = Object.values(snapshot.refs).find(
       el =>
