@@ -33,11 +33,19 @@ export default async function handler(req, res) {
     };
 
     if (isVercel) {
-      launchOptions.executablePath = await chromium.executablePath();
-      launchOptions.args = chromium.args;
-      console.log('[API] Chromium executable path:', launchOptions.executablePath);
-      console.log('[API] Chromium args count:', launchOptions.args.length);
-      console.log('[API] Launch options:', JSON.stringify(launchOptions, null, 2));
+      try {
+        console.log('[API] Starting chromium.executablePath()...');
+        launchOptions.executablePath = await chromium.executablePath();
+        console.log('[API] Chromium executable path:', launchOptions.executablePath);
+
+        launchOptions.args = chromium.args;
+        console.log('[API] Chromium args count:', launchOptions.args.length);
+        console.log('[API] Launch options:', JSON.stringify(launchOptions, null, 2));
+      } catch (chromiumError) {
+        console.error('[API] Failed to get chromium executable:', chromiumError);
+        console.error('[API] Chromium error stack:', chromiumError.stack);
+        throw new Error(`Chromium setup failed: ${chromiumError.message}`);
+      }
     }
 
     console.log('[API] Launching browser with options:', JSON.stringify(launchOptions, null, 2));
