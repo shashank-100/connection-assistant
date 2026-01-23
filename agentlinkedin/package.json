@@ -8,10 +8,13 @@
     "csv-parse": "^6.1.0",
     "playwright-core": "^1.57.0"
   },
-  "devDependencies": {
-    "playwright": "^1.57.0"
+  "scripts": {
+    "test": "vitest run"
   },
   "engines": {
     "node": "20.x"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.18"
   }
 }
