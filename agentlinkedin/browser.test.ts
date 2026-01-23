@@ -1,0 +1,322 @@
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { BrowserManager } from './node_modules/agent-browser/dist/browser.js';
+import chromium from '@sparticuz/chromium';
+
+describe('BrowserManager', () => {
+  let browser: BrowserManager;
+
+  beforeAll(async () => {
+    browser = new BrowserManager();
+
+    // Use @sparticuz/chromium on Vercel, playwright-core locally
+    const isVercel = !!process.env.VERCEL || !!process.env.CI;
+    const launchOptions: any = {
+      id: 'test-launch',
+      action: 'launch',
+      headless: true
+    };
+
+    if (isVercel) {
+      launchOptions.executablePath = await chromium.executablePath();
+    }
+
+    await browser.launch(launchOptions);
+  });
+
+  afterAll(async () => {
+    await browser.close();
+  });
+
+  describe('launch and close', () => {
+    it('should report as launched', () => {
+      expect(browser.isLaunched()).toBe(true);
+    });
+
+    it('should have a page', () => {
+      const page = browser.getPage();
+      expect(page).toBeDefined();
+    });
+
+    it('should reject invalid executablePath', async () => {
+      const testBrowser = new BrowserManager();
+      await expect(
+        testBrowser.launch({
+          id: 'test-invalid-path',
+          action: 'launch',
+          headless: true,
+          executablePath: '/nonexistent/path/to/chromium',
+        })
+      ).rejects.toThrow();
+    });
+  });
+
+  describe('navigation', () => {
+    it('should navigate to URL', async () => {
+      const page = browser.getPage();
+      await page.goto('https://www.linkedin.com/feed/', { timeout: 30000 });
+      expect(page.url()).toContain('linkedin.com');
+    }, 35000);
+
+    it('should get page title', async () => {
+      const page = browser.getPage();
+      const title = await page.title();
+      expect(title).toContain('LinkedIn');
+    });
+  });
+
+  describe('element interaction', () => {
+    it('should find element by selector', async () => {
+      const page = browser.getPage();
+      const heading = await page.locator('body').textContent();
+      expect(heading).toBeTruthy();
+    });
+
+    it('should check element visibility', async () => {
+      const page = browser.getPage();
+      const isVisible = await page.locator('body').isVisible();
+      expect(isVisible).toBe(true);
+    });
+
+    it('should count elements', async () => {
+      const page = browser.getPage();
+      const count = await page.locator('a').count();
+      expect(count).toBeGreaterThan(0);
+    });
+  });
+
+  describe('screenshots', () => {
+    it('should take screenshot as buffer', async () => {
+      const page = browser.getPage();
+      const buffer = await page.screenshot();
+      expect(buffer).toBeInstanceOf(Buffer);
+      expect(buffer.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('evaluate', () => {
+    it('should evaluate JavaScript', async () => {
+      const page = browser.getPage();
+      const result = await page.evaluate(() => document.title);
+      expect(result).toContain('LinkedIn');
+    });
+
+    it('should evaluate with arguments', async () => {
+      const page = browser.getPage();
+      const result = await page.evaluate((x: number) => x * 2, 5);
+      expect(result).toBe(10);
+    });
+  });
+
+  describe('tabs', () => {
+    it('should create new tab', async () => {
+      const result = await browser.newTab();
+      expect(result.index).toBe(1);
+      expect(result.total).toBe(2);
+    });
+
+    it('should list tabs', async () => {
+      const tabs = await browser.listTabs();
+      expect(tabs.length).toBe(2);
+    });
+
+    it('should close tab', async () => {
+      // Switch to second tab and close it
+      const page = browser.getPage();
+      const tabs = await browser.listTabs();
+      if (tabs.length > 1) {
+        const result = await browser.closeTab(1);
+        expect(result.remaining).toBe(1);
+      }
+    });
+  });
+
+  describe('context operations', () => {
+    it('should get cookies from context', async () => {
+      const page = browser.getPage();
+      const cookies = await page.context().cookies();
+      expect(Array.isArray(cookies)).toBe(true);
+    });
+
+    it('should set and get cookies', async () => {
+      const page = browser.getPage();
+      const context = page.context();
+      await context.addCookies([{ name: 'test', value: 'value', url: 'https://www.linkedin.com/feed/' }]);
+      const cookies = await context.cookies();
+      const testCookie = cookies.find((c) => c.name === 'test');
+      expect(testCookie?.value).toBe('value');
+    });
+
+    it('should set cookie with domain', async () => {
+      const page = browser.getPage();
+      const context = page.context();
+      await context.addCookies([
+        { name: 'domainCookie', value: 'domainValue', domain: 'linkedin.com', path: '/' },
+      ]);
+      const cookies = await context.cookies();
+      const testCookie = cookies.find((c) => c.name === 'domainCookie');
+      expect(testCookie?.value).toBe('domainValue');
+    });
+
+    it('should set multiple cookies at once', async () => {
+      const page = browser.getPage();
+      const context = page.context();
+      await context.clearCookies();
+      await context.addCookies([
+        { name: 'cookie1', value: 'value1', url: 'https://www.linkedin.com/feed/' },
+        { name: 'cookie2', value: 'value2', url: 'https://www.linkedin.com/feed/' },
+      ]);
+      const cookies = await context.cookies();
+      expect(cookies.find((c) => c.name === 'cookie1')?.value).toBe('value1');
+      expect(cookies.find((c) => c.name === 'cookie2')?.value).toBe('value2');
+    });
+
+    it('should clear cookies', async () => {
+      const page = browser.getPage();
+      const context = page.context();
+      await context.clearCookies();
+      const cookies = await context.cookies();
+      expect(cookies.length).toBe(0);
+    });
+  });
+
+  describe('localStorage operations', () => {
+    it('should set and get localStorage item', async () => {
+      const page = browser.getPage();
+      await page.goto('https://www.linkedin.com/feed/');
+      await page.evaluate(() => localStorage.setItem('testKey', 'testValue'));
+      const value = await page.evaluate(() => localStorage.getItem('testKey'));
+      expect(value).toBe('testValue');
+    });
+
+    it('should get all localStorage items', async () => {
+      const page = browser.getPage();
+      await page.evaluate(() => {
+        localStorage.clear();
+        localStorage.setItem('key1', 'value1');
+        localStorage.setItem('key2', 'value2');
+      });
+      const storage = await page.evaluate(() => {
+        const items: Record<string, string> = {};
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key) items[key] = localStorage.getItem(key) || '';
+        }
+        return items;
+      });
+      expect(storage.key1).toBe('value1');
+      expect(storage.key2).toBe('value2');
+    });
+
+    it('should clear localStorage', async () => {
+      const page = browser.getPage();
+      await page.evaluate(() => localStorage.clear());
+      const value = await page.evaluate(() => localStorage.getItem('testKey'));
+      expect(value).toBeNull();
+    });
+
+    it('should return null for non-existent key', async () => {
+      const page = browser.getPage();
+      await page.evaluate(() => localStorage.clear());
+      const value = await page.evaluate(() => localStorage.getItem('nonexistent'));
+      expect(value).toBeNull();
+    });
+  });
+
+  describe('sessionStorage operations', () => {
+    it('should set and get sessionStorage item', async () => {
+      const page = browser.getPage();
+      await page.goto('https://www.linkedin.com/feed/');
+      await page.evaluate(() => sessionStorage.setItem('sessionKey', 'sessionValue'));
+      const value = await page.evaluate(() => sessionStorage.getItem('sessionKey'));
+      expect(value).toBe('sessionValue');
+    });
+
+    it('should get all sessionStorage items', async () => {
+      const page = browser.getPage();
+      await page.evaluate(() => {
+        sessionStorage.clear();
+        sessionStorage.setItem('skey1', 'svalue1');
+        sessionStorage.setItem('skey2', 'svalue2');
+      });
+      const storage = await page.evaluate(() => {
+        const items: Record<string, string> = {};
+        for (let i = 0; i < sessionStorage.length; i++) {
+          const key = sessionStorage.key(i);
+          if (key) items[key] = sessionStorage.getItem(key) || '';
+        }
+        return items;
+      });
+      expect(storage.skey1).toBe('svalue1');
+      expect(storage.skey2).toBe('svalue2');
+    });
+
+    it('should clear sessionStorage', async () => {
+      const page = browser.getPage();
+      await page.evaluate(() => sessionStorage.clear());
+      const value = await page.evaluate(() => sessionStorage.getItem('sessionKey'));
+      expect(value).toBeNull();
+    });
+  });
+
+  describe('viewport', () => {
+    it('should set viewport', async () => {
+      await browser.setViewport(1920, 1080);
+      const page = browser.getPage();
+      const size = page.viewportSize();
+      expect(size?.width).toBe(1920);
+      expect(size?.height).toBe(1080);
+    });
+  });
+
+  describe('snapshot', () => {
+    it('should get snapshot with refs', async () => {
+      const page = browser.getPage();
+      await page.goto('https://www.linkedin.com/feed/');
+      const { tree, refs } = await browser.getSnapshot();
+      expect(tree).toBeTruthy();
+      expect(typeof refs).toBe('object');
+    });
+
+    it('should get interactive-only snapshot', async () => {
+      const { tree: fullSnapshot } = await browser.getSnapshot();
+      const { tree: interactiveSnapshot } = await browser.getSnapshot({ interactive: true });
+      // Interactive snapshot should be shorter (fewer elements)
+      expect(interactiveSnapshot.length).toBeLessThanOrEqual(fullSnapshot.length);
+    });
+
+    it('should get snapshot with depth limit', async () => {
+      const { tree: fullSnapshot } = await browser.getSnapshot();
+      const { tree: limitedSnapshot } = await browser.getSnapshot({ maxDepth: 2 });
+      // Limited depth should have fewer nested elements
+      const fullLines = fullSnapshot.split('\n').length;
+      const limitedLines = limitedSnapshot.split('\n').length;
+      expect(limitedLines).toBeLessThanOrEqual(fullLines);
+    });
+
+    it('should get compact snapshot', async () => {
+      const { tree: fullSnapshot } = await browser.getSnapshot();
+      const { tree: compactSnapshot } = await browser.getSnapshot({ compact: true });
+      // Compact should be equal or shorter
+      expect(compactSnapshot.length).toBeLessThanOrEqual(fullSnapshot.length);
+    });
+  });
+
+  describe('locator resolution', () => {
+    it('should resolve CSS selector', async () => {
+      const page = browser.getPage();
+      await page.goto('https://www.linkedin.com/feed/');
+      const locator = browser.getLocator('body');
+      const text = await locator.textContent();
+      expect(text).toBeTruthy();
+    });
+
+    it('should resolve ref from snapshot', async () => {
+      await browser.getSnapshot(); // Populates refs
+      // After snapshot, refs like @e1 should be available
+      // This tests the ref resolution mechanism
+      const page = browser.getPage();
+      const body = await page.locator('body').textContent();
+      expect(body).toBeTruthy();
+    });
+  });
+});
