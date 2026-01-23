@@ -18,6 +18,8 @@ describe('BrowserManager', () => {
 
     if (isVercel) {
       launchOptions.executablePath = await chromium.executablePath();
+      console.log('[TEST] Chromium executable path:', launchOptions.executablePath);
+      console.log('[TEST] Launch options:', JSON.stringify(launchOptions, null, 2));
     }
 
     await browser.launch(launchOptions);

@@ -16,125 +16,160 @@ export default async function handler(req, res) {
     max = 5,
     profileUrl,
     message,
-    cookies: userCookies,
+    cookies,
   } = req.body || {};
 
   const browser = new BrowserManager();
 
   try {
-    let executablePath;
-    let args = [];
-    let headless = true;
+    const isVercel = !!process.env.VERCEL || !!process.env.CI;
 
-    if (process.env.VERCEL) {
-      executablePath = await chromium.executablePath();
-      args = chromium.args;
-      headless = chromium.headless;
+    console.log('[API] Environment:', { isVercel, platform: process.platform });
+
+    const launchOptions = {
+      id: 'api-handler',
+      action: 'launch',
+      headless: true,
+    };
+
+    if (isVercel) {
+      launchOptions.executablePath = await chromium.executablePath();
+      launchOptions.args = chromium.args;
+      console.log('[API] Chromium executable path:', launchOptions.executablePath);
+      console.log('[API] Chromium args count:', launchOptions.args.length);
+      console.log('[API] Launch options:', JSON.stringify(launchOptions, null, 2));
     }
 
-    console.log("Launching browser…");
-    await browser.launch({
-      headless,
-      executablePath,
-      args,
+    console.log('[API] Launching browser with options:', JSON.stringify(launchOptions, null, 2));
+    try {
+      await browser.launch(launchOptions);
+      console.log('[API] Browser.launch() completed successfully');
+    } catch (launchError) {
+      console.error('[API] Browser.launch() failed:', launchError);
+      console.error('[API] Launch error stack:', launchError.stack);
+      console.error('[API] Launch error message:', launchError.message);
+      throw launchError;
+    }
+
+    console.log('[API] Browser launched successfully');
+    console.log('[API] Browser isLaunched:', browser.isLaunched());
+
+    browser.startRequestTracking();
+    console.log('[API] Request tracking started');
+
+    /* =========================
+       🔑 COOKIES (via page context)
+       ========================= */
+    if (Array.isArray(cookies) && cookies.length > 0) {
+      console.log('[API] Setting cookies:', cookies.length);
+      const page = browser.getPage();
+      await page.context().addCookies(cookies);
+    }
+
+    /* =========================
+       🔐 AUTH CHECK (agent-browser)
+       ========================= */
+    const page = browser.getPage();
+    console.log('[API] Navigating to LinkedIn feed...');
+    await page.goto("https://www.linkedin.com/feed/", {
+      waitUntil: 'load',
+      timeout: 45000
     });
 
-    /* =========================
-       🔑 COOKIE INJECTION FIRST
-       ========================= */
-    if (Array.isArray(userCookies)) {
-      await browser.loadCookies(userCookies);
-    }
-
-    /* =========================
-       🔐 AUTH VALIDATION
-       ========================= */
-    await browser.open("https://www.linkedin.com/feed/");
-    await browser.waitForLoad();
-
-    const page = browser.getPage();
     const currentUrl = page.url();
+    console.log('[API] Current URL after navigation:', currentUrl);
 
-    if (currentUrl.includes("login")) {
-      throw new Error("Cookies invalid or expired");
+    if (currentUrl?.includes("login") || currentUrl?.includes("authwall")) {
+      throw new Error("LinkedIn auth failed — cookies expired or missing");
     }
 
     let result;
 
+    console.log('[API] Executing action:', action);
+
     switch (action) {
       case "snapshot":
         if (url) {
-          await browser.open(url);
-          await browser.waitForLoad();
+          console.log('[API] Opening URL:', url);
+          await page.goto(url, { waitUntil: 'load', timeout: 45000 });
         }
         result = await browser.getSnapshot({ interactive: true });
+        console.log('[API] Snapshot captured');
         break;
 
       case "linkedin-me":
-        result = { authenticated: true };
+        result = {
+          authenticated: true,
+          url: currentUrl,
+          timestamp: new Date().toISOString()
+        };
+        console.log('[API] Auth check successful');
         break;
 
-      case "linkedin-search": {
-        if (!searchTerm) throw new Error("searchTerm is required");
-        const visitService = new LinkedInVisitService(browser);
-        result = await visitService.searchPeople(searchTerm);
-        break;
-      }
-
-      case "linkedin-connect": {
-        if (!profileUrl) throw new Error("profileUrl is required");
-        const connectService = new LinkedInConnectService(browser);
-        result = await connectService.sendConnectRequest(profileUrl);
-        break;
-      }
-
-      case "linkedin-visit": {
-        if (!searchTerm) throw new Error("searchTerm is required");
-        const visitService = new LinkedInVisitService(browser);
-        result = await visitService.visitProfiles(searchTerm, max);
-        break;
-      }
-
-      case "linkedin-message": {
-        if (!profileUrl) throw new Error("profileUrl is required");
-        if (!message) throw new Error("message is required");
-        const messageService = new LinkedInMessageService(browser);
-        result = await messageService.sendMessage(profileUrl, message);
-        break;
-      }
-
-      case "get-cookies":
-        result = await browser.getPage().context().cookies();
+      case "linkedin-search":
+        if (!searchTerm) throw new Error("searchTerm required");
+        console.log('[API] Searching for:', searchTerm);
+        result = await new LinkedInVisitService(browser).searchPeople(searchTerm);
+        console.log('[API] Search completed, found:', result.length, 'people');
         break;
 
-      case "get-storage":
-        result = await browser.getPage().evaluate(() => ({
-          local: { ...localStorage },
-          session: { ...sessionStorage },
-        }));
+      case "linkedin-connect":
+        if (!profileUrl) throw new Error("profileUrl required");
+        console.log('[API] Sending connect request to:', profileUrl);
+        result = await new LinkedInConnectService(browser).sendConnectRequest(profileUrl);
+        console.log('[API] Connect request result:', result.status);
+        break;
+
+      case "linkedin-visit":
+        if (!searchTerm) throw new Error("searchTerm required");
+        console.log('[API] Visiting profiles for search:', searchTerm, 'max:', max);
+        result = await new LinkedInVisitService(browser).visitProfiles(searchTerm, max);
+        console.log('[API] Visit completed:', result.visited?.length, 'profiles');
+        break;
+
+      case "linkedin-message":
+        if (!profileUrl || !message) {
+          throw new Error("profileUrl & message required");
+        }
+        console.log('[API] Sending message to:', profileUrl);
+        result = await new LinkedInMessageService(browser).sendMessage(
+          profileUrl,
+          message
+        );
+        console.log('[API] Message sent:', result.status);
         break;
 
       default:
         throw new Error(`Unknown action: ${action}`);
     }
 
+    console.log('[API] Closing browser...');
     await browser.close();
+    console.log('[API] Browser closed successfully');
 
     return res.status(200).json({
       success: true,
       data: result,
+      action,
+      timestamp: new Date().toISOString()
     });
 
-  } catch (error) {
-    console.error("Browser error:", error.message);
+  } catch (err) {
+    console.error("[API] Error occurred:", err);
+    console.error("[API] Error stack:", err.stack);
 
     try {
+      console.log('[API] Attempting to close browser after error...');
       await browser.close();
-    } catch {}
+    } catch (closeErr) {
+      console.error('[API] Failed to close browser:', closeErr.message);
+    }
 
     return res.status(500).json({
       success: false,
-      error: error.message,
+      error: err.message,
+      action,
+      timestamp: new Date().toISOString()
     });
   }
 }
