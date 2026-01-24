@@ -25,8 +25,9 @@ export default async function handler(req, res) {
 
     if (isVercel) {
       launchOptions.executablePath = await chromium.executablePath();
-      launchOptions.args = [...chromium.args, "--disable-gpu"];
+      launchOptions.args = chromium.args;
       console.log('[Test] Using Chromium from:', launchOptions.executablePath);
+      console.log('[Test] Chromium args count:', launchOptions.args.length);
     }
 
     console.log('[Test] Launching browser...');
