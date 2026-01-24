@@ -129,9 +129,32 @@ export default async function runLinkedInConnect({
   }
 }
 
+async function parseNetscapeCookies(filePath) {
+  const content = fs.readFileSync(filePath, 'utf-8');
+  const lines = content.split('\n');
+  const cookies = [];
+
+  for (const line of lines) {
+    if (!line || line.startsWith('#')) continue;
+    const parts = line.split('\t');
+    if (parts.length < 7) continue;
+
+    cookies.push({
+      name: parts[5],
+      value: parts[6].replace(/^"(.*)"$/, '$1'),
+      domain: parts[0],
+      path: parts[2],
+      secure: parts[3] === 'TRUE',
+      httpOnly: false,
+      expires: parseInt(parts[4], 10),
+    });
+  }
+  return cookies;
+}
+
 async function main() {
-  const cookies = JSON.parse(fs.readFileSync('cookies.txt', 'utf-8'));
-  const profileUrl = 'https://www.linkedin.com/in/akshad-sarda/';
+  const cookies = await parseNetscapeCookies('cookies.txt');
+  const profileUrl = 'https://www.linkedin.com/in/naseem-shaik/';
   console.log(`Attempting to send connection request to ${profileUrl}`);
   const result = await runLinkedInConnect({ profileUrl, cookies });
   console.log('Result:', result);

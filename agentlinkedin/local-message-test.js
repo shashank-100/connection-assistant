@@ -103,8 +103,8 @@ export default async function runLinkedInMessage({
 
 async function main() {
   const cookies = await parseNetscapeCookies('cookies.txt');
-  const profileUrl = 'https://www.linkedin.com/in/kiran-bari-a31361168/';
-  const testMessage = "Hi Kiran, I'd like to connect and discuss potential opportunities.";
+  const profileUrl = 'https://www.linkedin.com/in/naseem-shaik/';
+  const testMessage = "Hi Naseem, testing the message service from Vercel.";
   
   console.log(`Attempting to send message to ${profileUrl}`);
   const result = await runLinkedInMessage({ profileUrl, message: testMessage, cookies });

@@ -13,6 +13,7 @@ describe('BrowserManager', () => {
     const launchOptions: any = {
       id: 'test-launch',
       action: 'launch',
+      
       headless: true
     };
 

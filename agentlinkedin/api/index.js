@@ -1,5 +1,5 @@
 import chromium from "@sparticuz/chromium";
-import { BrowserManager } from "agent-browser/dist/browser.js";
+import { BrowserManager } from "../node_modules/agent-browser/dist/browser.js";
 import { LinkedInVisitService } from "../src/services/visit.js";
 import { LinkedInConnectService } from "../src/services/connect.js";
 import { LinkedInMessageService } from "../src/services/message.js";
@@ -34,16 +34,21 @@ export default async function handler(req, res) {
 
     if (isVercel) {
       try {
-        console.log('[API] Starting chromium.executablePath()...');
-        launchOptions.executablePath = await chromium.executablePath();
-        console.log('[API] Chromium executable path:', launchOptions.executablePath);
+        console.log('[API] Configuring Chromium for Vercel/serverless environment...');
 
+        // Get the executable path (this extracts the binary if needed)
+        const executablePath = await chromium.executablePath();
+        console.log('[API] Chromium executable path:', executablePath);
+
+        // Use chromium.args as recommended by @sparticuz/chromium for Playwright
+        launchOptions.executablePath = executablePath;
         launchOptions.args = chromium.args;
+
         console.log('[API] Chromium args count:', launchOptions.args.length);
-        console.log('[API] Launch options:', JSON.stringify(launchOptions, null, 2));
+        console.log('[API] Launch options configured for Vercel');
       } catch (chromiumError) {
-        console.error('[API] Failed to get chromium executable:', chromiumError);
-        console.error('[API] Chromium error stack:', chromiumError.stack);
+        console.error('[API] Failed to configure chromium:', chromiumError);
+        console.error('[API] Error stack:', chromiumError.stack);
         throw new Error(`Chromium setup failed: ${chromiumError.message}`);
       }
     }

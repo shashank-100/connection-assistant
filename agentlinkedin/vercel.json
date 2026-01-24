@@ -5,7 +5,11 @@
   },
   "functions": {
     "api/index.js": {
-      "maxDuration": 60,
+      "maxDuration": 300,
+      "memory": 2048
+    },
+    "api/test.js": {
+      "maxDuration": 120,
       "memory": 2048
     }
   }

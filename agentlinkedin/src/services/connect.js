@@ -20,17 +20,23 @@ export class LinkedInConnectService extends BaseLinkedInService {
   }
 
   async sendConnectRequest(profileUrl) {
-    console.log(`Opening profile: ${profileUrl}`);
+    console.log(`[LinkedInConnectService] Opening profile: ${profileUrl}`);
+
+    const page = this.browser.getPage();
 
     try {
-      await this.browser.getPage().goto(profileUrl, { waitUntil: 'load', timeout: 120000 });
+      await page.goto(profileUrl, { waitUntil: 'load', timeout: 45000 });
+      console.log(`[LinkedInConnectService] Navigation completed`);
     } catch (e) {
-      console.log(`Navigation warning: ${e.message}`);
+      console.error(`[LinkedInConnectService] Navigation error: ${e.message}`);
+      throw new Error(`Failed to navigate to profile: ${e.message}`);
     }
 
-    await sleep(2000);
+    await sleep(1500);
     await this.humanIdle();
+    console.log(`[LinkedInConnectService] Human idle completed`);
 
+    console.log(`[LinkedInConnectService] Getting page snapshot...`);
     const snapshot = await this.browser.getSnapshot({ interactive: true });
 
     const pendingPrimary = Object.values(snapshot.refs).find(
@@ -40,8 +46,8 @@ export class LinkedInConnectService extends BaseLinkedInService {
     );
 
     if (pendingPrimary) {
-      console.log("Connection request already sent (Pending)");
-      return { success: true, status: "already_sent" };
+      console.log("[LinkedInConnectService] Connection request already sent (Pending)");
+      return { success: true, status: "already_sent", profileUrl };
     }
 
     let connectRef = Object.entries(snapshot.refs).find(
@@ -58,14 +64,14 @@ export class LinkedInConnectService extends BaseLinkedInService {
       )?.[0];
 
       if (!moreRef) {
-        console.log("No Connect or More button found");
-        return { success: false, status: "not_available" };
+        console.log("[LinkedInConnectService] No Connect or More button found");
+        return { success: false, status: "not_available", profileUrl };
       }
 
-      console.log(`Clicking More: @${moreRef}`);
+      console.log(`[LinkedInConnectService] Clicking More: @${moreRef}`);
       await this.browser.getLocator(`@${moreRef}`).click();
 
-      await sleep(2000);
+      await sleep(1500);
       await this.humanIdle();
 
       const dropdownSnapshot = await this.browser.getSnapshot({ interactive: true });
@@ -75,8 +81,8 @@ export class LinkedInConnectService extends BaseLinkedInService {
       );
 
       if (pendingDropdown) {
-        console.log("Connection request already sent (Pending in More)");
-        return { success: true, status: "already_sent" };
+        console.log("[LinkedInConnectService] Connection request already sent (Pending in More)");
+        return { success: true, status: "already_sent", profileUrl };
       }
 
       const dropdownConnectRef = Object.entries(dropdownSnapshot.refs).find(
@@ -84,17 +90,17 @@ export class LinkedInConnectService extends BaseLinkedInService {
       )?.[0];
 
       if (!dropdownConnectRef) {
-        console.log("Connect not found in More dropdown");
-        return { success: false, status: "not_found" };
+        console.log("[LinkedInConnectService] Connect not found in More dropdown");
+        return { success: false, status: "not_found", profileUrl };
       }
 
       connectRef = dropdownConnectRef;
     }
 
-    console.log(`Clicking Connect: @${connectRef}`);
+    console.log(`[LinkedInConnectService] Clicking Connect: @${connectRef}`);
     await this.browser.getLocator(`@${connectRef}`).click();
 
-    await sleep(2000);
+    await sleep(1500);
     await this.humanIdle();
 
     const modalSnapshot = await this.browser.getSnapshot({ interactive: true });
@@ -104,8 +110,8 @@ export class LinkedInConnectService extends BaseLinkedInService {
     );
 
     if (modalPending) {
-      console.log("Connection request already sent (Modal)");
-      return { success: true, status: "already_sent" };
+      console.log("[LinkedInConnectService] Connection request already sent (Modal)");
+      return { success: true, status: "already_sent", profileUrl };
     }
 
     const sendRef = Object.entries(modalSnapshot.refs).find(
@@ -120,13 +126,14 @@ export class LinkedInConnectService extends BaseLinkedInService {
     )?.[0];
 
     if (!sendRef) {
-      console.log("Send button not found in modal");
-      return { success: false, status: "modal_missing" };
+      console.log("[LinkedInConnectService] Send button not found in modal");
+      return { success: false, status: "modal_missing", profileUrl };
     }
 
-    console.log(`Clicking Send: @${sendRef}`);
+    console.log(`[LinkedInConnectService] Clicking Send: @${sendRef}`);
     await this.browser.getLocator(`@${sendRef}`).click();
 
-    return { success: true, status: "sent" };
+    console.log("[LinkedInConnectService] Connection request sent successfully");
+    return { success: true, status: "sent", profileUrl };
   }
 }
