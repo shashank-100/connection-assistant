@@ -5,10 +5,10 @@ import { Download, Bot, RefreshCw } from 'lucide-react';
 import { FilterTabs } from './FilterTabs';
 import { SearchBar } from './SearchBar';
 import { ContactTable } from './ContactTable';
-import { mockContacts } from '@/data/mockContacts';
 import { FilterTab, Contact } from '@/types/contact';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { LinkedInAgentAPI } from '@/lib/agent-api/linkedin';
 
 export function OutreachDashboard() {
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
@@ -17,11 +17,14 @@ export function OutreachDashboard() {
   const [isAgentRunning, setIsAgentRunning] = useState(false);
   const [agentAnalytics, setAgentAnalytics] = useState<any>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [isLoadingContacts, setIsLoadingContacts] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     checkAuth();
     fetchAgentAnalytics();
+    fetchConversations();
   }, []);
 
   const checkAuth = async () => {
@@ -63,6 +66,79 @@ export function OutreachDashboard() {
     } catch (error) {
       console.error('Failed to fetch analytics', error);
     }
+  };
+
+  const fetchConversations = async () => {
+    setIsLoadingContacts(true);
+    toast({
+      title: 'Loading Conversations',
+      description: 'Fetching your LinkedIn conversations... This may take 2-3 minutes.',
+    });
+
+    try {
+      const response = await LinkedInAgentAPI.getConversations();
+
+      if (response.success && response.data) {
+        // Transform LinkedIn conversations to Contact format
+        const transformedContacts: Contact[] = response.data.map((conv: any, index: number) => ({
+          id: conv.id || `contact_${index}`,
+          name: conv.name || 'Unknown',
+          title: conv.title || '',
+          lastMessage: conv.sentByMe ? `You: ${conv.lastMessage}` : conv.lastMessage,
+          lastMessageTime: formatTimeAgo(conv.lastMessageTime),
+          connectionDate: formatDate(conv.lastActivityAt),
+          sentByMe: conv.sentByMe || false,
+          isRead: conv.isRead !== false,
+          hasReplied: !conv.sentByMe || conv.unreadCount > 0,
+          labels: [],
+          pipeline: 'Initial Contact',
+          notes: '',
+          reminder: undefined,
+        }));
+
+        setContacts(transformedContacts);
+        toast({
+          title: 'Conversations Loaded',
+          description: `Loaded ${transformedContacts.length} conversations from LinkedIn.`,
+        });
+      } else {
+        toast({
+          title: 'Failed to Load',
+          description: response.error || 'Could not fetch conversations',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Failed to fetch conversations', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch conversations from LinkedIn.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoadingContacts(false);
+    }
+  };
+
+  const formatTimeAgo = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 60) return `${minutes} minutes ago`;
+    if (hours < 24) return `${hours} hours ago`;
+    return `${days} days ago`;
+  };
+
+  const formatDate = (timestamp: number) => {
+    return new Date(timestamp).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
   };
 
   const handleRunAgent = async () => {
@@ -126,16 +202,16 @@ export function OutreachDashboard() {
 
   const counts = useMemo(() => {
     return {
-      all: mockContacts.length,
-      unread: mockContacts.filter((c) => !c.isRead).length,
-      'sent-by-member': mockContacts.filter((c) => !c.sentByMe).length,
-      'sent-by-me': mockContacts.filter((c) => c.sentByMe).length,
-      'never-answered': mockContacts.filter((c) => c.sentByMe && !c.hasReplied).length,
+      all: contacts.length,
+      unread: contacts.filter((c) => !c.isRead).length,
+      'sent-by-member': contacts.filter((c) => !c.sentByMe).length,
+      'sent-by-me': contacts.filter((c) => c.sentByMe).length,
+      'never-answered': contacts.filter((c) => c.sentByMe && !c.hasReplied).length,
     };
-  }, []);
+  }, [contacts]);
 
   const filteredContacts = useMemo(() => {
-    return mockContacts.filter((contact) => {
+    return contacts.filter((contact) => {
       const matchesTab = filterContact(contact, activeTab);
       const matchesSearch = searchQuery
         ? contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -235,6 +311,20 @@ export function OutreachDashboard() {
           )}
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={fetchConversations}
+            disabled={isLoadingContacts}
+            className="gap-2"
+          >
+            {isLoadingContacts ? (
+              <RefreshCw className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
+            {isLoadingContacts ? 'Loading...' : 'Refresh'}
+          </Button>
           <Button
             variant="default"
             size="sm"

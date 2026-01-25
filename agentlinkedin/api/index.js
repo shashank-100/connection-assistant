@@ -3,6 +3,7 @@ import { BrowserManager } from "../node_modules/agent-browser/dist/browser.js";
 import { LinkedInVisitService } from "../src/services/visit.js";
 import { LinkedInConnectService } from "../src/services/connect.js";
 import { LinkedInMessageService } from "../src/services/message.js";
+import { LinkedInConversationsService } from "../src/services/conversations.js";
 import { getCookies } from "../db.js";
 
 export default async function handler(req, res) {
@@ -202,6 +203,14 @@ export default async function handler(req, res) {
             profileUrl,
             message
           );
+        break;
+
+      case "linkedin-conversations":
+        result = await new LinkedInConversationsService(browser).getConversations(max || 50);
+        break;
+
+      case "linkedin-profile":
+        result = await new LinkedInConversationsService(browser).getMyProfile();
         break;
 
       default:

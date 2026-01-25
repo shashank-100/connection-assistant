@@ -69,6 +69,14 @@ export class LinkedInAgentAPI {
     return this.runRailwayAction('linkedin-connect', userId, { profileUrl });
   }
 
+  static async getConversations(userId: string = 'shashank'): Promise<AgentActionResponse> {
+    return this.runRailwayAction('linkedin-conversations', userId, { max: 50 });
+  }
+
+  static async getMyProfile(userId: string = 'shashank'): Promise<AgentActionResponse> {
+    return this.runRailwayAction('linkedin-profile', userId);
+  }
+
   static async openLogin(): Promise<AgentActionResponse> {
     return {
       success: false,
