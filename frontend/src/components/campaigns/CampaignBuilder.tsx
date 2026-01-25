@@ -1,14 +1,23 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SequenceStep } from '@/types/campaign';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { defaultSequences } from '@/data/mockCampaigns';
 import { Check, AlertCircle, Copy, Minus, Trash2, RefreshCw, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { LinkedInAgentAPI } from '@/lib/agent-api/linkedin';
+
+const defaultSequences: SequenceStep[] = [
+  { id: '1', type: 'visit_profile', label: 'Visit profile', enabled: true, order: 1 },
+  { id: '2', type: 'follow_member', label: 'Follow member', enabled: false, order: 2 },
+  { id: '3', type: 'like_post', label: "Like member's post", enabled: false, order: 3 },
+  { id: '4', type: 'connection_request', label: 'Connection request', enabled: true, order: 4 },
+  { id: '5', type: 'send_message', label: 'Send message', enabled: true, order: 5, hasWarning: true },
+  { id: '6', type: 'follow_up', label: 'Follow-up message 1', enabled: false, order: 6, hasWarning: true },
+];
 
 export function CampaignBuilder() {
   const [sequences, setSequences] = useState<SequenceStep[]>(defaultSequences);
@@ -17,8 +26,33 @@ export function CampaignBuilder() {
   const [excludeInNetwork, setExcludeInNetwork] = useState(false);
   const [currentRunningStepId, setCurrentRunningStepId] = useState<string | null>(null);
   const [isLaunching, setIsLaunching] = useState(false);
+  const [isLoadingStats, setIsLoadingStats] = useState(false);
+  const [campaignStats, setCampaignStats] = useState({ visited: 0, connected: 0, messaged: 0, replied: 0 });
   const { toast } = useToast();
-  const recipientCount = 40;
+  const [recipientCount, setRecipientCount] = useState(0);
+
+  useEffect(() => {
+    fetchCampaignStats();
+  }, []);
+
+  const fetchCampaignStats = async () => {
+    setIsLoadingStats(true);
+    try {
+      const response = await LinkedInAgentAPI.getCampaigns();
+
+      if (response.success && response.data) {
+        const campaigns = response.data.campaigns || [];
+        if (campaigns.length > 0) {
+          setCampaignStats(campaigns[0].stats || { visited: 0, connected: 0, messaged: 0, replied: 0 });
+          setRecipientCount(campaigns[0].recipientCount || 0);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch campaign stats', error);
+    } finally {
+      setIsLoadingStats(false);
+    }
+  };
 
   const toggleSequence = (id: string) => {
     setSequences((prev) =>
@@ -103,14 +137,34 @@ export function CampaignBuilder() {
               </svg>
             </div>
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium">Sequences</span>
               <AlertCircle className="w-3.5 h-3.5 text-muted-foreground" />
             </div>
-            <Badge variant="secondary" className="bg-primary/10 text-primary border-0">
-              {recipientCount} recipients
-            </Badge>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={fetchCampaignStats}
+              disabled={isLoadingStats}
+              className="h-7 gap-1"
+            >
+              {isLoadingStats ? (
+                <RefreshCw className="h-3 w-3 animate-spin" />
+              ) : (
+                <RefreshCw className="h-3 w-3" />
+              )}
+            </Button>
+          </div>
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="bg-surface p-2 rounded">
+              <div className="text-muted-foreground">Connected</div>
+              <div className="font-medium">{campaignStats.connected}</div>
+            </div>
+            <div className="bg-surface p-2 rounded">
+              <div className="text-muted-foreground">Messaged</div>
+              <div className="font-medium">{campaignStats.messaged}</div>
+            </div>
           </div>
         </div>
 

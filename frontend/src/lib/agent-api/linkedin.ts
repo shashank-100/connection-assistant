@@ -77,6 +77,14 @@ export class LinkedInAgentAPI {
     return this.runRailwayAction('linkedin-profile', userId);
   }
 
+  static async getLeads(userId: string = 'shashank'): Promise<AgentActionResponse> {
+    return this.runRailwayAction('linkedin-leads', userId);
+  }
+
+  static async getCampaigns(userId: string = 'shashank'): Promise<AgentActionResponse> {
+    return this.runRailwayAction('linkedin-campaigns', userId);
+  }
+
   static async openLogin(): Promise<AgentActionResponse> {
     return {
       success: false,

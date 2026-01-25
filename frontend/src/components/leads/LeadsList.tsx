@@ -1,19 +1,85 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LeadList } from '@/types/lead';
-import { mockLeadLists, mockLeadStats } from '@/data/mockLeads';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Search, ChevronDown, Plus, MoreVertical, Linkedin, Users } from 'lucide-react';
+import { Search, ChevronDown, Plus, MoreVertical, Linkedin, Users, RefreshCw } from 'lucide-react';
+import { LinkedInAgentAPI } from '@/lib/agent-api/linkedin';
+import { useToast } from '@/hooks/use-toast';
 
 export function LeadsList() {
   const [searchQuery, setSearchQuery] = useState('');
   const [listFilter, setListFilter] = useState('active');
-  const stats = mockLeadStats;
-  const lists = mockLeadLists;
+  const [leads, setLeads] = useState<any[]>([]);
+  const [stats, setStats] = useState({ totalLeads: 0, pendingRequests: 0, recentConnections: 0 });
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchLeads();
+  }, []);
+
+  const fetchLeads = async () => {
+    setIsLoading(true);
+    toast({
+      title: 'Loading Leads',
+      description: 'Fetching your LinkedIn leads... This may take 2-3 minutes.',
+    });
+
+    try {
+      const response = await LinkedInAgentAPI.getLeads();
+
+      if (response.success && response.data) {
+        setLeads(response.data.all || []);
+        setStats(response.data.stats || { totalLeads: 0, pendingRequests: 0, recentConnections: 0 });
+
+        toast({
+          title: 'Leads Loaded',
+          description: `Loaded ${response.data.all?.length || 0} leads from LinkedIn.`,
+        });
+      } else {
+        toast({
+          title: 'Failed to Load',
+          description: response.error || 'Could not fetch leads',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Failed to fetch leads', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch leads from LinkedIn.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Group leads by status for display
+  const lists: LeadList[] = [
+    {
+      id: 'pending',
+      name: 'Pending Connection Requests',
+      source: 'linkedin',
+      memberCount: stats.pendingRequests,
+      totalCapacity: 1000,
+      importedAt: new Date().toLocaleDateString(),
+      status: stats.pendingRequests > 0 ? 'sending' : 'not_started',
+    },
+    {
+      id: 'recent',
+      name: 'Recent Connections',
+      source: 'linkedin',
+      memberCount: stats.recentConnections,
+      totalCapacity: 1000,
+      importedAt: new Date().toLocaleDateString(),
+      status: stats.recentConnections > 0 ? 'sending' : 'not_started',
+    },
+  ];
 
   const filteredLists = lists.filter((list) =>
     list.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -59,25 +125,35 @@ export function LeadsList() {
 
       {/* Stats Bar */}
       <div className="flex items-center gap-8 px-6 py-3 border-b border-border bg-surface">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={fetchLeads}
+          disabled={isLoading}
+          className="gap-2"
+        >
+          {isLoading ? (
+            <RefreshCw className="h-4 w-4 animate-spin" />
+          ) : (
+            <RefreshCw className="h-4 w-4" />
+          )}
+          {isLoading ? 'Loading...' : 'Refresh'}
+        </Button>
         <div className="text-sm">
-          <span className="text-muted-foreground">Total imported lists: </span>
-          <span className="font-medium">{stats.totalImportedLists}</span>
+          <span className="text-muted-foreground">Total leads: </span>
+          <span className="font-medium">{stats.totalLeads}</span>
         </div>
         <div className="text-sm">
-          <span className="text-muted-foreground">Total imported leads: </span>
-          <span className="font-medium">{stats.totalImportedLeads}</span>
+          <span className="text-muted-foreground">Pending requests: </span>
+          <span className="font-medium">{stats.pendingRequests}</span>
+        </div>
+        <div className="text-sm">
+          <span className="text-muted-foreground">Recent connections: </span>
+          <span className="font-medium">{stats.recentConnections}</span>
         </div>
         <div className="ml-auto flex items-center gap-6">
-          <div className="text-sm bg-accent/50 px-3 py-1 rounded">
-            <span className="text-muted-foreground">Monthly imports: </span>
-            <span className="font-medium">{stats.monthlyImports.used} / {stats.monthlyImports.total}</span>
-          </div>
           <div className="text-sm">
-            <span className="text-muted-foreground">Email credits: </span>
-            <span className="font-medium">{stats.emailCredits}</span>
-          </div>
-          <div className="text-sm">
-            <span className="text-muted-foreground">Daily quotas - LinkedIn: </span>
+            <span className="text-muted-foreground">LinkedIn automation: </span>
             <span className="font-medium">{stats.dailyQuotaLinkedIn.used} / {stats.dailyQuotaLinkedIn.total}</span>
           </div>
         </div>

@@ -4,6 +4,8 @@ import { LinkedInVisitService } from "../src/services/visit.js";
 import { LinkedInConnectService } from "../src/services/connect.js";
 import { LinkedInMessageService } from "../src/services/message.js";
 import { LinkedInConversationsService } from "../src/services/conversations.js";
+import { LinkedInLeadsService } from "../src/services/leads.js";
+import { LinkedInCampaignsService } from "../src/services/campaigns.js";
 import { getCookies } from "../db.js";
 
 export default async function handler(req, res) {
@@ -211,6 +213,14 @@ export default async function handler(req, res) {
 
       case "linkedin-profile":
         result = await new LinkedInConversationsService(browser).getMyProfile();
+        break;
+
+      case "linkedin-leads":
+        result = await new LinkedInLeadsService(browser).getAllLeads();
+        break;
+
+      case "linkedin-campaigns":
+        result = await new LinkedInCampaignsService(browser).getCampaigns();
         break;
 
       default:
