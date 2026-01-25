@@ -3,6 +3,7 @@ import { BrowserManager } from "../node_modules/agent-browser/dist/browser.js";
 import { LinkedInVisitService } from "../src/services/visit.js";
 import { LinkedInConnectService } from "../src/services/connect.js";
 import { LinkedInMessageService } from "../src/services/message.js";
+import { getCookies } from "../db.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -17,15 +18,41 @@ export default async function handler(req, res) {
     profileUrl,
     message,
     cookies,
+    userId,
   } = req.body || {};
 
   const browser = new BrowserManager();
 
+  // Fetch cookies from DB if userId provided but no cookies
+  let userCookies = cookies;
+  if (!userCookies && userId) {
+    console.log(`[API] Fetching cookies for userId: ${userId}`);
+    try {
+      userCookies = await getCookies(userId);
+      if (!userCookies) {
+        return res.status(404).json({
+          success: false,
+          error: `No cookies found for userId: ${userId}. Please authenticate first at POST /auth/linkedin`
+        });
+      }
+      console.log(`[API] Found cookies for userId: ${userId}`);
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: `Failed to fetch cookies: ${err.message}`
+      });
+    }
+  }
+
   try {
     const isVercel = !!process.env.VERCEL || !!process.env.CI;
+    const isRailway = !!process.env.RAILWAY_ENVIRONMENT;
+    const isDocker = !!process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
 
     console.log("[API] Environment:", {
       isVercel,
+      isRailway,
+      isDocker,
       platform: process.platform,
     });
 
@@ -36,9 +63,23 @@ export default async function handler(req, res) {
     };
 
     /* =========================
+       🐳 RAILWAY / DOCKER
+       ========================= */
+    if (isRailway || isDocker) {
+      console.log("[API] Configuring for Railway/Docker with system Chromium...");
+      launchOptions.executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || '/usr/bin/chromium-browser';
+      launchOptions.args = [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+      ];
+      console.log("[API] Using system Chromium:", launchOptions.executablePath);
+    }
+    /* =========================
        🚀 VERCEL / SERVERLESS
        ========================= */
-    if (isVercel) {
+    else if (isVercel) {
       console.log("[API] Configuring Chromium for Vercel...");
 
       const executablePath = await chromium.executablePath();
@@ -76,9 +117,9 @@ export default async function handler(req, res) {
     /* =========================
        🍪 COOKIES
        ========================= */
-    if (Array.isArray(cookies) && cookies.length > 0) {
-      console.log("[API] Setting cookies:", cookies.length);
-      await page.context().addCookies(cookies);
+    if (Array.isArray(userCookies) && userCookies.length > 0) {
+      console.log("[API] Setting cookies:", userCookies.length);
+      await page.context().addCookies(userCookies);
     }
 
     /* =========================
