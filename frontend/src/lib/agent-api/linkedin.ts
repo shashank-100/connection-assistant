@@ -6,6 +6,7 @@ import fs from 'fs';
 const execAsync = promisify(exec);
 
 const AGENT_DIR = process.env.AGENT_DIR || path.resolve(process.cwd(), '..');
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://courteous-empathy-production-9e68.up.railway.app';
 
 export interface AgentActionResponse {
   success: boolean;
@@ -15,74 +16,68 @@ export interface AgentActionResponse {
 }
 
 export class LinkedInAgentAPI {
-  private static async runCommand(
-    scriptName: string,
-    args: string[] = []
+  private static async runRailwayAction(
+    action: string,
+    userId: string,
+    params: any = {}
   ): Promise<AgentActionResponse> {
     try {
-      const command = `node ${scriptName} ${args.join(' ')}`;
-      const { stdout, stderr } = await execAsync(command, {
-        cwd: AGENT_DIR,
+      const response = await fetch(`${BACKEND_URL}/api`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action,
+          userId,
+          ...params,
+        }),
       });
 
-      return {
-        success: true,
-        message: stdout,
-        data: { stderr },
-      };
+      const data = await response.json();
+      if (data.success) {
+        return {
+          success: true,
+          message: `${action} completed successfully`,
+          data: data.data,
+        };
+      } else {
+        return {
+          success: false,
+          message: data.error || `Failed to execute ${action}`,
+          error: data.error,
+        };
+      }
     } catch (error: any) {
       return {
         success: false,
-        message: 'Failed to execute agent command',
+        message: 'Failed to communicate with Railway backend',
         error: error.message,
       };
     }
   }
 
-  static async searchPeople(searchTerm: string): Promise<AgentActionResponse> {
-    return this.runCommand('linkedin-agent.js', [JSON.stringify(searchTerm), '--auto']);
+  static async searchPeople(searchTerm: string, userId: string = 'shashank'): Promise<AgentActionResponse> {
+    return this.runRailwayAction('linkedin-search', userId, { searchTerm });
   }
 
-  static async checkAuthStatus(): Promise<AgentActionResponse> {
-    try {
-      const command = `./bin/agent-browser --session linkedin-agent get url`;
-      const { stdout } = await execAsync(command, { cwd: AGENT_DIR });
-      const url = stdout.trim();
-      const isLoggedIn = url.includes('feed') || url.includes('mynetwork') || url.includes('in/');
-
-      return {
-        success: true,
-        message: isLoggedIn ? 'Authenticated' : 'Not authenticated',
-        data: { isLoggedIn, url },
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        message: 'Could not verify auth status',
-        data: { isLoggedIn: false },
-        error: error.message,
-      };
-    }
+  static async checkAuthStatus(userId: string = 'shashank'): Promise<AgentActionResponse> {
+    return this.runRailwayAction('linkedin-me', userId);
   }
 
   static async openLogin(): Promise<AgentActionResponse> {
-    return this.runCommand('linkedin-agent.js', ['--login-only']);
+    return {
+      success: false,
+      message: 'Manual login not supported via Railway backend. Please provide valid cookies.',
+    };
   }
 
-  static async visitProfiles(searchTerm: string, max: number = 10): Promise<AgentActionResponse> {
-    return this.runCommand('linkedin-profile-visitor.js', [
-      JSON.stringify(searchTerm),
-      `--max ${max}`,
-      '--auto',
-    ]);
+  static async visitProfiles(searchTerm: string, userId: string = 'shashank', max: number = 10): Promise<AgentActionResponse> {
+    return this.runRailwayAction('linkedin-visit', userId, { searchTerm, max });
   }
 
-  static async scrapeLeads(searchTerm: string, max: number = 25): Promise<AgentActionResponse> {
-    return this.runCommand('linkedin-scraper.js', [
-      JSON.stringify(searchTerm),
-      `--max ${max}`,
-      '--auto',
-    ]);
+  static async scrapeLeads(searchTerm: string, userId: string = 'shashank', max: number = 25): Promise<AgentActionResponse> {
+    return this.runRailwayAction('linkedin-search', userId, { searchTerm, max });
   }
 
   static async sendMessages(
@@ -90,21 +85,22 @@ export class LinkedInAgentAPI {
     filter?: string,
     max: number = 5
   ): Promise<AgentActionResponse> {
-    const args = [`--message "${message}"`, `--max ${max}`, '--auto'];
-    if (filter) args.push(`--filter "${filter}"`);
-    return this.runCommand('linkedin-messenger.js', args);
+    return {
+      success: false,
+      message: 'Bulk messaging needs mapping to individual profileUrl actions on backend',
+    };
   }
 
   static async getAnalytics(): Promise<AgentActionResponse> {
-    try {
-      const analyticsPath = path.join(AGENT_DIR, 'linkedin-data/analytics.json');
-      if (fs.existsSync(analyticsPath)) {
-        const data = JSON.parse(fs.readFileSync(analyticsPath, 'utf8'));
-        return { success: true, message: 'Analytics fetched', data };
+    return {
+      success: true,
+      message: 'Analytics fetched (Mock)',
+      data: {
+        totalSearched: 150,
+        totalVisited: 85,
+        totalConnected: 42,
+        totalMessaged: 12
       }
-      return { success: false, message: 'Analytics file not found' };
-    } catch (error: any) {
-      return { success: false, message: 'Error reading analytics', error: error.message };
-    }
+    };
   }
 }

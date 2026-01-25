@@ -1,0 +1,26 @@
+globalThis.__BUILD_MANIFEST = {
+  "pages": {
+    "/_app": []
+  },
+  "devFiles": [],
+  "polyfillFiles": [
+    "static/chunks/eec6e_next_dist_build_polyfills_polyfill-nomodule.js"
+  ],
+  "lowPriorityFiles": [],
+  "rootMainFiles": [
+    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_ea828a9b._.js",
+    "static/chunks/eec6e_next_dist_compiled_react-dom_0ae7d6e0._.js",
+    "static/chunks/eec6e_next_dist_compiled_react-server-dom-turbopack_cb365c4b._.js",
+    "static/chunks/eec6e_next_dist_compiled_next-devtools_index_2d5fd1f2.js",
+    "static/chunks/eec6e_next_dist_compiled_4acadf65._.js",
+    "static/chunks/eec6e_next_dist_client_e19db405._.js",
+    "static/chunks/eec6e_next_dist_5be186c8._.js",
+    "static/chunks/eec6e_@swc_helpers_cjs_7f4800fd._.js",
+    "static/chunks/geodo-vercel-agent-browser_frontend_a0ff3932._.js",
+    "static/chunks/turbopack-geodo-vercel-agent-browser_frontend_c922a200._.js"
+  ]
+};
+globalThis.__BUILD_MANIFEST.lowPriorityFiles = [
+"/static/" + process.env.__NEXT_BUILD_ID + "/_buildManifest.js",
+"/static/" + process.env.__NEXT_BUILD_ID + "/_ssgManifest.js"
+];
