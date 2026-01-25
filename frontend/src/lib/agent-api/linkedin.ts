@@ -65,6 +65,10 @@ export class LinkedInAgentAPI {
     return this.runRailwayAction('linkedin-me', userId);
   }
 
+  static async sendConnectionRequest(profileUrl: string, userId: string = 'shashank'): Promise<AgentActionResponse> {
+    return this.runRailwayAction('linkedin-connect', userId, { profileUrl });
+  }
+
   static async openLogin(): Promise<AgentActionResponse> {
     return {
       success: false,

@@ -81,7 +81,8 @@ export async function POST(request: Request) {
       return NextResponse.json(await LinkedInAgentAPI.searchPeople(params.searchTerm));
     case 'visit':
       return NextResponse.json(await LinkedInAgentAPI.visitProfiles(params.searchTerm, params.max));
-
+    case 'connect':
+      return NextResponse.json(await LinkedInAgentAPI.sendConnectionRequest(params.profileUrl));
     case 'message':
       return NextResponse.json(
         await LinkedInAgentAPI.sendMessages(params.message, params.filter, params.max)
