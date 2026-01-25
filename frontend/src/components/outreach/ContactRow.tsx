@@ -1,13 +1,16 @@
 import { Contact } from '@/types/contact';
 import { Checkbox } from '@/components/ui/checkbox';
+import { MessageSquare } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface ContactRowProps {
   contact: Contact;
   isSelected: boolean;
   onSelect: (id: string) => void;
+  onMessageClick?: (contact: Contact) => void;
 }
 
-export function ContactRow({ contact, isSelected, onSelect }: ContactRowProps) {
+export function ContactRow({ contact, isSelected, onSelect, onMessageClick }: ContactRowProps) {
   const initials = contact.name
     .split(' ')
     .map((n) => n[0])

@@ -3,6 +3,7 @@ export interface Contact {
   name: string;
   title: string;
   avatarUrl?: string;
+  profileUrl?: string;
   lastMessage: string;
   lastMessageTime: string;
   connectionDate: string;

@@ -14,7 +14,12 @@ export function LeadsList() {
   const [searchQuery, setSearchQuery] = useState('');
   const [listFilter, setListFilter] = useState('active');
   const [leads, setLeads] = useState<any[]>([]);
-  const [stats, setStats] = useState({ totalLeads: 0, pendingRequests: 0, recentConnections: 0 });
+  const [stats, setStats] = useState({
+    totalLeads: 0,
+    pendingRequests: 0,
+    recentConnections: 0,
+    dailyQuotaLinkedIn: { used: 0, total: 100 }
+  });
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -34,7 +39,12 @@ export function LeadsList() {
 
       if (response.success && response.data) {
         setLeads(response.data.all || []);
-        setStats(response.data.stats || { totalLeads: 0, pendingRequests: 0, recentConnections: 0 });
+        setStats(response.data.stats || {
+          totalLeads: 0,
+          pendingRequests: 0,
+          recentConnections: 0,
+          dailyQuotaLinkedIn: { used: 0, total: 100 }
+        });
 
         toast({
           title: 'Leads Loaded',

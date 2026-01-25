@@ -1,11 +1,3 @@
-import { exec } from 'child_process';
-import { promisify } from 'util';
-import path from 'path';
-import fs from 'fs';
-
-const execAsync = promisify(exec);
-
-const AGENT_DIR = process.env.AGENT_DIR || path.resolve(process.cwd(), '..');
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://courteous-empathy-production-9e68.up.railway.app';
 
 export interface AgentActionResponse {
