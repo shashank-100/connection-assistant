@@ -1,6 +1,9 @@
+import { saveLeads, getLeads, getLeadStats } from '../../db.js';
+
 export class LinkedInLeadsService {
-  constructor(browser) {
+  constructor(browser, userId = 'shashank') {
     this.browser = browser;
+    this.userId = userId;
   }
 
   /**
@@ -228,6 +231,16 @@ export class LinkedInLeadsService {
 
       const allLeads = [...pending, ...recent];
 
+      // Save leads to database
+      if (allLeads.length > 0) {
+        try {
+          await saveLeads(this.userId, allLeads);
+          console.log(`[Leads] Saved ${allLeads.length} leads to database`);
+        } catch (dbErr) {
+          console.error('[Leads] Error saving to database:', dbErr);
+        }
+      }
+
       console.log(`[Leads] Total leads: ${allLeads.length} (${pending.length} pending, ${recent.length} recent)`);
 
       return {
@@ -242,6 +255,31 @@ export class LinkedInLeadsService {
       };
     } catch (error) {
       console.error('[Leads] Error fetching all leads:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get leads from database
+   */
+  async getLeadsFromDB(filters = {}) {
+    try {
+      console.log('[Leads] Fetching leads from database...');
+      const leads = await getLeads(this.userId, filters);
+      const stats = await getLeadStats(this.userId);
+
+      return {
+        all: leads,
+        pending: leads.filter(l => l.status === 'pending'),
+        recent: leads.filter(l => l.status === 'connected'),
+        stats: {
+          totalLeads: parseInt(stats.total_leads || 0),
+          pendingRequests: parseInt(stats.pending_requests || 0),
+          recentConnections: parseInt(stats.recent_connections || 0),
+        }
+      };
+    } catch (error) {
+      console.error('[Leads] Error fetching leads from database:', error);
       throw error;
     }
   }

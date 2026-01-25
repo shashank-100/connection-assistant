@@ -14,6 +14,7 @@ export function LeadsList() {
   const [searchQuery, setSearchQuery] = useState('');
   const [listFilter, setListFilter] = useState('active');
   const [leads, setLeads] = useState<any[]>([]);
+  const [importedLeads, setImportedLeads] = useState<any[]>([]);
   const [stats, setStats] = useState({
     totalLeads: 0,
     pendingRequests: 0,
@@ -25,7 +26,19 @@ export function LeadsList() {
 
   useEffect(() => {
     fetchLeads();
+    fetchImportedLeads();
   }, []);
+
+  const fetchImportedLeads = async () => {
+    try {
+      const response = await LinkedInAgentAPI.getImportedLeads();
+      if (response.success && response.data) {
+        setImportedLeads(response.data || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch imported leads', error);
+    }
+  };
 
   const fetchLeads = async () => {
     setIsLoading(true);
@@ -70,6 +83,9 @@ export function LeadsList() {
   };
 
   // Group leads by status for display
+  // Use consistent date format to avoid hydration mismatch
+  const today = new Date().toISOString().split('T')[0];
+
   const lists: LeadList[] = [
     {
       id: 'pending',
@@ -77,7 +93,7 @@ export function LeadsList() {
       source: 'linkedin',
       memberCount: stats.pendingRequests,
       totalCapacity: 1000,
-      importedAt: new Date().toLocaleDateString(),
+      importedAt: today,
       status: stats.pendingRequests > 0 ? 'sending' : 'not_started',
     },
     {
@@ -86,8 +102,17 @@ export function LeadsList() {
       source: 'linkedin',
       memberCount: stats.recentConnections,
       totalCapacity: 1000,
-      importedAt: new Date().toLocaleDateString(),
+      importedAt: today,
       status: stats.recentConnections > 0 ? 'sending' : 'not_started',
+    },
+    {
+      id: 'imported',
+      name: 'Imported from CSV',
+      source: 'linkedin',
+      memberCount: importedLeads.length,
+      totalCapacity: 1000,
+      importedAt: today,
+      status: 'not_started',
     },
   ];
 

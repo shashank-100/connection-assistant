@@ -6,10 +6,22 @@ import { LinkedInMessageService } from "../src/services/message.js";
 import { LinkedInConversationsService } from "../src/services/conversations.js";
 import { LinkedInLeadsService } from "../src/services/leads.js";
 import { LinkedInCampaignsService } from "../src/services/campaigns.js";
+import { LinkedInLeadImportService } from "../src/services/leadImport.js";
 import { getCookies } from "../db.js";
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://frontend-production-50ccc.up.railway.app');
+  // Allow multiple origins for CORS
+  const allowedOrigins = [
+    'https://frontend-production-50ccc.up.railway.app',
+    'http://localhost:3000',
+    'http://localhost:3001'
+  ];
+
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -230,6 +242,10 @@ export default async function handler(req, res) {
 
       case "linkedin-campaigns":
         result = await new LinkedInCampaignsService(browser).getCampaigns();
+        break;
+
+      case "linkedin-import-leads":
+        result = await new LinkedInLeadImportService(browser).getImportedLeads();
         break;
 
       default:
