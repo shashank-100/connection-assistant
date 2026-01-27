@@ -1,0 +1,11 @@
+{imported module ./geodo-vercel-agent-browser/frontend/src/lib/agent-api/linkedin.ts}.LinkedInAgentAPI.deleteLeadsBySource is not a function
+src/components/leads/LeadsList.tsx (110:47) @ handleDeleteList
+
+
+  108 |   const handleDeleteList = async (id: string, name: string) => {
+  109 |     try {
+> 110 |       const response = await LinkedInAgentAPI.deleteLeadsBySource(id);
+      |                                               ^
+  111 |       if (response.success) {
+  112 |         toast({
+  113 |           title: 'List deleted',
