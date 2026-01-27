@@ -21,7 +21,7 @@ export function ContactRow({ contact, isSelected, onSelect, onMessageClick }: Co
   return (
     <div 
       className={`
-        grid grid-cols-[32px_1fr_120px_140px_120px_100px] gap-4 items-center px-4 py-3 
+        grid grid-cols-[32px_1fr_120px_140px] gap-4 items-center px-4 py-3 
         border-b border-border hover:bg-row-hover transition-colors cursor-pointer
         ${!contact.isRead ? 'bg-accent/30' : ''}
       `}
@@ -78,14 +78,6 @@ export function ContactRow({ contact, isSelected, onSelect, onMessageClick }: Co
 
       <div className="text-sm text-muted-foreground truncate">
         {contact.pipeline}
-      </div>
-
-      <div className="text-sm text-muted-foreground truncate">
-        {contact.notes || '-'}
-      </div>
-
-      <div className="text-sm text-muted-foreground">
-        {contact.reminder || '-'}
       </div>
     </div>
   );

@@ -71,16 +71,46 @@ export function OutreachDashboard() {
   const fetchConversations = async () => {
     setIsLoadingContacts(true);
     toast({
-      title: 'Loading Conversations',
-      description: 'Fetching your LinkedIn conversations... This may take 2-3 minutes.',
+      title: 'Loading Leads',
+      description: 'Fetching your tracked leads...',
     });
 
     try {
-      const response = await LinkedInAgentAPI.getConversations();
+      // Get tracked leads from database
+      const leadsResponse = await fetch('https://courteous-empathy-production-9e68.up.railway.app/api/leads?userId=shashank', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-      if (response.success && response.data) {
-        // Transform LinkedIn conversations to Contact format
-        const transformedContacts: Contact[] = response.data.map((conv: any, index: number) => ({
+      const leadsData = await leadsResponse.json();
+
+      if (!leadsData.success || !leadsData.data) {
+        toast({
+          title: 'Failed to Load',
+          description: leadsData.error || 'Could not fetch tracked leads',
+          variant: 'destructive',
+        });
+        setIsLoadingContacts(false);
+        return;
+      }
+
+      const trackedLeads = leadsData.data || [];
+
+      // Get all conversations
+      const conversationsResponse = await LinkedInAgentAPI.getConversations();
+
+      if (conversationsResponse.success && conversationsResponse.data) {
+        // Filter conversations to only show tracked leads
+        const trackedLeadNames = new Set(trackedLeads.map((lead: any) => lead.name?.toLowerCase()));
+
+        const filteredConversations = conversationsResponse.data.filter((conv: any) =>
+          trackedLeadNames.has(conv.name?.toLowerCase())
+        );
+
+        // Transform to Contact format
+        const transformedContacts: Contact[] = filteredConversations.map((conv: any, index: number) => ({
           id: conv.id || `contact_${index}`,
           name: conv.name || 'Unknown',
           title: conv.title || '',
@@ -98,21 +128,38 @@ export function OutreachDashboard() {
 
         setContacts(transformedContacts);
         toast({
-          title: 'Conversations Loaded',
-          description: `Loaded ${transformedContacts.length} conversations from LinkedIn.`,
+          title: 'Leads Loaded',
+          description: `Loaded ${transformedContacts.length} tracked leads with conversations.`,
         });
       } else {
+        // If conversations fail, just show tracked leads without messages
+        const transformedContacts: Contact[] = trackedLeads.map((lead: any, index: number) => ({
+          id: lead.id || `contact_${index}`,
+          name: lead.name || 'Unknown',
+          title: lead.title || lead.headline || '',
+          lastMessage: 'No messages yet',
+          lastMessageTime: 'Never',
+          connectionDate: formatDate(Date.now()),
+          sentByMe: false,
+          isRead: true,
+          hasReplied: false,
+          labels: [],
+          pipeline: 'Initial Contact',
+          notes: '',
+          reminder: undefined,
+        }));
+
+        setContacts(transformedContacts);
         toast({
-          title: 'Failed to Load',
-          description: response.error || 'Could not fetch conversations',
-          variant: 'destructive',
+          title: 'Leads Loaded',
+          description: `Loaded ${transformedContacts.length} tracked leads.`,
         });
       }
     } catch (error) {
-      console.error('Failed to fetch conversations', error);
+      console.error('Failed to fetch leads', error);
       toast({
         title: 'Error',
-        description: 'Failed to fetch conversations from LinkedIn.',
+        description: 'Failed to fetch tracked leads.',
         variant: 'destructive',
       });
     } finally {

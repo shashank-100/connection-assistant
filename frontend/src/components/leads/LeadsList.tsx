@@ -1,20 +1,21 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { LeadList } from '@/types/lead';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { LeadList, Lead } from '@/types/lead';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Search, ChevronDown, Plus, MoreVertical, Linkedin, Users, RefreshCw } from 'lucide-react';
+import { Search, Plus, MoreVertical, Linkedin, Users, RefreshCw, Trash2 } from 'lucide-react';
 import { LinkedInAgentAPI } from '@/lib/agent-api/linkedin';
 import { useToast } from '@/hooks/use-toast';
+import { CSVUploadDialog } from './CSVUploadDialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export function LeadsList() {
   const [searchQuery, setSearchQuery] = useState('');
   const [listFilter, setListFilter] = useState('active');
-  const [leads, setLeads] = useState<any[]>([]);
-  const [importedLeads, setImportedLeads] = useState<any[]>([]);
+  const [leads, setLeads] = useState<Lead[]>([]);
   const [stats, setStats] = useState({
     totalLeads: 0,
     pendingRequests: 0,
@@ -24,49 +25,43 @@ export function LeadsList() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    fetchLeads();
-    fetchImportedLeads();
-  }, []);
+  const [selectedListId, setSelectedListId] = useState<string | null>(null);
 
-  const fetchImportedLeads = async () => {
-    try {
-      const response = await LinkedInAgentAPI.getImportedLeads();
-      if (response.success && response.data) {
-        setImportedLeads(response.data || []);
-      }
-    } catch (error) {
-      console.error('Failed to fetch imported leads', error);
-    }
-  };
-
-  const fetchLeads = async () => {
+  const fetchLeads = useCallback(async () => {
     setIsLoading(true);
     toast({
       title: 'Loading Leads',
-      description: 'Fetching your LinkedIn leads... This may take 2-3 minutes.',
+      description: 'Fetching your leads...',
     });
 
     try {
-      const response = await LinkedInAgentAPI.getLeads();
+      const response = await fetch('https://courteous-empathy-production-9e68.up.railway.app/api/leads?userId=shashank', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-      if (response.success && response.data) {
-        setLeads(response.data.all || []);
-        setStats(response.data.stats || {
-          totalLeads: 0,
-          pendingRequests: 0,
-          recentConnections: 0,
+      const data = await response.json();
+
+      if (data.success && data.data) {
+        const allLeads = Array.isArray(data.data) ? data.data : [];
+        setLeads(allLeads);
+        setStats({
+          totalLeads: allLeads.length,
+          pendingRequests: allLeads.filter((l: Lead) => l.status === 'pending').length,
+          recentConnections: allLeads.filter((l: Lead) => l.status === 'connected').length,
           dailyQuotaLinkedIn: { used: 0, total: 100 }
         });
 
         toast({
           title: 'Leads Loaded',
-          description: `Loaded ${response.data.all?.length || 0} leads from LinkedIn.`,
+          description: `Loaded ${allLeads.length} leads from database.`,
         });
       } else {
         toast({
           title: 'Failed to Load',
-          description: response.error || 'Could not fetch leads',
+          description: data.error || 'Could not fetch leads',
           variant: 'destructive',
         });
       }
@@ -74,62 +69,119 @@ export function LeadsList() {
       console.error('Failed to fetch leads', error);
       toast({
         title: 'Error',
-        description: 'Failed to fetch leads from LinkedIn.',
+        description: 'Failed to fetch leads from database.',
         variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
     }
+  }, [toast]);
+
+  useEffect(() => {
+    fetchLeads();
+  }, [fetchLeads]);
+
+  const lists: LeadList[] = useMemo(() => {
+    return leads.reduce((acc: LeadList[], lead: Lead) => {
+      const source = lead.source || 'default';
+      const sourceName = lead.sourceName || source;
+      const existingList = acc.find(l => l.id === source);
+      
+      if (existingList) {
+        existingList.memberCount++;
+      } else {
+        acc.push({
+          id: source,
+          name: source === 'voyager_sync' ? 'LinkedIn Connections' : 
+                source === 'connection_request' ? 'Sent Requests' : 
+                source.startsWith('csv_') ? sourceName : source,
+          memberCount: 1,
+          totalCapacity: 1000,
+          status: 'active' as const,
+          importedAt: new Date(lead.created_at || lead.sentAt || Date.now()).toLocaleDateString()
+        });
+      }
+      return acc;
+    }, []);
+  }, [leads]);
+
+  const handleDeleteList = async (id: string, name: string) => {
+    try {
+      const response = await LinkedInAgentAPI.deleteLeadsBySource(id);
+      if (response.success) {
+        toast({
+          title: 'List deleted',
+          description: `The ${name} list has been removed.`,
+        });
+        fetchLeads();
+      } else {
+        toast({
+          title: 'Delete failed',
+          description: response.error || 'Could not delete the list.',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Failed to delete leads list', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to delete the leads list.',
+        variant: 'destructive',
+      });
+    }
   };
 
-  // Group leads by status for display
-  // Use consistent date format to avoid hydration mismatch
-  const today = new Date().toISOString().split('T')[0];
+  const filteredLists = useMemo(() => {
+    return lists.filter((list) =>
+      list.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [lists, searchQuery]);
 
-  const lists: LeadList[] = [
-    {
-      id: 'pending',
-      name: 'Pending Connection Requests',
-      source: 'linkedin',
-      memberCount: stats.pendingRequests,
-      totalCapacity: 1000,
-      importedAt: today,
-      status: stats.pendingRequests > 0 ? 'sending' : 'not_started',
-    },
-    {
-      id: 'recent',
-      name: 'Recent Connections',
-      source: 'linkedin',
-      memberCount: stats.recentConnections,
-      totalCapacity: 1000,
-      importedAt: today,
-      status: stats.recentConnections > 0 ? 'sending' : 'not_started',
-    },
-    {
-      id: 'imported',
-      name: 'Imported from CSV',
-      source: 'linkedin',
-      memberCount: importedLeads.length,
-      totalCapacity: 1000,
-      importedAt: today,
-      status: 'not_started',
-    },
-  ];
+  const selectedListLeads = useMemo(() => {
+    return leads.filter(lead => 
+      selectedListId ? (lead.source || 'default') === selectedListId : false
+    );
+  }, [leads, selectedListId]);
 
-  const filteredLists = lists.filter((list) =>
-    list.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  if (selectedListId) {
+    const listName = lists.find(l => l.id === selectedListId)?.name || 'Leads';
+    return (
+      <div className="flex flex-col h-full">
+        <div className="flex items-center gap-4 px-6 py-4 border-b border-border">
+          <Button variant="ghost" size="sm" onClick={() => setSelectedListId(null)}>
+            ← Back to Lists
+          </Button>
+          <h1 className="text-lg font-semibold">{listName}</h1>
+        </div>
+        <div className="flex-1 overflow-auto p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {selectedListLeads.map((lead, i) => (
+              <div key={i} className="p-4 border rounded-lg bg-surface flex items-center gap-3">
+                {lead.profilePicture ? (
+                  <img src={lead.profilePicture} alt="" className="w-10 h-10 rounded-full" />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                    <Users className="w-5 h-5 text-muted-foreground" />
+                  </div>
+                )}
+                <div>
+                  <div className="font-medium">{lead.name}</div>
+                  <div className="text-xs text-muted-foreground truncate max-w-[200px]">{lead.title}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header */}
       <div className="flex items-center gap-4 px-6 py-4 border-b border-border">
         <h1 className="text-lg font-semibold">Lists of Leads</h1>
-        
-        <Button className="bg-primary hover:bg-primary/90">
-          New Import
-          <ChevronDown className="w-4 h-4 ml-2" />
-        </Button>
+
+        <CSVUploadDialog onUploadSuccess={fetchLeads} />
 
         <Select value={listFilter} onValueChange={setListFilter}>
           <SelectTrigger className="w-32">
@@ -142,23 +194,8 @@ export function LeadsList() {
           </SelectContent>
         </Select>
 
-        <Button variant="outline" size="icon">
-          <Plus className="w-4 h-4" />
-        </Button>
-
-        <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search by name"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-
       </div>
 
-      {/* Stats Bar */}
       <div className="flex items-center gap-8 px-6 py-3 border-b border-border bg-surface">
         <Button
           variant="outline"
@@ -178,23 +215,8 @@ export function LeadsList() {
           <span className="text-muted-foreground">Total leads: </span>
           <span className="font-medium">{stats.totalLeads}</span>
         </div>
-        <div className="text-sm">
-          <span className="text-muted-foreground">Pending requests: </span>
-          <span className="font-medium">{stats.pendingRequests}</span>
-        </div>
-        <div className="text-sm">
-          <span className="text-muted-foreground">Recent connections: </span>
-          <span className="font-medium">{stats.recentConnections}</span>
-        </div>
-        <div className="ml-auto flex items-center gap-6">
-          <div className="text-sm">
-            <span className="text-muted-foreground">LinkedIn automation: </span>
-            <span className="font-medium">{stats.dailyQuotaLinkedIn.used} / {stats.dailyQuotaLinkedIn.total}</span>
-          </div>
-        </div>
       </div>
 
-      {/* Table Header */}
       <div className="grid grid-cols-[1fr_100px_140px_100px_40px] gap-4 items-center px-6 py-2 border-b border-border bg-surface text-xs font-medium text-muted-foreground uppercase tracking-wide">
         <div>Name</div>
         <div>Members</div>
@@ -203,10 +225,11 @@ export function LeadsList() {
         <div></div>
       </div>
 
-      {/* Table Body */}
       <div className="flex-1 overflow-auto">
         {filteredLists.map((list) => (
-          <LeadListRow key={list.id} list={list} />
+          <div key={list.id} onClick={() => setSelectedListId(list.id)} className="cursor-pointer">
+            <LeadListRow list={list} onDelete={() => handleDeleteList(list.id, list.name)} />
+          </div>
         ))}
 
         {filteredLists.length === 0 && (
@@ -219,9 +242,7 @@ export function LeadsList() {
   );
 }
 
-function LeadListRow({ list }: { list: LeadList }) {
-  const isAllLeads = list.name === 'All leads';
-
+function LeadListRow({ list, onDelete }: { list: LeadList; onDelete: () => void }) {
   const getStatusBadge = () => {
     switch (list.status) {
       case 'sent':
@@ -239,15 +260,9 @@ function LeadListRow({ list }: { list: LeadList }) {
   return (
     <div className="grid grid-cols-[1fr_100px_140px_100px_40px] gap-4 items-center px-6 py-3 border-b border-border hover:bg-row-hover transition-colors">
       <div className="flex items-center gap-3">
-        {isAllLeads ? (
-          <div className="w-6 h-6 rounded bg-muted flex items-center justify-center">
-            <Users className="w-4 h-4 text-muted-foreground" />
-          </div>
-        ) : (
-          <div className="w-6 h-6 rounded bg-muted flex items-center justify-center">
-            <Linkedin className="w-4 h-4 text-muted-foreground" />
-          </div>
-        )}
+        <div className="w-6 h-6 rounded bg-muted flex items-center justify-center">
+          <Linkedin className="w-4 h-4 text-muted-foreground" />
+        </div>
         <span className="text-sm font-medium">{list.name}</span>
       </div>
       <div className="text-sm">
@@ -262,9 +277,22 @@ function LeadListRow({ list }: { list: LeadList }) {
         {getStatusBadge()}
       </div>
       <div>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <MoreVertical className="w-4 h-4" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <MoreVertical className="w-4 h-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem className="text-destructive gap-2" onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}>
+              <Trash2 className="w-4 h-4" />
+              Delete List
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

@@ -73,6 +73,110 @@ export class LinkedInAgentAPI {
     return this.runRailwayAction('linkedin-leads', userId);
   }
 
+  static async getLeadLists(userId: string = 'shashank'): Promise<AgentActionResponse> {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/leads?userId=${userId}&action=lists`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        return {
+          success: true,
+          message: 'Lead lists fetched successfully',
+          data: data.data,
+        };
+      } else {
+        return {
+          success: false,
+          message: data.error || 'Failed to fetch lead lists',
+          error: data.error,
+        };
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: 'Failed to communicate with backend',
+        error: error.message,
+      };
+    }
+  }
+
+  static async saveLeads(leads: any[], userId: string = 'shashank'): Promise<AgentActionResponse> {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/leads`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          leads
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        return {
+          success: true,
+          message: 'Leads saved successfully',
+          data: data.data,
+        };
+      } else {
+        return {
+          success: false,
+          message: data.error || 'Failed to save leads',
+          error: data.error,
+        };
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: 'Failed to communicate with backend',
+        error: error.message,
+      };
+    }
+  }
+
+  static async deleteLeadsBySource(source: string, userId: string = 'shashank'): Promise<AgentActionResponse> {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/leads`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          source
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        return {
+          success: true,
+          message: 'Leads deleted successfully',
+          data: data.data,
+        };
+      } else {
+        return {
+          success: false,
+          message: data.error || 'Failed to delete leads',
+          error: data.error,
+        };
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: 'Failed to communicate with backend',
+        error: error.message,
+      };
+    }
+  }
+
   static async getCampaigns(userId: string = 'shashank'): Promise<AgentActionResponse> {
     return this.runRailwayAction('linkedin-campaigns', userId);
   }

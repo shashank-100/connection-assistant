@@ -1,11 +1,24 @@
+export interface Lead {
+  id: string;
+  name: string;
+  title?: string;
+  company?: string;
+  profileUrl: string;
+  profilePicture?: string;
+  status: string;
+  source: string;
+  sourceName?: string;
+  created_at?: string;
+  sentAt?: string;
+}
+
 export interface LeadList {
   id: string;
   name: string;
-  source: 'linkedin' | 'csv' | 'search';
   memberCount: number;
   totalCapacity: number;
   importedAt: string;
-  status: 'sent' | 'sending' | 'paused' | 'not_started';
+  status: 'sent' | 'sending' | 'paused' | 'not_started' | 'active';
 }
 
 export interface LeadStats {

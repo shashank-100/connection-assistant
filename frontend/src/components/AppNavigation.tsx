@@ -9,7 +9,6 @@ const navItems = [
   { href: '/', label: 'Inbox', icon: Inbox },
   { href: '/campaigns', label: 'Campaigns', icon: Megaphone },
   { href: '/leads', label: 'Leads', icon: Users },
-  { href: '/templates', label: 'Templates', icon: FileText },
 ];
 
 export function AppNavigation() {
