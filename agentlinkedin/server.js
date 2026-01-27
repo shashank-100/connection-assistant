@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import handler from './api/index.js';
+import leadsHandler from './api/leads.js';
 import { initDB, saveCookies, getCookies, deleteCookies } from './db.js';
 
 const app = express();
@@ -96,6 +97,19 @@ app.delete('/auth/linkedin/:userId', async (req, res) => {
 // Main API endpoint
 app.post('/api', async (req, res) => {
   await handler(req, res);
+});
+
+// Leads API endpoint (no browser needed)
+app.get('/api/leads', async (req, res) => {
+  await leadsHandler(req, res);
+});
+
+app.post('/api/leads', async (req, res) => {
+  await leadsHandler(req, res);
+});
+
+app.delete('/api/leads', async (req, res) => {
+  await leadsHandler(req, res);
 });
 
 // Initialize database and start server

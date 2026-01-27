@@ -1,120 +1,26 @@
-Local backend running at http://localhost:3000
-Browser error: page.goto: Timeout 60000ms exceeded.
-Call log:
-[2m  - navigating to "https://www.linkedin.com/search/results/people/?keywords=Software%20Engineer", waiting until "networkidle"[22m
 
-    at LinkedInVisitService.searchPeople (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/visit.js:7:16)
-    at async handler (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:77:18)
-    at async IncomingMessage.<anonymous> (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9) {
-  name: 'TimeoutError'
-}
-Browser error: page.goto: Timeout 60000ms exceeded.
-Call log:
-[2m  - navigating to "https://www.linkedin.com/search/results/people/?keywords=Software%20Engineer", waiting until "networkidle"[22m
+> agentlinkedin@1.0.0 start
+> node server.js
 
-    at LinkedInVisitService.searchPeople (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/visit.js:7:16)
-    at async handler (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:77:18)
-    at async IncomingMessage.<anonymous> (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9) {
-  name: 'TimeoutError'
+[SERVER] Failed to initialize database: error: database "shashank" does not exist
+    at /Users/shashank/geodo-vercel-agent-browser/agentlinkedin/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async initDB (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/db.js:11:18) {
+  length: 93,
+  severity: 'FATAL',
+  code: '3D000',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'postinit.c',
+  line: '890',
+  routine: 'InitPostgres'
 }
-Browser error: page.goto: Timeout 60000ms exceeded.
-Call log:
-[2m  - navigating to "https://www.linkedin.com/search/results/people/?keywords=Recruiter", waiting until "networkidle"[22m
-
-    at LinkedInVisitService.searchPeople (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/visit.js:7:16)
-    at async LinkedInVisitService.visitProfiles (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/visit.js:34:20)
-    at async handler (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:87:18)
-    at async IncomingMessage.<anonymous> (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9) {
-  name: 'TimeoutError'
-}
-Full Snapshot Tree: "- button \"Skip to search\" [ref=e1]\n- button \"Skip to main content\" [ref=e2]\n- button \"Keyboard shortcuts\" [ref=e3]\n- button \"Close jump menu\" [ref=e4]\n- link \"LinkedIn\" [ref=e5]\n- combobox \"Search\" [ref=e6]\n- link \"new feed updates notifications Home\" [ref=e7]\n- link \"1 new network update notification My Network\" [ref=e8]\n- link \"Jobs\" [ref=e9]\n- link \"Messaging\" [ref=e10]\n- link \"Notifications\" [ref=e11]\n- button \"Shashank Telkhade Me\" [ref=e12]\n- button \"For Business\" [ref=e13]\n- button \"Background Image\" [ref=e14]\n- button \"open profile picture\" [ref=e15]\n- link \"Tarkeshwar Singh\" [ref=e16]\n- link \"Contact info\" [ref=e17]"
-Browser error: Error: Could not find "Connect" or "More" button.
-    at LinkedInConnectService.sendConnectRequest (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/connect.js:41:15)
-    at async handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:82:18)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Full Snapshot Tree: "- button \"Skip to search\" [ref=e1]\n- button \"Skip to main content\" [ref=e2]\n- button \"Keyboard shortcuts\" [ref=e3]\n- button \"Close jump menu\" [ref=e4]\n- link \"LinkedIn\" [ref=e5]\n- combobox \"Search\" [ref=e6]\n- link \"new feed updates notifications Home\" [ref=e7]\n- link \"1 new network update notification My Network\" [ref=e8]\n- link \"Jobs\" [ref=e9]\n- link \"Messaging\" [ref=e10]\n- link \"Notifications\" [ref=e11]\n- button \"Shashank Telkhade Me\" [ref=e12]\n- button \"For Business\" [ref=e13]\n- button \"Background Image\" [ref=e14]\n- button \"open profile picture\" [ref=e15]\n- button [ref=e16]\n- link \"Tanvi Jain\" [ref=e17]\n- link \"Contact info\" [ref=e18]"
-Browser error: Error: Could not find "Connect" or "More" button.
-    at LinkedInConnectService.sendConnectRequest (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/connect.js:41:15)
-    at async handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:82:18)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Full Snapshot Tree: "- button \"Skip to search\" [ref=e1]\n- button \"Skip to main content\" [ref=e2]\n- button \"Keyboard shortcuts\" [ref=e3]\n- button \"Close jump menu\" [ref=e4]\n- link \"LinkedIn\" [ref=e5]\n- combobox \"Search\" [ref=e6]\n- link \"new feed updates notifications Home\" [ref=e7]\n- link \"My Network\" [ref=e8]\n- link \"Jobs\" [ref=e9]\n- link \"Messaging\" [ref=e10]\n- link \"Notifications\" [ref=e11]\n- button \"Shashank Telkhade Me\" [ref=e12]\n- button \"For Business\" [ref=e13]\n- button \"Background Image\" [ref=e14]\n- button \"open profile picture\" [ref=e15]\n- button [ref=e16]\n- link \"subhash tiwari\" [ref=e17]\n- link \"Contact info\" [ref=e18]"
-Browser error: Error: Could not find "Connect" or "More" button.
-    at LinkedInConnectService.sendConnectRequest (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/connect.js:41:15)
-    at async handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:82:18)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Full Snapshot Tree: "- button \"Skip to search\" [ref=e1]\n- button \"Skip to main content\" [ref=e2]\n- button \"Keyboard shortcuts\" [ref=e3]\n- button \"Close jump menu\" [ref=e4]\n- link \"LinkedIn\" [ref=e5]\n- combobox \"Search\" [ref=e6]\n- link \"new feed updates notifications Home\" [ref=e7]\n- link \"My Network\" [ref=e8]\n- link \"Jobs\" [ref=e9]\n- link \"Messaging\" [ref=e10]\n- link \"Notifications\" [ref=e11]\n- button \"Shashank Telkhade Me\" [ref=e12]\n- button \"For Business\" [ref=e13]\n- button \"Background Image\" [ref=e14]\n- button \"open profile picture\" [ref=e15]\n- link \"Vikas Kumar\" [ref=e16]\n- link \"Contact info\" [ref=e17]"
-Browser error: Error: Could not find "Connect" or "More" button.
-    at LinkedInConnectService.sendConnectRequest (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/connect.js:41:15)
-    at async handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:82:18)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Full Snapshot Tree: "(no interactive elements)"
-Browser error: Error: Could not find "Connect" or "More" button.
-    at LinkedInConnectService.sendConnectRequest (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/connect.js:41:15)
-    at async handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:82:18)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Browser error: locator.click: Timeout 60000ms exceeded.
-Call log:
-[2m  - waiting for locator('non-existent-button')[22m
-
-    at handler (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:57:23)
-    at async IncomingMessage.<anonymous> (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9) {
-  name: 'TimeoutError'
-}
-Browser error: locator.click: Timeout 60000ms exceeded.
-Call log:
-[2m  - waiting for locator('non-existent-button')[22m
-
-    at handler (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:57:23)
-    at async IncomingMessage.<anonymous> (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9) {
-  name: 'TimeoutError'
-}
-Browser error: locator.click: Timeout 60000ms exceeded.
-Call log:
-[2m  - waiting for locator('non-existent-button')[22m
-
-    at handler (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:57:23)
-    at async IncomingMessage.<anonymous> (/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9) {
-  name: 'TimeoutError'
-}
-Browser error: Error: searchTerm is required
-    at handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:85:32)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Browser error: Error: searchTerm is required
-    at handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:85:32)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Browser error: Error: searchTerm is required
-    at handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:85:32)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Browser error: Error: searchTerm is required
-    at handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:85:32)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Browser error: Error: searchTerm is required
-    at handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:85:32)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Full Snapshot Tree: "- button \"Skip to search\" [ref=e1]\n- button \"Skip to main content\" [ref=e2]\n- button \"Keyboard shortcuts\" [ref=e3]\n- button \"Close jump menu\" [ref=e4]\n- link \"LinkedIn\" [ref=e5]\n- combobox \"Search\" [ref=e6]\n- link \"new feed updates notifications Home\" [ref=e7]\n- link \"My Network\" [ref=e8]\n- link \"Jobs\" [ref=e9]\n- link \"Messaging\" [ref=e10]\n- link \"1 new notification Notifications\" [ref=e11]\n- button \"Shashank Telkhade Me\" [ref=e12]\n- button \"For Business\" [ref=e13]\n- button \"Background Image\" [ref=e14]\n- button \"open profile picture\" [ref=e15]\n- link \"Tarkeshwar Singh\" [ref=e16]\n- link \"Contact info\" [ref=e17]\n- button \"You are on the messaging overlay. Press enter to open the list of conversations.\" [ref=e18]\n- button \"Open messenger dropdown menu\" [ref=e19]\n- button \"Compose message\" [ref=e20]\n- button \"You are on the messaging overlay. Press enter to open the list of conversations.\" [ref=e21] [nth=1]"
-Browser error: Error: Could not find "Connect" or "More" button.
-    at LinkedInConnectService.sendConnectRequest (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/connect.js:41:15)
-    at async handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:82:18)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Full Snapshot Tree: "- button \"Skip to search\" [ref=e1]\n- button \"Skip to main content\" [ref=e2]\n- button \"Keyboard shortcuts\" [ref=e3]\n- button \"Close jump menu\" [ref=e4]\n- link \"LinkedIn\" [ref=e5]\n- combobox \"Search\" [ref=e6]\n- link \"new feed updates notifications Home\" [ref=e7]\n- link \"My Network\" [ref=e8]\n- link \"Jobs\" [ref=e9]\n- link \"Messaging\" [ref=e10]\n- link \"Notifications\" [ref=e11]\n- button \"Shashank Telkhade Me\" [ref=e12]\n- button \"For Business\" [ref=e13]\n- button \"Background Image\" [ref=e14]\n- button \"open profile picture\" [ref=e15]\n- button [ref=e16]\n- link \"Tanvi Jain\" [ref=e17]\n- link \"Contact info\" [ref=e18]"
-Browser error: Error: Could not find "Connect" or "More" button.
-    at LinkedInConnectService.sendConnectRequest (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/connect.js:41:15)
-    at async handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:82:18)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Full Snapshot Tree: "- button \"Skip to search\" [ref=e1]\n- button \"Skip to main content\" [ref=e2]\n- button \"Keyboard shortcuts\" [ref=e3]\n- button \"Close jump menu\" [ref=e4]\n- link \"LinkedIn\" [ref=e5]\n- combobox \"Search\" [ref=e6]\n- link \"new feed updates notifications Home\" [ref=e7]\n- link \"My Network\" [ref=e8]\n- link \"Jobs\" [ref=e9]\n- link \"Messaging\" [ref=e10]\n- link \"Notifications\" [ref=e11]\n- button \"Shashank Telkhade Me\" [ref=e12]\n- button \"For Business\" [ref=e13]\n- button \"Background Image\" [ref=e14]\n- button \"open profile picture\" [ref=e15]\n- button [ref=e16]\n- link \"subhash tiwari\" [ref=e17]\n- link \"Contact info\" [ref=e18]"
-Browser error: Error: Could not find "Connect" or "More" button.
-    at LinkedInConnectService.sendConnectRequest (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/connect.js:41:15)
-    at async handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:82:18)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Full Snapshot Tree: "- button \"Skip to search\" [ref=e1]\n- button \"Skip to main content\" [ref=e2]\n- button \"Keyboard shortcuts\" [ref=e3]\n- button \"Close jump menu\" [ref=e4]\n- link \"LinkedIn\" [ref=e5]\n- combobox \"Search\" [ref=e6]\n- link \"new feed updates notifications Home\" [ref=e7]\n- link \"My Network\" [ref=e8]\n- link \"Jobs\" [ref=e9]\n- link \"Messaging\" [ref=e10]\n- link \"Notifications\" [ref=e11]\n- button \"Shashank Telkhade Me\" [ref=e12]\n- button \"For Business\" [ref=e13]\n- button \"Background Image\" [ref=e14]\n- button \"open profile picture\" [ref=e15]\n- link \"Tarkeshwar Singh\" [ref=e16]\n- link \"Contact info\" [ref=e17]"
-Browser error: Error: Could not find "Connect" or "More" button.
-    at LinkedInConnectService.sendConnectRequest (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/connect.js:41:15)
-    at async handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:82:18)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)
-Full Snapshot Tree: "(no interactive elements)"
-Browser error: Error: Could not find "Connect" or "More" button.
-    at LinkedInConnectService.sendConnectRequest (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/src/services/connect.js:41:15)
-    at runNextTicks (node:internal/process/task_queues:65:5)
-    at process.processImmediate (node:internal/timers:473:9)
-    at async handler (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/api/index.js:82:18)
-    at async IncomingMessage.<anonymous> (file:///Users/shashank/geodo-vercel-agent-browser/agentlinkedin/local-server.js:31:9)

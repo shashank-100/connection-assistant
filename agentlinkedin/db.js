@@ -30,6 +30,7 @@ export async function initDB() {
         profile_picture TEXT,
         status VARCHAR(50) DEFAULT 'not_started',
         source VARCHAR(50),
+        source_name VARCHAR(255),
         sent_at TIMESTAMP,
         connected_at TIMESTAMP,
         campaign_id VARCHAR(255),
@@ -116,14 +117,31 @@ export async function deleteCookies(userId) {
   }
 }
 
+export async function deleteLeadsBySource(userId, source) {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      'DELETE FROM leads WHERE user_id = $1 AND source = $2',
+      [userId, source]
+    );
+    console.log(`[DB] Deleted ${result.rowCount} leads for user: ${userId} with source: ${source}`);
+    return { success: true, count: result.rowCount };
+  } catch (err) {
+    console.error('[DB] Error deleting leads:', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 // Save or update leads
 export async function saveLeads(userId, leads) {
   const client = await pool.connect();
   try {
     for (const lead of leads) {
       await client.query(
-        `INSERT INTO leads (id, user_id, name, title, company, profile_url, profile_picture, status, source, sent_at, connected_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())
+        `INSERT INTO leads (id, user_id, name, title, company, profile_url, profile_picture, status, source, source_name, sent_at, connected_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())
          ON CONFLICT (id)
          DO UPDATE SET
            name = $3,
@@ -133,8 +151,9 @@ export async function saveLeads(userId, leads) {
            profile_picture = $7,
            status = $8,
            source = $9,
-           sent_at = $10,
-           connected_at = $11,
+           source_name = $10,
+           sent_at = $11,
+           connected_at = $12,
            updated_at = NOW()`,
         [
           lead.id,
@@ -146,6 +165,7 @@ export async function saveLeads(userId, leads) {
           lead.profilePicture,
           lead.status,
           lead.source,
+          lead.sourceName || lead.source,
           lead.sentAt,
           lead.connectedAt
         ]
@@ -232,6 +252,30 @@ export async function getLeadStats(userId) {
     return result.rows[0];
   } catch (err) {
     console.error('[DB] Error getting lead stats:', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+// Get unique lead lists (sources) for a user
+export async function getLeadLists(userId) {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      `SELECT
+        source,
+        COALESCE(MAX(source_name), source) as source_name,
+        COUNT(*) as count
+       FROM leads
+       WHERE user_id = $1 AND source IS NOT NULL
+       GROUP BY source
+       ORDER BY count DESC`,
+      [userId]
+    );
+    return result.rows;
+  } catch (err) {
+    console.error('[DB] Error getting lead lists:', err);
     throw err;
   } finally {
     client.release();
