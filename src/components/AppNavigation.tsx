@@ -1,12 +1,11 @@
 import { NavLink } from 'react-router-dom';
-import { Inbox, Megaphone, Users, FileText } from 'lucide-react';
+import { Inbox, Megaphone, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { to: '/', label: 'Inbox', icon: Inbox },
   { to: '/campaigns', label: 'Campaigns', icon: Megaphone },
   { to: '/leads', label: 'Leads', icon: Users },
-  { to: '/templates', label: 'Templates', icon: FileText },
 ];
 
 export function AppNavigation() {

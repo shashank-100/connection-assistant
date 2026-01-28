@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { SequenceStep } from '@/types/campaign';
+import { LeadVariable } from '@/types/template';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { defaultSequences } from '@/data/mockCampaigns';
-import { Check, AlertCircle, Copy, Minus, Trash2, Play, Pause } from 'lucide-react';
+import { defaultVariables, defaultPromptContent } from '@/data/mockTemplates';
+import { Check, AlertCircle, Play, Pause } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 
@@ -157,6 +159,22 @@ export function CampaignBuilder() {
 }
 
 function SequenceDetail({ sequence }: { sequence: SequenceStep }) {
+  const [promptModel, setPromptModel] = useState<string>('');
+  const [promptContent, setPromptContent] = useState(defaultPromptContent);
+  const [variables, setVariables] = useState<LeadVariable[]>(defaultVariables);
+
+  const toggleVariable = (variableId: string) => {
+    setVariables((prev) =>
+      prev.map((v) => (v.id === variableId ? { ...v, enabled: !v.enabled } : v))
+    );
+  };
+
+  const updateFallback = (variableId: string, fallback: string) => {
+    setVariables((prev) =>
+      prev.map((v) => (v.id === variableId ? { ...v, fallback } : v))
+    );
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -170,31 +188,63 @@ function SequenceDetail({ sequence }: { sequence: SequenceStep }) {
       </div>
 
       {(sequence.type === 'send_message' || sequence.type === 'follow_up') && (
-        <div className="space-y-4">
+        <div className="space-y-6">
+          {/* Prompt Section */}
           <div>
-            <label className="text-sm font-medium mb-2 block">Message Template</label>
-            <Textarea 
-              placeholder="Write your message here..." 
-              className="min-h-[150px]"
-            />
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <label className="text-sm font-medium mb-2 block">Delay (days)</label>
-              <Input type="number" defaultValue={1} min={0} />
-            </div>
-            <div className="flex-1">
-              <label className="text-sm font-medium mb-2 block">Send time</label>
-              <Select defaultValue="morning">
-                <SelectTrigger>
-                  <SelectValue />
+            <h3 className="text-lg font-semibold text-primary mb-4">Prompt</h3>
+            
+            <div className="flex items-center justify-between mb-4">
+              <Select value={promptModel} onValueChange={setPromptModel}>
+                <SelectTrigger className="w-56 bg-primary/10 text-primary border-primary/20">
+                  <SelectValue placeholder="Choose A Prompt Model" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="morning">Morning (9 AM - 12 PM)</SelectItem>
-                  <SelectItem value="afternoon">Afternoon (12 PM - 5 PM)</SelectItem>
-                  <SelectItem value="evening">Evening (5 PM - 9 PM)</SelectItem>
+                  <SelectItem value="gpt-4">GPT-4</SelectItem>
+                  <SelectItem value="gpt-3.5">GPT-3.5</SelectItem>
+                  <SelectItem value="claude">Claude</SelectItem>
                 </SelectContent>
               </Select>
+
+              <Button className="bg-amber-400 hover:bg-amber-500 text-amber-900">
+                Messages preview
+              </Button>
+            </div>
+
+            {/* Tip Box */}
+            <div className="border-l-4 border-primary bg-primary/5 p-4 mb-4 rounded-r">
+              <p className="font-semibold text-sm mb-1">
+                For best results, define the AI's role with "You are..." instead of "I am...".
+              </p>
+              <p className="text-sm text-muted-foreground">
+                When you start a prompt with "You are an expert in...", you tell the AI which role to adopt and how to respond. If you write "I am an expert...", you're just describing yourself, not guiding the AI.
+              </p>
+            </div>
+
+            {/* Prompt Textarea */}
+            <Textarea
+              value={promptContent}
+              onChange={(e) => setPromptContent(e.target.value)}
+              className="min-h-[200px] font-mono text-sm resize-none"
+              placeholder="Enter your prompt here..."
+            />
+          </div>
+
+          {/* Variables Section */}
+          <div className="border border-border rounded-lg p-6">
+            <h3 className="font-semibold mb-1">Available lead context variables:</h3>
+            <p className="text-sm text-muted-foreground mb-6">
+              Select the variables you want to be passed to the AI for each lead.
+            </p>
+
+            <div className="space-y-4">
+              {variables.map((variable) => (
+                <VariableRow
+                  key={variable.id}
+                  variable={variable}
+                  onToggle={() => toggleVariable(variable.id)}
+                  onFallbackChange={(fallback) => updateFallback(variable.id, fallback)}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -218,6 +268,36 @@ function SequenceDetail({ sequence }: { sequence: SequenceStep }) {
             This action will be performed automatically when the campaign runs.
           </p>
         </div>
+      )}
+    </div>
+  );
+}
+
+function VariableRow({
+  variable,
+  onToggle,
+  onFallbackChange,
+}: {
+  variable: LeadVariable;
+  onToggle: () => void;
+  onFallbackChange: (fallback: string) => void;
+}) {
+  return (
+    <div className="flex items-center gap-4">
+      <Switch
+        checked={variable.enabled}
+        onCheckedChange={onToggle}
+        className="data-[state=checked]:bg-primary"
+      />
+      <span className="text-sm font-medium w-36">{variable.name}</span>
+      {variable.fallbackPlaceholder !== undefined && (
+        <Input
+          value={variable.fallback || ''}
+          onChange={(e) => onFallbackChange(e.target.value)}
+          placeholder={variable.fallbackPlaceholder}
+          className="flex-1 text-sm"
+          disabled={!variable.enabled}
+        />
       )}
     </div>
   );
