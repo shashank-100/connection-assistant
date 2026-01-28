@@ -1,9 +1,8 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  /* config options here */
   reactCompiler: true,
-  serverExternalPackages: ['playwright', 'playwright-core', '@sparticuz/chromium-min'],
 };
 
 export default nextConfig;

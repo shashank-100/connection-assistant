@@ -15,6 +15,7 @@ export interface Lead {
 export interface LeadList {
   id: string;
   name: string;
+  source?: string;
   memberCount: number;
   totalCapacity: number;
   importedAt: string;

@@ -15,7 +15,7 @@ export function ContactTable({ contacts, selectedIds, onSelect, onSelectAll }: C
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="grid grid-cols-[32px_1fr_120px_140px] gap-4 items-center px-4 py-2 border-b border-border bg-surface sticky top-0">
+      <div className="grid grid-cols-[32px_1fr] gap-4 items-center px-4 py-2 border-b border-border bg-surface sticky top-0">
         <div className="flex items-center justify-center">
           <Checkbox
             checked={allSelected}
@@ -30,12 +30,6 @@ export function ContactTable({ contacts, selectedIds, onSelect, onSelectAll }: C
         </div>
         <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
           Members
-        </div>
-        <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-          Labels
-        </div>
-        <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-          Pipeline | Column
         </div>
       </div>
 

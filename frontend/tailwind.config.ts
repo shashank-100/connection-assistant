@@ -1,8 +1,13 @@
 import type { Config } from "tailwindcss";
 
-export default {
+const config: Config = {
   darkMode: "class",
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -14,47 +19,47 @@ export default {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        border: "hsl(220 13% 91%)",
+        input: "hsl(220 13% 91%)",
+        ring: "hsl(228 45% 52%)",
+        background: "hsl(0 0% 100%)",
+        foreground: "hsl(220 13% 18%)",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "hsl(228 45% 52%)",
+          foreground: "hsl(0 0% 100%)",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "hsl(220 14% 96%)",
+          foreground: "hsl(220 13% 18%)",
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "hsl(0 72% 51%)",
+          foreground: "hsl(0 0% 100%)",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "hsl(220 14% 96%)",
+          foreground: "hsl(220 9% 46%)",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "hsl(228 45% 96%)",
+          foreground: "hsl(228 45% 52%)",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "hsl(0 0% 100%)",
+          foreground: "hsl(220 13% 18%)",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "hsl(0 0% 100%)",
+          foreground: "hsl(220 13% 18%)",
         },
         surface: {
-          DEFAULT: "hsl(var(--surface))",
-          hover: "hsl(var(--surface-hover))",
+          DEFAULT: "hsl(220 14% 98%)",
+          hover: "hsl(220 14% 95%)",
         },
-        link: "hsl(var(--link))",
-        success: "hsl(var(--success))",
-        warning: "hsl(var(--warning))",
-        "row-hover": "hsl(var(--row-hover))",
+        link: "hsl(228 45% 52%)",
+        success: "hsl(142 71% 45%)",
+        warning: "hsl(38 92% 50%)",
+        "row-hover": "hsl(220 14% 98%)",
       },
       fontFamily: {
         sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
@@ -89,4 +94,5 @@ export default {
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config;
+}
+export default config;

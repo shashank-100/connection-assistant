@@ -23,6 +23,16 @@ export class LinkedInConversationsService {
       // Execute GraphQL query to fetch conversations
       const conversations = await page.evaluate(async (limit) => {
         try {
+          // Extract CSRF token from cookies
+          const getCookie = (name) => {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift().replace(/"/g, '');
+            return null;
+          };
+          
+          const csrfToken = getCookie('JSESSIONID');
+
           // Use the messaging conversations endpoint
           const response = await fetch(`https://www.linkedin.com/voyager/api/messaging/conversations?keyVersion=LEGACY_INBOX&q=inbox&start=0&count=${limit}`, {
             method: 'GET',
@@ -30,6 +40,8 @@ export class LinkedInConversationsService {
               'accept': 'application/vnd.linkedin.normalized+json+2.1',
               'x-li-lang': 'en_US',
               'x-restli-protocol-version': '2.0.0',
+              'csrf-token': csrfToken,
+              'x-li-page-instance': 'urn:li:page:d_flagship3_messaging;6y/9z/5rR/2h+8g==', // Dummy but often helpful
             },
             credentials: 'include'
           });

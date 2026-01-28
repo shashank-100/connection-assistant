@@ -1,16 +1,13 @@
 import { Contact } from '@/types/contact';
 import { Checkbox } from '@/components/ui/checkbox';
-import { MessageSquare } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 interface ContactRowProps {
   contact: Contact;
   isSelected: boolean;
   onSelect: (id: string) => void;
-  onMessageClick?: (contact: Contact) => void;
 }
 
-export function ContactRow({ contact, isSelected, onSelect, onMessageClick }: ContactRowProps) {
+export function ContactRow({ contact, isSelected, onSelect }: ContactRowProps) {
   const initials = contact.name
     .split(' ')
     .map((n) => n[0])
@@ -21,7 +18,7 @@ export function ContactRow({ contact, isSelected, onSelect, onMessageClick }: Co
   return (
     <div 
       className={`
-        grid grid-cols-[32px_1fr_120px_140px] gap-4 items-center px-4 py-3 
+        grid grid-cols-[32px_1fr] gap-4 items-center px-4 py-3 
         border-b border-border hover:bg-row-hover transition-colors cursor-pointer
         ${!contact.isRead ? 'bg-accent/30' : ''}
       `}
@@ -63,21 +60,6 @@ export function ContactRow({ contact, isSelected, onSelect, onMessageClick }: Co
             {contact.lastMessageTime} - Connection since {contact.connectionDate}
           </p>
         </div>
-      </div>
-
-      <div className="flex flex-wrap gap-1">
-        {contact.labels.map((label) => (
-          <span 
-            key={label}
-            className="px-2 py-0.5 text-xs rounded-full bg-secondary text-secondary-foreground"
-          >
-            {label}
-          </span>
-        ))}
-      </div>
-
-      <div className="text-sm text-muted-foreground truncate">
-        {contact.pipeline}
       </div>
     </div>
   );

@@ -16,4 +16,4 @@ export interface Contact {
   reminder?: string;
 }
 
-export type FilterTab = 'all' | 'unread' | 'sent-by-member' | 'sent-by-me' | 'never-answered';
+export type FilterTab = 'all' | 'sent-by-member' | 'sent-by-me';

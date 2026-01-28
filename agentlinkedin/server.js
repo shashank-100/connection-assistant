@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import handler from './api/index.js';
 import leadsHandler from './api/leads.js';
+import campaignsHandler from './api/campaigns.js';
+import { CampaignRunner } from './src/campaign-runner.js';
 import { initDB, saveCookies, getCookies, deleteCookies } from './db.js';
 
 const app = express();
@@ -112,10 +114,23 @@ app.delete('/api/leads', async (req, res) => {
   await leadsHandler(req, res);
 });
 
+// Campaigns API endpoint
+app.post('/api/campaigns', async (req, res) => {
+  await campaignsHandler(req, res);
+});
+
 // Initialize database and start server
 initDB().then(() => {
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
+    
+    // Start background campaign runner with delay
+    setTimeout(() => {
+      const runner = new CampaignRunner();
+      runner.start().catch(err => {
+        console.error('[SERVER] Failed to start campaign runner:', err);
+      });
+    }, 5000);
   });
 }).catch(err => {
   console.error('[SERVER] Failed to initialize database:', err);

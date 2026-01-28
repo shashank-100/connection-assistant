@@ -30,7 +30,6 @@ export async function initDB() {
         profile_picture TEXT,
         status VARCHAR(50) DEFAULT 'not_started',
         source VARCHAR(50),
-        source_name VARCHAR(255),
         sent_at TIMESTAMP,
         connected_at TIMESTAMP,
         campaign_id VARCHAR(255),
@@ -46,6 +45,43 @@ export async function initDB() {
 
     await client.query(`
       CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status)
+    `);
+
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS campaigns (
+        id VARCHAR(255) PRIMARY KEY,
+        user_id VARCHAR(255) NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        status VARCHAR(50) DEFAULT 'draft', -- draft, active, paused, completed
+        steps JSONB NOT NULL, -- Array of steps: [{ type: 'connect', delay: 0, template: '...' }]
+        settings JSONB, -- Daily limits, schedule, etc.
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS campaign_leads (
+        id VARCHAR(255) PRIMARY KEY, -- usually campaignId_leadId
+        campaign_id VARCHAR(255) REFERENCES campaigns(id),
+        lead_id VARCHAR(255) REFERENCES leads(id),
+        user_id VARCHAR(255) NOT NULL,
+        status VARCHAR(50) DEFAULT 'pending', -- pending, processing, completed, failed
+        current_step INTEGER DEFAULT 0,
+        next_action_at TIMESTAMP DEFAULT NOW(),
+        history JSONB DEFAULT '[]', -- Log of actions taken: [{ step: 1, action: 'connect', status: 'success', time: '...' }]
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW(),
+        UNIQUE(campaign_id, lead_id)
+      )
+    `);
+
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_campaigns_user_id ON campaigns(user_id)
+    `);
+    
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_campaign_leads_processing ON campaign_leads(campaign_id, status, next_action_at)
     `);
 
     console.log('[DB] Database schema initialized');
@@ -140,8 +176,8 @@ export async function saveLeads(userId, leads) {
   try {
     for (const lead of leads) {
       await client.query(
-        `INSERT INTO leads (id, user_id, name, title, company, profile_url, profile_picture, status, source, source_name, sent_at, connected_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())
+        `INSERT INTO leads (id, user_id, name, title, company, profile_url, profile_picture, status, source, sent_at, connected_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())
          ON CONFLICT (id)
          DO UPDATE SET
            name = $3,
@@ -151,9 +187,8 @@ export async function saveLeads(userId, leads) {
            profile_picture = $7,
            status = $8,
            source = $9,
-           source_name = $10,
-           sent_at = $11,
-           connected_at = $12,
+           sent_at = $10,
+           connected_at = $11,
            updated_at = NOW()`,
         [
           lead.id,
@@ -163,9 +198,8 @@ export async function saveLeads(userId, leads) {
           lead.company,
           lead.profileUrl,
           lead.profilePicture,
-          lead.status,
+          lead.status || 'not_started',
           lead.source,
-          lead.sourceName || lead.source,
           lead.sentAt,
           lead.connectedAt
         ]
@@ -181,27 +215,40 @@ export async function saveLeads(userId, leads) {
   }
 }
 
-// Get all leads for a user
+// Get all leads for a user with their campaign progress
 export async function getLeads(userId, filters = {}) {
   const client = await pool.connect();
   try {
-    let query = 'SELECT * FROM leads WHERE user_id = $1';
+    let query = `
+      SELECT 
+        l.*,
+        cl.status as campaign_status,
+        cl.current_step,
+        cl.next_action_at,
+        cl.history as campaign_history,
+        c.name as campaign_name,
+        c.steps as campaign_steps
+      FROM leads l
+      LEFT JOIN campaign_leads cl ON l.id = cl.lead_id
+      LEFT JOIN campaigns c ON cl.campaign_id = c.id
+      WHERE l.user_id = $1`;
+    
     const params = [userId];
     let paramIndex = 2;
 
     if (filters.status) {
-      query += ` AND status = $${paramIndex}`;
+      query += ` AND l.status = $${paramIndex}`;
       params.push(filters.status);
       paramIndex++;
     }
 
     if (filters.source) {
-      query += ` AND source = $${paramIndex}`;
+      query += ` AND l.source = $${paramIndex}`;
       params.push(filters.source);
       paramIndex++;
     }
 
-    query += ' ORDER BY created_at DESC';
+    query += ' ORDER BY l.created_at DESC';
 
     if (filters.limit) {
       query += ` LIMIT $${paramIndex}`;
@@ -265,7 +312,7 @@ export async function getLeadLists(userId) {
     const result = await client.query(
       `SELECT
         source,
-        COALESCE(MAX(source_name), source) as source_name,
+        source as source_name,
         COUNT(*) as count
        FROM leads
        WHERE user_id = $1 AND source IS NOT NULL
@@ -276,6 +323,135 @@ export async function getLeadLists(userId) {
     return result.rows;
   } catch (err) {
     console.error('[DB] Error getting lead lists:', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+// --- CAMPAIGN FUNCTIONS ---
+
+export async function saveCampaign(userId, campaignData) {
+  const client = await pool.connect();
+  try {
+    const { id, name, status, steps, settings } = campaignData;
+    await client.query(
+      `INSERT INTO campaigns (id, user_id, name, status, steps, settings, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, NOW())
+       ON CONFLICT (id)
+       DO UPDATE SET
+         name = $3,
+         status = $4,
+         steps = $5,
+         settings = $6,
+         updated_at = NOW()`,
+      [id, userId, name, status, JSON.stringify(steps), JSON.stringify(settings)]
+    );
+    console.log(`[DB] Saved campaign: ${name} (${id})`);
+    return { success: true };
+  } catch (err) {
+    console.error('[DB] Error saving campaign:', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+export async function addLeadsToCampaign(userId, campaignId, leadIds) {
+  const client = await pool.connect();
+  try {
+    let addedCount = 0;
+    for (const leadId of leadIds) {
+      // Check if lead exists first
+      const leadCheck = await client.query('SELECT 1 FROM leads WHERE id = $1', [leadId]);
+      if (leadCheck.rowCount === 0) continue;
+
+      const id = `${campaignId}_${leadId}`;
+      await client.query(
+        `INSERT INTO campaign_leads (id, campaign_id, lead_id, user_id, status, current_step, next_action_at, updated_at)
+         VALUES ($1, $2, $3, $4, 'pending', 0, NOW(), NOW())
+         ON CONFLICT (campaign_id, lead_id) DO NOTHING`, // Don't reset if already added
+        [id, campaignId, leadId, userId]
+      );
+      addedCount++;
+    }
+    console.log(`[DB] Added ${addedCount} leads to campaign ${campaignId}`);
+    return { success: true, count: addedCount };
+  } catch (err) {
+    console.error('[DB] Error adding leads to campaign:', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+export async function getPendingCampaignActions(userId) {
+  const client = await pool.connect();
+  try {
+    // Join campaign_leads with campaigns to get the steps
+    // Join with leads to get profile info
+    const result = await client.query(
+      `SELECT 
+         cl.*,
+         c.steps,
+         l.profile_url,
+         l.name as lead_name
+       FROM campaign_leads cl
+       JOIN campaigns c ON cl.campaign_id = c.id
+       JOIN leads l ON cl.lead_id = l.id
+       WHERE cl.user_id = $1
+         AND cl.status IN ('pending', 'processing')
+         AND c.status = 'active'
+         AND cl.next_action_at <= NOW()
+       ORDER BY cl.next_action_at ASC
+       LIMIT 5`, // Process 5 at a time
+      [userId]
+    );
+    return result.rows;
+  } catch (err) {
+    console.error('[DB] Error getting pending actions:', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+export async function updateCampaignLeadStatus(id, updates) {
+  const client = await pool.connect();
+  try {
+    const { status, current_step, next_action_at, historyEntry } = updates;
+    
+    let query = `UPDATE campaign_leads SET updated_at = NOW()`;
+    const params = [id];
+    let paramIndex = 2;
+
+    if (status) {
+      query += `, status = $${paramIndex}`;
+      params.push(status);
+      paramIndex++;
+    }
+    if (current_step !== undefined) {
+      query += `, current_step = $${paramIndex}`;
+      params.push(current_step);
+      paramIndex++;
+    }
+    if (next_action_at) {
+      query += `, next_action_at = $${paramIndex}`;
+      params.push(next_action_at);
+      paramIndex++;
+    }
+    if (historyEntry) {
+      query += `, history = history || $${paramIndex}::jsonb`;
+      params.push(JSON.stringify([historyEntry])); // Append to array
+      paramIndex++;
+    }
+
+    query += ` WHERE id = $1`;
+
+    await client.query(query, params);
+    return { success: true };
+  } catch (err) {
+    console.error('[DB] Error updating campaign lead:', err);
     throw err;
   } finally {
     client.release();
