@@ -14,6 +14,7 @@ export function CampaignBuilder() {
   const [selectedList, setSelectedList] = useState('referral');
   const [excludeInNetwork, setExcludeInNetwork] = useState(false);
   const [selectedSequence, setSelectedSequence] = useState<SequenceStep | null>(null);
+  const [showRecipients, setShowRecipients] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
 
   const toggleSequence = (id: string) => {
@@ -24,6 +25,12 @@ export function CampaignBuilder() {
 
   const handleSequenceClick = (step: SequenceStep) => {
     setSelectedSequence(step);
+    setShowRecipients(false);
+  };
+
+  const handleRecipientsClick = () => {
+    setShowRecipients(true);
+    setSelectedSequence(null);
   };
 
   const handleLaunchPause = () => {
@@ -42,6 +49,20 @@ export function CampaignBuilder() {
         </div>
 
         <div className="flex-1 overflow-auto">
+          {/* Recipients item */}
+          <div className="p-2 border-b border-border">
+            <div
+              onClick={handleRecipientsClick}
+              className={cn(
+                'flex items-center justify-between px-3 py-2.5 rounded-md cursor-pointer transition-colors',
+                showRecipients && 'bg-accent'
+              )}
+            >
+              <span className="text-sm">Recipients</span>
+            </div>
+          </div>
+
+          {/* Sequence items */}
           <div className="p-2">
             {sequences.map((step) => (
               <div
@@ -122,9 +143,7 @@ export function CampaignBuilder() {
         </div>
 
         <div className="flex-1 overflow-auto p-6">
-          {selectedSequence ? (
-            <SequenceDetail sequence={selectedSequence} />
-          ) : (
+          {showRecipients ? (
             <RecipientsSection
               recipientSource={recipientSource}
               setRecipientSource={setRecipientSource}
@@ -133,6 +152,12 @@ export function CampaignBuilder() {
               excludeInNetwork={excludeInNetwork}
               setExcludeInNetwork={setExcludeInNetwork}
             />
+          ) : selectedSequence ? (
+            <SequenceDetail sequence={selectedSequence} />
+          ) : (
+            <div className="text-muted-foreground text-sm">
+              Select a sequence step or recipients to configure
+            </div>
           )}
         </div>
       </div>
