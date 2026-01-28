@@ -252,28 +252,8 @@ function RecipientsSection({
   return (
     <>
       <h2 className="text-lg font-medium mb-4">Recipients</h2>
-      
-      <div className="bg-accent/50 border border-accent rounded-md p-4 mb-6">
-        <p className="text-sm text-muted-foreground">
-          Recipients who might be already in a running campaign won't be added to this campaign
-        </p>
-      </div>
 
       <div className="space-y-6">
-        <div className="flex items-center gap-8">
-          <label className="text-sm font-medium w-16">From</label>
-          <Select value={recipientSource} onValueChange={setRecipientSource}>
-            <SelectTrigger className="w-48">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="list_of_leads">List of leads</SelectItem>
-              <SelectItem value="search">Search results</SelectItem>
-              <SelectItem value="csv">CSV import</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
         <div className="flex items-center gap-8">
           <label className="text-sm font-medium w-16">List</label>
           <Select value={selectedList} onValueChange={setSelectedList}>
