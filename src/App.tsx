@@ -7,7 +7,6 @@ import { AppNavigation } from "@/components/AppNavigation";
 import Index from "./pages/Index";
 import Campaigns from "./pages/Campaigns";
 import Leads from "./pages/Leads";
-import Templates from "./pages/Templates";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,7 +23,6 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/campaigns" element={<Campaigns />} />
             <Route path="/leads" element={<Leads />} />
-            <Route path="/templates" element={<Templates />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
