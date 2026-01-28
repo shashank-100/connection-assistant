@@ -109,9 +109,6 @@ export function CampaignBuilder() {
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <h1 className="text-lg font-semibold">New campaign</h1>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
-              <Trash2 className="w-4 h-4" />
-            </Button>
             <Button variant="outline">Save draft</Button>
             <Button 
               className={cn(
