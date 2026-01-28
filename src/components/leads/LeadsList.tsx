@@ -71,22 +71,6 @@ export function LeadsList() {
       {/* Header */}
       <div className="flex items-center gap-4 px-6 py-4 border-b border-border">
         <h1 className="text-lg font-semibold">Lists of Leads</h1>
-        
-        <Button className="bg-primary hover:bg-primary/90">
-          New Import
-          <ChevronDown className="w-4 h-4 ml-2" />
-        </Button>
-
-        <Select value={listFilter} onValueChange={setListFilter}>
-          <SelectTrigger className="w-32">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="active">Active lists</SelectItem>
-            <SelectItem value="paused">Paused</SelectItem>
-            <SelectItem value="all">All lists</SelectItem>
-          </SelectContent>
-        </Select>
 
         <Button 
           variant="outline" 
