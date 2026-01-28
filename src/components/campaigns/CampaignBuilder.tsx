@@ -110,9 +110,6 @@ export function CampaignBuilder() {
           <h1 className="text-lg font-semibold">New campaign</h1>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon">
-              <Copy className="w-4 h-4" />
-            </Button>
-            <Button variant="ghost" size="icon">
               <Minus className="w-4 h-4" />
             </Button>
             <Button variant="ghost" size="icon">
