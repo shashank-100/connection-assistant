@@ -170,6 +170,27 @@ export async function deleteLeadsBySource(userId, source) {
   }
 }
 
+export async function deleteCampaignLeadsBySource(userId, source) {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      `DELETE FROM campaign_leads 
+       WHERE lead_id IN (
+         SELECT l.id FROM leads l 
+         WHERE l.user_id = $1 AND l.source = $2
+       )`,
+      [userId, source]
+    );
+    console.log(`[DB] Deleted ${result.rowCount} campaign leads for user: ${userId} with source: ${source}`);
+    return { success: true, count: result.rowCount };
+  } catch (err) {
+    console.error('[DB] Error deleting campaign leads:', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 // Save or update leads
 export async function saveLeads(userId, leads) {
   const client = await pool.connect();

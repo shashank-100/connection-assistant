@@ -1,4 +1,4 @@
-import { saveLeads, getLeads, deleteLeadsBySource, getLeadLists } from "../db.js";
+import { saveLeads, getLeads, deleteLeadsBySource, deleteCampaignLeadsBySource, getLeadLists } from "../db.js";
 
 export default async function handler(req, res) {
   // CORS
@@ -80,6 +80,7 @@ export default async function handler(req, res) {
         });
       }
 
+      const campaignResult = await deleteCampaignLeadsBySource(userId, source);
       const result = await deleteLeadsBySource(userId, source);
 
       return res.status(200).json({
