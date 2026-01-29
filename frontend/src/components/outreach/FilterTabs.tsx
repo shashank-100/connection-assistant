@@ -8,10 +8,8 @@ interface FilterTabsProps {
 
 const tabs: { id: FilterTab; label: string }[] = [
   { id: 'all', label: 'All' },
-  { id: 'unread', label: 'Unread' },
   { id: 'sent-by-member', label: 'Last message sent by member' },
   { id: 'sent-by-me', label: 'Last message sent by me' },
-  { id: 'never-answered', label: 'Never answered' },
 ];
 
 export function FilterTabs({ activeTab, onTabChange, counts }: FilterTabsProps) {

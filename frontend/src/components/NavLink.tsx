@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/link";
+import Link, { LinkProps } from "next/link";
 import { usePathname } from "next/navigation";
 import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
-interface NavLinkProps {
-  href: string;
+interface NavLinkProps extends LinkProps {
   className?: string;
   activeClassName?: string;
   children: React.ReactNode;

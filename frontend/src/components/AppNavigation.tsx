@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Inbox, Megaphone, Users, FileText } from 'lucide-react';
+import { Inbox, Megaphone, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/', label: 'Inbox', icon: Inbox },
-  { href: '/campaigns', label: 'Campaigns', icon: Megaphone },
-  { href: '/leads', label: 'Leads', icon: Users },
+  { to: '/', label: 'Inbox', icon: Inbox },
+  { to: '/campaigns', label: 'Campaigns', icon: Megaphone },
+  { to: '/leads', label: 'Leads', icon: Users },
 ];
 
 export function AppNavigation() {
@@ -17,11 +17,11 @@ export function AppNavigation() {
   return (
     <nav className="flex items-center gap-1 px-4 py-2 border-b border-border bg-background">
       {navItems.map((item) => {
-        const isActive = pathname === item.href;
+        const isActive = pathname === item.to;
         return (
           <Link
-            key={item.href}
-            href={item.href}
+            key={item.to}
+            href={item.to}
             className={cn(
               'flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-colors',
               isActive

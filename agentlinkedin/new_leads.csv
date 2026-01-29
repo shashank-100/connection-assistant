@@ -1,4 +1,8 @@
-name,title,company,profile_url,mutual_connections
+- agentlinkedin/Untitled
+- agentlinkedin/api/leads.js
+- agentlinkedin/leads_manual_import.csv
+- agentlinkedin/local-server.log
+- agentlinkedin/new_leads.csv name,title,company,profile_url,mutual_connections
 Zishan S,Data Engineering Lead | Architecting Scalable Data Solutions | Leading High-Performing Teams in FinTech,,https://www.linkedin.com/in/zishan-s/,26
 Amit Tayade,Developer,Barclays,https://www.linkedin.com/in/amit-tayade/,61
 RASHMI RAUT,Software Developer,NCDEX e Market Ltd,https://www.linkedin.com/in/rashmi-raut/,47
