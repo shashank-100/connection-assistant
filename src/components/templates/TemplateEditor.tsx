@@ -118,13 +118,18 @@ export function TemplateEditor() {
           </div>
 
           {/* Tip Box */}
-          <div className="border-l-4 border-primary bg-primary/5 p-4 mb-4 rounded-r">
-            <p className="font-semibold text-sm mb-1">
-              For best results, define the AI's role with "You are..." instead of "I am...".
+          <div className="border-l-4 border-primary bg-primary/5 p-4 mb-4 rounded-r space-y-2">
+            <p className="font-semibold text-sm">
+              Tips to avoid spam detection:
             </p>
-            <p className="text-sm text-muted-foreground">
-              When you start a prompt with "You are an expert in...", you tell the AI which role to adopt and how to respond. If you write "I am an expert...", you're just describing yourself, not guiding the AI.
-            </p>
+            <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+              <li>Start your prompt with "You are..." to set the AI's role clearly.</li>
+              <li>Instruct the AI to reference something specific about each lead (headline, company, recent work).</li>
+              <li>Ask for varied sentence structure so each message feels unique, not templated.</li>
+              <li>Avoid filler openers like "I hope this finds you well" or "I came across your profile".</li>
+              <li>Keep messages under 90 words — shorter messages have higher reply rates and lower spam scores.</li>
+              <li>Use the delay settings between campaign steps to mimic natural human pacing.</li>
+            </ul>
           </div>
 
           {/* Prompt Textarea */}

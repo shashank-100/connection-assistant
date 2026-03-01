@@ -23,11 +23,16 @@ Take into account the following details:
 
 Format constraints:
 - Keep the message short (40–90 words).
-- Format with line breaks
+- Format with line breaks.
 - Avoid direct sales language (no "I sell," "free demo," etc.).
 - Include a personalized hook related to the lead's context (industry, recent activity, role, etc.).
 - End with a natural opener (a simple question or soft suggestion).
-- Do not sign the message`;
+- Do not sign the message.
+- Write as if it is a genuine one-to-one human message, not a broadcast.
+- Vary sentence structure and vocabulary so each generated message feels unique.
+- Never use filler phrases like "I hope this message finds you well" or "I came across your profile".
+- Reference something specific and real about the lead (their headline, company, or recent work).
+- Do not use bullet points or numbered lists inside the message itself.`;
 
 export const mockTemplates: Template[] = [
   {

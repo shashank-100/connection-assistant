@@ -164,6 +164,7 @@ function SequenceDetail({ sequence }: { sequence: SequenceStep }) {
   const [variables, setVariables] = useState<LeadVariable[]>(defaultVariables);
   const [ignoreDelay, setIgnoreDelay] = useState('1');
   const [messageMode, setMessageMode] = useState<'message' | 'ai_prompt'>('ai_prompt');
+  const [stepDelay, setStepDelay] = useState('2');
 
   const toggleVariable = (variableId: string) => {
     setVariables((prev) =>
@@ -193,6 +194,24 @@ function SequenceDetail({ sequence }: { sequence: SequenceStep }) {
             Messages preview
           </Button>
         </div>
+      </div>
+
+      {/* Delay between steps — shown for all step types */}
+      <div className="flex items-center gap-3 p-3 bg-amber-50 border border-amber-200 rounded-md">
+        <span className="text-sm text-amber-800 font-medium">⏱ Wait</span>
+        <Select value={stepDelay} onValueChange={setStepDelay}>
+          <SelectTrigger className="w-28 bg-white border-amber-300">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="1">1 day</SelectItem>
+            <SelectItem value="2">2 days</SelectItem>
+            <SelectItem value="3">3 days</SelectItem>
+            <SelectItem value="5">5 days</SelectItem>
+            <SelectItem value="7">7 days</SelectItem>
+          </SelectContent>
+        </Select>
+        <span className="text-sm text-amber-700">before this step — helps avoid spam detection.</span>
       </div>
 
       {sequence.type === 'follow_up' && (
@@ -274,13 +293,18 @@ function SequenceDetail({ sequence }: { sequence: SequenceStep }) {
                 </div>
 
                 {/* Tip Box */}
-                <div className="border-l-4 border-primary bg-primary/5 p-4 mb-4 rounded-r">
-                  <p className="font-semibold text-sm mb-1">
-                    For best results, define the AI's role with "You are..." instead of "I am...".
+                <div className="border-l-4 border-primary bg-primary/5 p-4 mb-4 rounded-r space-y-2">
+                  <p className="font-semibold text-sm">
+                    Tips to avoid spam detection:
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    When you start a prompt with "You are an expert in...", you tell the AI which role to adopt and how to respond. If you write "I am an expert...", you're just describing yourself, not guiding the AI.
-                  </p>
+                  <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                    <li>Start your prompt with "You are..." to set the AI's role clearly.</li>
+                    <li>Instruct the AI to reference something specific about each lead (headline, company, recent work).</li>
+                    <li>Ask for varied sentence structure so each message feels unique, not templated.</li>
+                    <li>Avoid filler openers like "I hope this finds you well" or "I came across your profile".</li>
+                    <li>Keep messages under 90 words — shorter messages have higher reply rates and lower spam scores.</li>
+                    <li>Use the delay settings between steps to mimic natural human pacing.</li>
+                  </ul>
                 </div>
 
                 {/* Prompt Textarea */}
@@ -324,10 +348,19 @@ function SequenceDetail({ sequence }: { sequence: SequenceStep }) {
 
       {sequence.type === 'send_invite' && (
         <div className="space-y-4">
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-md text-sm text-amber-800 space-y-1">
+            <p className="font-medium">Tips to avoid spam detection on invite notes:</p>
+            <ul className="list-disc list-inside space-y-0.5 text-amber-700">
+              <li>Keep it under 200 characters — shorter notes feel more genuine.</li>
+              <li>Mention something specific: a shared interest, their recent post, or a mutual contact.</li>
+              <li>Avoid generic phrases like "I'd love to connect" or "expanding my network".</li>
+              <li>Do not include links, phone numbers, or promotional language.</li>
+            </ul>
+          </div>
           <div>
             <label className="text-sm font-medium mb-2 block">Invite Note (optional)</label>
             <Textarea
-              placeholder="Add a personalized note to your invite..."
+              placeholder="e.g. Saw your post on AI in fintech — really resonated with what we're building. Would love to exchange thoughts."
               className="min-h-[100px]"
             />
           </div>
