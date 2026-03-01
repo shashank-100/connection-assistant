@@ -1,6 +1,6 @@
 export interface SequenceStep {
   id: string;
-  type: 'visit_profile' | 'follow_member' | 'like_post' | 'connection_request' | 'send_message' | 'follow_up';
+  type: 'view_profile' | 'follow_contact' | 'engage_post' | 'send_invite' | 'send_message' | 'follow_up';
   label: string;
   enabled: boolean;
   order: number;

@@ -13,7 +13,7 @@ export const defaultVariables: LeadVariable[] = [
   { id: '10', name: 'Conversation', enabled: false },
 ];
 
-export const defaultPromptContent = `You are an expert in B2B copywriting and LinkedIn outreach.
+export const defaultPromptContent = `You are an expert in B2B copywriting and professional outreach.
 Propose a personalized first outreach message that is concise, engaging, and adapted to my business context and the target lead profile.
 
 Take into account the following details:

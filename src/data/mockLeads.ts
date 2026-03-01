@@ -4,7 +4,7 @@ export const mockLeadLists: LeadList[] = [
   {
     id: '1',
     name: 'All leads',
-    source: 'linkedin',
+    source: 'platform',
     memberCount: 0,
     totalCapacity: 0,
     importedAt: '',
@@ -13,7 +13,7 @@ export const mockLeadLists: LeadList[] = [
   {
     id: '2',
     name: 'referral',
-    source: 'linkedin',
+    source: 'platform',
     memberCount: 40,
     totalCapacity: 1000,
     importedAt: 'January 20, 2026 3:59 ...',
@@ -26,5 +26,5 @@ export const mockLeadStats: LeadStats = {
   totalImportedLeads: 40,
   monthlyImports: { used: 30, total: 1000 },
   emailCredits: 30,
-  dailyQuotaLinkedIn: { used: 0, total: 30 },
+  dailyQuota: { used: 0, total: 30 },
 };

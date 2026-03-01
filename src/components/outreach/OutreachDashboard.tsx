@@ -91,7 +91,7 @@ export function OutreachDashboard() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'linkedin-contacts.csv';
+    a.download = 'contacts.csv';
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -99,7 +99,7 @@ export function OutreachDashboard() {
   return (
     <div className="flex flex-col h-screen bg-background">
       <header className="flex items-center justify-between px-6 py-4 border-b border-border">
-        <h1 className="text-lg font-semibold text-foreground">LinkedIn Outreach</h1>
+        <h1 className="text-lg font-semibold text-foreground">Outreach</h1>
         <Button
           variant="outline"
           size="sm"

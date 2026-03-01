@@ -1,7 +1,7 @@
 export interface LeadList {
   id: string;
   name: string;
-  source: 'linkedin' | 'csv' | 'search';
+  source: 'platform' | 'csv' | 'search';
   memberCount: number;
   totalCapacity: number;
   importedAt: string;
@@ -13,5 +13,5 @@ export interface LeadStats {
   totalImportedLeads: number;
   monthlyImports: { used: number; total: number };
   emailCredits: number;
-  dailyQuotaLinkedIn: { used: number; total: number };
+  dailyQuota: { used: number; total: number };
 }

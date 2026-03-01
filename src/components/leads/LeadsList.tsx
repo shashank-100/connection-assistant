@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Search, ChevronDown, Plus, MoreVertical, Linkedin, Users, Upload, FileSpreadsheet, X } from 'lucide-react';
+import { Search, ChevronDown, Plus, MoreVertical, Network, Users, Upload, FileSpreadsheet, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function LeadsList() {
@@ -112,8 +112,8 @@ export function LeadsList() {
             <span className="font-medium">{stats.emailCredits}</span>
           </div>
           <div className="text-sm">
-            <span className="text-muted-foreground">Daily quotas - LinkedIn: </span>
-            <span className="font-medium">{stats.dailyQuotaLinkedIn.used} / {stats.dailyQuotaLinkedIn.total}</span>
+            <span className="text-muted-foreground">Daily quotas: </span>
+            <span className="font-medium">{stats.dailyQuota.used} / {stats.dailyQuota.total}</span>
           </div>
         </div>
       </div>
@@ -250,7 +250,7 @@ function LeadListRow({ list }: { list: LeadList }) {
           </div>
         ) : (
           <div className="w-6 h-6 rounded bg-muted flex items-center justify-center">
-            <Linkedin className="w-4 h-4 text-muted-foreground" />
+            <Network className="w-4 h-4 text-muted-foreground" />
           </div>
         )}
         <span className="text-sm font-medium">{list.name}</span>

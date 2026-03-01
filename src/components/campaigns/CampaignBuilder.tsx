@@ -83,8 +83,8 @@ export function CampaignBuilder() {
                   )}
                 </div>
                 <div onClick={(e) => e.stopPropagation()}>
-                  {step.type === 'visit_profile' || step.type === 'follow_member' || 
-                   step.type === 'like_post' || step.type === 'connection_request' ? (
+                  {step.type === 'view_profile' || step.type === 'follow_contact' ||
+                     step.type === 'engage_post' || step.type === 'send_invite' ? (
                     <Switch
                       checked={step.enabled}
                       onCheckedChange={() => toggleSequence(step.id)}
@@ -322,19 +322,19 @@ function SequenceDetail({ sequence }: { sequence: SequenceStep }) {
         </div>
       )}
 
-      {sequence.type === 'connection_request' && (
+      {sequence.type === 'send_invite' && (
         <div className="space-y-4">
           <div>
-            <label className="text-sm font-medium mb-2 block">Connection Note (optional)</label>
-            <Textarea 
-              placeholder="Add a personalized note to your connection request..." 
+            <label className="text-sm font-medium mb-2 block">Invite Note (optional)</label>
+            <Textarea
+              placeholder="Add a personalized note to your invite..."
               className="min-h-[100px]"
             />
           </div>
         </div>
       )}
 
-      {(sequence.type === 'visit_profile' || sequence.type === 'follow_member' || sequence.type === 'like_post') && (
+      {(sequence.type === 'view_profile' || sequence.type === 'follow_contact' || sequence.type === 'engage_post') && (
         <div className="bg-accent/50 border border-accent rounded-md p-4">
           <p className="text-sm text-muted-foreground">
             This action will be performed automatically when the campaign runs.
