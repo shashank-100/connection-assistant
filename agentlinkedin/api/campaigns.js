@@ -1,21 +1,27 @@
-import { saveCampaign, addLeadsToCampaign, getLeads, getLeadLists } from '../db.js';
+import { saveCampaign, addLeadsToCampaign, getLeads, getLeadLists } from '../db-supabase.js';
 
 export default async function handler(req, res) {
-  // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
   const { userId = 'shashank' } = req.body || req.query;
 
   try {
-    // POST /api/campaigns - Create/Update Campaign
+    // POST /api/campaigns - Create/Update/Start Campaign
     if (req.method === 'POST') {
       const { action } = req.body;
+
+      // STEP 2: Start Route (Strictly flips status)
+      if (action === 'start') {
+        const { campaignId } = req.body;
+        if (!campaignId) throw new Error('Campaign ID required');
+        
+        const { updateCampaignStatus } = await import('../db-supabase.js');
+        await updateCampaignStatus(campaignId, 'active');
+
+        return res.status(200).json({
+          success: true,
+          status: 'started',
+          message: `Campaign ${campaignId} is now active`
+        });
+      }
 
       // LAUNCH: Add leads to campaign
       if (action === 'launch') {

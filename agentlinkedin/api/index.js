@@ -6,7 +6,7 @@ import { LinkedInMessageService } from "../src/services/message.js";
 import { LinkedInConversationsService } from "../src/services/conversations.js";
 import { LinkedInCampaignsService } from "../src/services/campaigns.js";
 import { LinkedInLeadsService } from "../src/services/leads.js";
-import { getCookies } from "../db.js";
+import { getCookies } from "../db-supabase.js";
 
 export default async function handler(req, res) {
   // Allow multiple origins for CORS

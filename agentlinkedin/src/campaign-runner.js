@@ -1,143 +1,92 @@
-import chromium from "@sparticuz/chromium";
-import { BrowserManager } from "../node_modules/agent-browser/dist/browser.js";
-import { getPendingCampaignActions, updateCampaignLeadStatus, getCookies } from "../db.js";
-import { LinkedInConnectService } from "./services/connect.js";
-import { LinkedInMessageService } from "./services/message.js";
-import { LinkedInVisitService } from "./services/visit.js";
-
-const LOOP_INTERVAL_MS = 60 * 1000;
-const BROWSER_TIMEOUT_MS = 10 * 60 * 1000;
+import { getActiveCampaigns, getNextPendingProspect, markProspectDone, markProspectFailed, checkAndCompleteCampaign, getCookies } from '../db-supabase.js';
+import { LinkedInConnectService } from './services/connect.js';
 
 export class CampaignRunner {
   constructor() {
-    this.isRunning = false;
-    this.browser = null;
-    this.lastBrowserInit = 0;
+    this.running = false;
+    this.checkInterval = 5000; // 5 seconds
+    this.minDelay = 45000; // 45 seconds
+    this.maxDelay = 90000; // 90 seconds
   }
 
   async start() {
-    if (this.isRunning) return;
-    this.isRunning = true;
-    console.log('[Runner] Campaign runner started');
-    this.loop();
-  }
+    if (this.running) return;
+    this.running = true;
+    console.log('[RUNNER] Campaign engine started...');
 
-  async loop() {
-    while (this.isRunning) {
+    while (this.running) {
       try {
-        await this.processPendingActions();
-      } catch (err) {
-        console.error('[Runner] Error in loop:', err);
-      }
-      await new Promise(r => setTimeout(r, LOOP_INTERVAL_MS));
-    }
-  }
+        const activeCampaigns = await getActiveCampaigns();
 
-  async getBrowser(userId) {
-    if (!this.browser || (Date.now() - this.lastBrowserInit > BROWSER_TIMEOUT_MS)) {
-      if (this.browser) {
-        try { await this.browser.close(); } catch (e) {}
-      }
-      
-      this.browser = new BrowserManager();
-      const isRailway = !!process.env.RAILWAY_ENVIRONMENT;
-      const isDocker = !!process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
-      
-      const launchOptions = {
-        id: "campaign-runner",
-        action: "launch",
-        headless: true,
-      };
-
-      if (isRailway || isDocker) {
-        launchOptions.executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || '/usr/bin/chromium-browser';
-        launchOptions.args = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'];
-      }
-
-      await this.browser.launch(launchOptions);
-      this.lastBrowserInit = Date.now();
-    }
-
-    const cookies = await getCookies(userId);
-    if (cookies) {
-      const page = this.browser.getPage();
-      await page.context().addCookies(cookies);
-    }
-
-    return this.browser;
-  }
-
-  async processPendingActions() {
-    const userId = 'shashank';
-    const actions = await getPendingCampaignActions(userId); 
-    
-    if (actions.length === 0) return;
-
-    console.log(`[Runner] Processing ${actions.length} actions...`);
-    const browser = await this.getBrowser(userId);
-
-    for (const item of actions) {
-      try {
-        await updateCampaignLeadStatus(item.id, { status: 'processing' });
-
-        const stepConfig = item.steps[item.current_step];
-        const profileUrl = item.profile_url;
-        
-        if (!stepConfig) {
-          await updateCampaignLeadStatus(item.id, { status: 'failed' });
+        if (activeCampaigns.length === 0) {
+          await this.sleep(this.checkInterval);
           continue;
         }
 
-        console.log(`[Runner] Executing ${stepConfig.type} for ${item.lead_name}`);
-        let result = { success: false };
+        for (const campaign of activeCampaigns) {
+          // STEP 3: The Engine - Process ONE prospect per campaign loop
+          const prospect = await getNextPendingProspect(campaign.id);
 
-        switch (stepConfig.type) {
-          case 'visit_profile':
-            await browser.getPage().goto(profileUrl, { waitUntil: 'load', timeout: 30000 });
-            result = { success: true };
-            break;
+          if (!prospect) {
+            // STEP 5: Stop after all are finished
+            await checkAndCompleteCampaign(campaign.id);
+            continue;
+          }
 
-          case 'connection_request':
-            result = await new LinkedInConnectService(browser).sendConnectRequest(profileUrl);
-            break;
+          console.log(`[RUNNER] Processing ${prospect.leadName} (${prospect.profileUrl})`);
 
-          case 'send_message':
-            result = await new LinkedInMessageService(browser).sendMessage(profileUrl, stepConfig.template || "Hello!");
-            break;
-        }
+          try {
+            // Perform action (LinkedIn Connection)
+            const cookies = await getCookies(prospect.user_id);
+            if (!cookies) throw new Error(`No cookies for user: ${prospect.user_id}`);
 
-        if (result.success) {
-            const nextStepIndex = item.current_step + 1;
-            const nextStepConfig = item.steps[nextStepIndex];
+            // Initialize browser via ConnectService (which inherits from BaseLinkedInService)
+            const connectService = new LinkedInConnectService(cookies);
+            await connectService.init(); // Must initialize browser
             
-            let updates = {
-                status: nextStepConfig ? 'pending' : 'completed',
-                current_step: nextStepIndex,
-                historyEntry: { step: item.current_step, type: stepConfig.type, status: 'success', timestamp: new Date().toISOString() }
-            };
+            const result = await connectService.sendConnectRequest(prospect.profileUrl);
 
-            if (nextStepConfig && nextStepConfig.delay) {
-                const nextDate = new Date();
-                nextDate.setDate(nextDate.getDate() + (parseInt(nextStepConfig.delay) || 1));
-                updates.next_action_at = nextDate.toISOString();
-            }
-
-            await updateCampaignLeadStatus(item.id, updates);
-            console.log(`[Runner] Success for ${item.lead_name}. Waiting 2 mins for next action...`);
-            
-            // Mandatory 2-minute wait after a successful action
-            await new Promise(r => setTimeout(r, 2 * 60 * 1000));
-
-        } else {
-            await updateCampaignLeadStatus(item.id, { 
-                status: 'failed',
-                historyEntry: { step: item.current_step, type: stepConfig.type, status: 'failed', error: result.error, timestamp: new Date().toISOString() }
+            // Mark as done
+            await markProspectDone(prospect.id, {
+              action: 'connect',
+              status: 'success',
+              result: result,
+              time: new Date()
             });
+
+            console.log(`[RUNNER] Success: ${prospect.leadName}`);
+
+            // Wait before closing browser (human-like - reviewing LinkedIn notifications, etc.)
+            const preCloseWait = 3000 + Math.random() * 4000; // 3-7 seconds
+            console.log(`[RUNNER] Waiting ${Math.round(preCloseWait/1000)}s before closing browser...`);
+            await this.sleep(preCloseWait);
+
+            await connectService.close(); // Clean up browser
+
+            // Random delay between 45 and 90 seconds
+            const delay = Math.floor(Math.random() * (this.maxDelay - this.minDelay + 1)) + this.minDelay;
+            console.log(`[RUNNER] Sleeping for ${Math.round(delay/1000)}s...`);
+            await this.sleep(delay);
+
+          } catch (err) {
+            console.error(`[RUNNER] Failed processing prospect ${prospect.id}:`, err.message);
+            await markProspectFailed(prospect.id, err.message);
+          }
         }
+
       } catch (err) {
-        console.error(`[Runner] Error processing ${item.id}:`, err);
-        await updateCampaignLeadStatus(item.id, { status: 'failed' });
+        console.error('[RUNNER] Fatal loop error:', err);
       }
+
+      await this.sleep(this.checkInterval);
     }
+  }
+
+  stop() {
+    this.running = false;
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

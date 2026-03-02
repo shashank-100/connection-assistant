@@ -1,16 +1,33 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import handler from './api/index.js';
 import leadsHandler from './api/leads.js';
 import campaignsHandler from './api/campaigns.js';
 import { CampaignRunner } from './src/campaign-runner.js';
-import { initDB, saveCookies, getCookies, deleteCookies } from './db.js';
+import { initDB, saveCookies, getCookies, deleteCookies } from './db-supabase.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Unified CORS configuration
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'https://frontend-production-50ccc.up.railway.app',
+  'http://localhost:3000',
+  'http://localhost:3001'
+].filter(Boolean);
+
 app.use(cors({
-  origin: ['https://frontend-production-50ccc.up.railway.app', 'http://localhost:3000'],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true

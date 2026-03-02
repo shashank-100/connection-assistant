@@ -1,26 +1,6 @@
-import { saveLeads, getLeads, deleteLeadsBySource, deleteCampaignLeadsBySource, getLeadLists } from "../db.js";
+import { saveLeads, getLeads, deleteLeadsBySource, deleteCampaignLeadsBySource, getLeadLists } from "../db-supabase.js";
 
 export default async function handler(req, res) {
-  // CORS
-  const allowedOrigins = [
-    'https://frontend-production-50ccc.up.railway.app',
-    'http://localhost:3000',
-    'http://localhost:3001'
-  ];
-
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
   try {
     // GET - Fetch leads or lists
     if (req.method === 'GET') {
@@ -29,18 +9,45 @@ export default async function handler(req, res) {
       if (action === 'lists') {
         console.log('[Leads API] Fetching lists for userId:', userId);
         const lists = await getLeadLists(userId);
-        console.log('[Leads API] Found lists:', lists);
+        
+        // Map to LeadList type
+        const mappedLists = lists.map(item => ({
+          id: item.source,
+          name: item.source_name || item.source,
+          memberCount: parseInt(item.count || '0'),
+          totalCapacity: parseInt(item.count || '0'),
+          importedAt: new Date().toLocaleDateString(), // Placeholder until tracked in DB
+          status: 'not_started'
+        }));
+
         return res.status(200).json({
           success: true,
-          data: lists,
+          data: mappedLists,
           timestamp: new Date().toISOString(),
         });
       }
 
       const leads = await getLeads(userId);
+      
+      // Map DB snake_case to Frontend camelCase
+      const mappedLeads = leads.map(l => ({
+        id: l.id,
+        name: l.name,
+        title: l.title,
+        company: l.company,
+        profileUrl: l.profile_url,
+        profilePicture: l.profile_picture,
+        status: l.status,
+        source: l.source,
+        campaignId: l.campaign_id,
+        createdAt: l.created_at,
+        sentAt: l.sent_at,
+        connectedAt: l.connected_at
+      }));
+
       return res.status(200).json({
         success: true,
-        data: leads,
+        data: mappedLeads,
         timestamp: new Date().toISOString(),
       });
     }
