@@ -1,0 +1,735 @@
+{
+  "tree": "- button \"LinkedIn\" [ref=e1]\n- textbox \"Search\" [ref=e2]\n- button \"Home, 1 new notification\" [ref=e3]\n- button \"My Network, 1 new notification\" [ref=e4]\n- button \"Jobs, 0 new notifications\" [ref=e5]\n- link \"Messaging, 0 new notifications\" [ref=e6]\n- link \"Notifications, 4 new notifications\" [ref=e7]\n- button \"Me\" [ref=e8]\n- button \"For Business\" [ref=e9]\n- button \"Venkata Padmasri Vaddadi\" [ref=e10]\n- button \"More\" [ref=e11]\n- link \"Message\" [ref=e12]\n- link \"Invite Venkata Padmasri Vaddadi to connect\" [ref=e13]\n- button \"Cover photo\" [ref=e14]\n- button \"Profile photo\" [ref=e15]\n- button \"Venkata Padmasri Vaddadi View Venkata Padmasri’s verifications\" [ref=e16]\n- button \"Venkata Padmasri Vaddadi View Venkata Padmasri’s verifications\" [ref=e17] [nth=1]\n- link \"Contact info\" [ref=e18]\n- button \"Visa\" [ref=e19]\n- button \"Shri Vishnu Engineering College for Women, Vishnupur, Kovvada Village, Bhimavaram, PIN-534202(CC-B0)\" [ref=e20]\n- link \"Rahul, Sai prasad and 5 other mutual connections\" [ref=e21]\n- link \"Rahul, Sai prasad and 5 other mutual connections\" [ref=e22] [nth=1]\n- link \"Invite Venkata Padmasri Vaddadi to connect\" [ref=e23] [nth=1]\n- link \"Message\" [ref=e24] [nth=1]\n- button \"More\" [ref=e25] [nth=1]\n- button \"Follow Venkata Padmasri Vaddadi\" [ref=e26]\n- link \"Venkata Padmasri Vaddadi commented on a post • 7mo Congratulations Apoorva 🎉🎊\" [ref=e27]\n- link \"Venkata Padmasri Vaddadi commented on a post • 9mo Congratulations Rounak 🎉\" [ref=e28]\n- link \"Show all\" [ref=e29]\n- link \"Visa logo\" [ref=e30]\n- link \"Software Engineer Visa · Full-time Jun 2024 - Present · 1 yr 9 mos Bengaluru, Karnataka, India\" [ref=e31]\n- button \"Go (Programming Language), Docker and +1 skill\" [ref=e32]\n- link \"Go (Programming Language), Docker and +1 skill\" [ref=e33]\n- link \"Smart Interviews logo\" [ref=e34]\n- link \"DSA Mentor Smart Interviews · Part-time Jan 2024 - Jun 2024 · 6 mos\" [ref=e35]\n- button \"Data Structures, Problem Solving and +2 skills\" [ref=e36]\n- link \"Data Structures, Problem Solving and +2 skills\" [ref=e37]\n- link \"Persistent Systems logo\" [ref=e38]\n- link \"Intern Persistent Systems · Internship Jun 2023 - Jul 2023 · 2 mos Remote\" [ref=e39]\n- button \"Java, Linux and +2 skills\" [ref=e40]\n- link \"Java, Linux and +2 skills\" [ref=e41]\n- link \"Smart Interviews logo\" [ref=e42] [nth=1]\n- link \"Campus Ambassador Smart Interviews · Part-time Jan 2023 - Jun 2023 · 6 mos Remote\" [ref=e43]\n- button \"Communication\" [ref=e44]\n- link \"Communication\" [ref=e45]\n- link \"The Sparks Foundation logo\" [ref=e46]\n- link \"Web Development Intern The Sparks Foundation · Internship Sep 2022 - Oct 2022 · 2 mos\" [ref=e47]\n- button \"Java, HTML5 and +2 skills\" [ref=e48]\n- link \"Java, HTML5 and +2 skills\" [ref=e49]\n- button \"Show all\" [ref=e50]\n- link \"Shri Vishnu Engineering College for Women, Vishnupur, Kovvada Village, Bhimavaram, PIN-534202(CC-B0) logo\" [ref=e51]\n- link \"Shri Vishnu Engineering College for Women, Vishnupur, Kovvada Village, Bhimavaram, PIN-534202(CC-B0) Bachelor of Technology - BTech, Cse 2020 – 2024\" [ref=e52]\n- link \"LinkedIn logo\" [ref=e53]\n- link \"Show credential\" [ref=e54]\n- button \"Show all skills\" [ref=e55]\n- radio \"Top Voices\" [ref=e56] [checked]:\n- checkbox \"Top Voices\" [ref=e57] [checked]\n- radio \"Companies\" [ref=e58]\n- checkbox \"Companies\" [ref=e59]\n- radio \"Groups\" [ref=e60]\n- checkbox \"Groups\" [ref=e61]\n- radio \"Newsletters\" [ref=e62]\n- checkbox \"Newsletters\" [ref=e63]\n- radio \"Schools\" [ref=e64]\n- checkbox \"Schools\" [ref=e65]\n- link \"Rajat Taneja · 3rd President, Technology at Visa 123,404 followers Follow Rajat Taneja\" [ref=e66]\n- button \"Follow Rajat Taneja\" [ref=e67]\n- link \"Pat Gelsinger · 2nd Electrical engineering expert with four+ decades of technology leadership and experience 299,925 followers Follow Pat Gelsinger\" [ref=e68]\n- button \"Follow Pat Gelsinger\" [ref=e69]\n- button \"Show all\" [ref=e70] [nth=1]\n- link \"Vaishalini Vunnam · 2nd SW Engineer @VISA\" [ref=e71]\n- button \"Follow Vaishalini Vunnam\" [ref=e72]\n- link \"YIVVALA HARSHINI DEVI · 2nd Software Engineer @Visa || Summer Intern @Providence'23 || CSE, SVECW 🎓'24\" [ref=e73]\n- button \"Invite YIVVALA HARSHINI DEVI to connect\" [ref=e74]\n- link \"Koppineedi Meghana Pushpa Sri · 2nd Software Engineer @VISA | DSA mentor for Junior's @Smart Interviews | Amazon MLSS'23 | CSE' 24 @SVECW\" [ref=e75]\n- button \"Invite Koppineedi Meghana Pushpa Sri to connect\" [ref=e76]\n- link \"Kalyani Kaligotla · 3rd Software Engineer @VISA\" [ref=e77]\n- link \"Message\" [ref=e78] [nth=2]\n- link \"Sri Sowmya Darapureddy · 2nd Software Engineer at VISA || Ex-Amazon || Google Women Techmakers member || Student at Sri Vishnu Educational Society For Women\" [ref=e79]\n- button \"Invite Sri Sowmya Darapureddy to connect\" [ref=e80]\n- button \"Show all\" [ref=e81] [nth=2]\n- link \"Bikash Satpathy · 1st SDE III @Walmart | IIT BHU Varanasi\" [ref=e82]\n- link \"Message\" [ref=e83] [nth=3]\n- link \"amit singh · 2nd Tech Lead @ HCLTech, IIITA Prayagraj\" [ref=e84]\n- link \"Message\" [ref=e85] [nth=4]\n- link \"Ankit Kumar · 2nd Tech @ Privado\" [ref=e86]\n- link \"Message\" [ref=e87] [nth=5]\n- link \"Gaurav Singh · 2nd Senior Backend engineer at Goldman Sachs | Ex-Samsung | Ex-Infosys | IIT(ISM) Dhanbad\" [ref=e88]\n- link \"Message\" [ref=e89] [nth=6]\n- link \"About\" [ref=e90]\n- link \"Accessibility\" [ref=e91]\n- link \"Talent Solutions\" [ref=e92]\n- link \"Community Guidelines\" [ref=e93]\n- link \"Careers\" [ref=e94]\n- link \"Marketing Solutions\" [ref=e95]\n- button \"Privacy & Terms\" [ref=e96]\n- link \"Ad Choices\" [ref=e97]\n- link \"Advertising\" [ref=e98]\n- link \"Sales Solutions\" [ref=e99]\n- link \"Mobile\" [ref=e100]\n- link \"Small Business\" [ref=e101]\n- link \"Safety Center\" [ref=e102]\n- link \"Questions?\" [ref=e103]\n- link \"Manage your account and privacy\" [ref=e104]\n- link \"Recommendation transparency\" [ref=e105]\n- combobox \"Select language\" [ref=e106]\n- option \"العربية (Arabic)\" [ref=e107]\n- option \"বাংলা (Bangla)\" [ref=e108]\n- option \"Čeština (Czech)\" [ref=e109]\n- option \"Dansk (Danish)\" [ref=e110]\n- option \"Deutsch (German)\" [ref=e111]\n- option \"Ελληνικά (Greek)\" [ref=e112]\n- option \"English (English)\" [ref=e113] [selected]\n- option \"Español (Spanish)\" [ref=e114]\n- option \"فارسی (Persian)\" [ref=e115]\n- option \"Suomi (Finnish)\" [ref=e116]\n- option \"Français (French)\" [ref=e117]\n- option \"हिंदी (Hindi)\" [ref=e118]\n- option \"Magyar (Hungarian)\" [ref=e119]\n- option \"Bahasa Indonesia (Indonesian)\" [ref=e120]\n- option \"Italiano (Italian)\" [ref=e121]\n- option \"עברית (Hebrew)\" [ref=e122]\n- option \"日本語 (Japanese)\" [ref=e123]\n- option \"한국어 (Korean)\" [ref=e124]\n- option \"मराठी (Marathi)\" [ref=e125]\n- option \"Bahasa Malaysia (Malay)\" [ref=e126]\n- option \"Nederlands (Dutch)\" [ref=e127]\n- option \"Norsk (Norwegian)\" [ref=e128]\n- option \"ਪੰਜਾਬੀ (Punjabi)\" [ref=e129]\n- option \"Polski (Polish)\" [ref=e130]\n- option \"Português (Portuguese)\" [ref=e131]\n- option \"Română (Romanian)\" [ref=e132]\n- option \"Русский (Russian)\" [ref=e133]\n- option \"Svenska (Swedish)\" [ref=e134]\n- option \"తెలుగు (Telugu)\" [ref=e135]\n- option \"ภาษาไทย (Thai)\" [ref=e136]\n- option \"Tagalog (Tagalog)\" [ref=e137]\n- option \"Türkçe (Turkish)\" [ref=e138]\n- option \"Українська (Ukrainian)\" [ref=e139]\n- option \"Tiếng Việt (Vietnamese)\" [ref=e140]\n- option \"简体中文 (Chinese (Simplified))\" [ref=e141]\n- option \"正體中文 (Chinese (Traditional))\" [ref=e142]",
+  "refs": {
+    "e1": {
+      "selector": "getByRole('button', { name: \"LinkedIn\", exact: true })",
+      "role": "button",
+      "name": "LinkedIn"
+    },
+    "e2": {
+      "selector": "getByRole('textbox', { name: \"Search\", exact: true })",
+      "role": "textbox",
+      "name": "Search"
+    },
+    "e3": {
+      "selector": "getByRole('button', { name: \"Home, 1 new notification\", exact: true })",
+      "role": "button",
+      "name": "Home, 1 new notification"
+    },
+    "e4": {
+      "selector": "getByRole('button', { name: \"My Network, 1 new notification\", exact: true })",
+      "role": "button",
+      "name": "My Network, 1 new notification"
+    },
+    "e5": {
+      "selector": "getByRole('button', { name: \"Jobs, 0 new notifications\", exact: true })",
+      "role": "button",
+      "name": "Jobs, 0 new notifications"
+    },
+    "e6": {
+      "selector": "getByRole('link', { name: \"Messaging, 0 new notifications\", exact: true })",
+      "role": "link",
+      "name": "Messaging, 0 new notifications"
+    },
+    "e7": {
+      "selector": "getByRole('link', { name: \"Notifications, 4 new notifications\", exact: true })",
+      "role": "link",
+      "name": "Notifications, 4 new notifications"
+    },
+    "e8": {
+      "selector": "getByRole('button', { name: \"Me\", exact: true })",
+      "role": "button",
+      "name": "Me"
+    },
+    "e9": {
+      "selector": "getByRole('button', { name: \"For Business\", exact: true })",
+      "role": "button",
+      "name": "For Business"
+    },
+    "e10": {
+      "selector": "getByRole('button', { name: \"Venkata Padmasri Vaddadi\", exact: true })",
+      "role": "button",
+      "name": "Venkata Padmasri Vaddadi"
+    },
+    "e11": {
+      "selector": "getByRole('button', { name: \"More\", exact: true })",
+      "role": "button",
+      "name": "More",
+      "nth": 0
+    },
+    "e12": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 0
+    },
+    "e13": {
+      "selector": "getByRole('link', { name: \"Invite Venkata Padmasri Vaddadi to connect\", exact: true })",
+      "role": "link",
+      "name": "Invite Venkata Padmasri Vaddadi to connect",
+      "nth": 0
+    },
+    "e14": {
+      "selector": "getByRole('button', { name: \"Cover photo\", exact: true })",
+      "role": "button",
+      "name": "Cover photo"
+    },
+    "e15": {
+      "selector": "getByRole('button', { name: \"Profile photo\", exact: true })",
+      "role": "button",
+      "name": "Profile photo"
+    },
+    "e16": {
+      "selector": "getByRole('button', { name: \"Venkata Padmasri Vaddadi View Venkata Padmasri’s verifications\", exact: true })",
+      "role": "button",
+      "name": "Venkata Padmasri Vaddadi View Venkata Padmasri’s verifications",
+      "nth": 0
+    },
+    "e17": {
+      "selector": "getByRole('button', { name: \"Venkata Padmasri Vaddadi View Venkata Padmasri’s verifications\", exact: true })",
+      "role": "button",
+      "name": "Venkata Padmasri Vaddadi View Venkata Padmasri’s verifications",
+      "nth": 1
+    },
+    "e18": {
+      "selector": "getByRole('link', { name: \"Contact info\", exact: true })",
+      "role": "link",
+      "name": "Contact info"
+    },
+    "e19": {
+      "selector": "getByRole('button', { name: \"Visa\", exact: true })",
+      "role": "button",
+      "name": "Visa"
+    },
+    "e20": {
+      "selector": "getByRole('button', { name: \"Shri Vishnu Engineering College for Women, Vishnupur, Kovvada Village, Bhimavaram, PIN-534202(CC-B0)\", exact: true })",
+      "role": "button",
+      "name": "Shri Vishnu Engineering College for Women, Vishnupur, Kovvada Village, Bhimavaram, PIN-534202(CC-B0)"
+    },
+    "e21": {
+      "selector": "getByRole('link', { name: \"Rahul, Sai prasad and 5 other mutual connections\", exact: true })",
+      "role": "link",
+      "name": "Rahul, Sai prasad and 5 other mutual connections",
+      "nth": 0
+    },
+    "e22": {
+      "selector": "getByRole('link', { name: \"Rahul, Sai prasad and 5 other mutual connections\", exact: true })",
+      "role": "link",
+      "name": "Rahul, Sai prasad and 5 other mutual connections",
+      "nth": 1
+    },
+    "e23": {
+      "selector": "getByRole('link', { name: \"Invite Venkata Padmasri Vaddadi to connect\", exact: true })",
+      "role": "link",
+      "name": "Invite Venkata Padmasri Vaddadi to connect",
+      "nth": 1
+    },
+    "e24": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 1
+    },
+    "e25": {
+      "selector": "getByRole('button', { name: \"More\", exact: true })",
+      "role": "button",
+      "name": "More",
+      "nth": 1
+    },
+    "e26": {
+      "selector": "getByRole('button', { name: \"Follow Venkata Padmasri Vaddadi\", exact: true })",
+      "role": "button",
+      "name": "Follow Venkata Padmasri Vaddadi"
+    },
+    "e27": {
+      "selector": "getByRole('link', { name: \"Venkata Padmasri Vaddadi commented on a post • 7mo Congratulations Apoorva 🎉🎊\", exact: true })",
+      "role": "link",
+      "name": "Venkata Padmasri Vaddadi commented on a post • 7mo Congratulations Apoorva 🎉🎊"
+    },
+    "e28": {
+      "selector": "getByRole('link', { name: \"Venkata Padmasri Vaddadi commented on a post • 9mo Congratulations Rounak 🎉\", exact: true })",
+      "role": "link",
+      "name": "Venkata Padmasri Vaddadi commented on a post • 9mo Congratulations Rounak 🎉"
+    },
+    "e29": {
+      "selector": "getByRole('link', { name: \"Show all\", exact: true })",
+      "role": "link",
+      "name": "Show all"
+    },
+    "e30": {
+      "selector": "getByRole('link', { name: \"Visa logo\", exact: true })",
+      "role": "link",
+      "name": "Visa logo"
+    },
+    "e31": {
+      "selector": "getByRole('link', { name: \"Software Engineer Visa · Full-time Jun 2024 - Present · 1 yr 9 mos Bengaluru, Karnataka, India\", exact: true })",
+      "role": "link",
+      "name": "Software Engineer Visa · Full-time Jun 2024 - Present · 1 yr 9 mos Bengaluru, Karnataka, India"
+    },
+    "e32": {
+      "selector": "getByRole('button', { name: \"Go (Programming Language), Docker and +1 skill\", exact: true })",
+      "role": "button",
+      "name": "Go (Programming Language), Docker and +1 skill"
+    },
+    "e33": {
+      "selector": "getByRole('link', { name: \"Go (Programming Language), Docker and +1 skill\", exact: true })",
+      "role": "link",
+      "name": "Go (Programming Language), Docker and +1 skill"
+    },
+    "e34": {
+      "selector": "getByRole('link', { name: \"Smart Interviews logo\", exact: true })",
+      "role": "link",
+      "name": "Smart Interviews logo",
+      "nth": 0
+    },
+    "e35": {
+      "selector": "getByRole('link', { name: \"DSA Mentor Smart Interviews · Part-time Jan 2024 - Jun 2024 · 6 mos\", exact: true })",
+      "role": "link",
+      "name": "DSA Mentor Smart Interviews · Part-time Jan 2024 - Jun 2024 · 6 mos"
+    },
+    "e36": {
+      "selector": "getByRole('button', { name: \"Data Structures, Problem Solving and +2 skills\", exact: true })",
+      "role": "button",
+      "name": "Data Structures, Problem Solving and +2 skills"
+    },
+    "e37": {
+      "selector": "getByRole('link', { name: \"Data Structures, Problem Solving and +2 skills\", exact: true })",
+      "role": "link",
+      "name": "Data Structures, Problem Solving and +2 skills"
+    },
+    "e38": {
+      "selector": "getByRole('link', { name: \"Persistent Systems logo\", exact: true })",
+      "role": "link",
+      "name": "Persistent Systems logo"
+    },
+    "e39": {
+      "selector": "getByRole('link', { name: \"Intern Persistent Systems · Internship Jun 2023 - Jul 2023 · 2 mos Remote\", exact: true })",
+      "role": "link",
+      "name": "Intern Persistent Systems · Internship Jun 2023 - Jul 2023 · 2 mos Remote"
+    },
+    "e40": {
+      "selector": "getByRole('button', { name: \"Java, Linux and +2 skills\", exact: true })",
+      "role": "button",
+      "name": "Java, Linux and +2 skills"
+    },
+    "e41": {
+      "selector": "getByRole('link', { name: \"Java, Linux and +2 skills\", exact: true })",
+      "role": "link",
+      "name": "Java, Linux and +2 skills"
+    },
+    "e42": {
+      "selector": "getByRole('link', { name: \"Smart Interviews logo\", exact: true })",
+      "role": "link",
+      "name": "Smart Interviews logo",
+      "nth": 1
+    },
+    "e43": {
+      "selector": "getByRole('link', { name: \"Campus Ambassador Smart Interviews · Part-time Jan 2023 - Jun 2023 · 6 mos Remote\", exact: true })",
+      "role": "link",
+      "name": "Campus Ambassador Smart Interviews · Part-time Jan 2023 - Jun 2023 · 6 mos Remote"
+    },
+    "e44": {
+      "selector": "getByRole('button', { name: \"Communication\", exact: true })",
+      "role": "button",
+      "name": "Communication"
+    },
+    "e45": {
+      "selector": "getByRole('link', { name: \"Communication\", exact: true })",
+      "role": "link",
+      "name": "Communication"
+    },
+    "e46": {
+      "selector": "getByRole('link', { name: \"The Sparks Foundation logo\", exact: true })",
+      "role": "link",
+      "name": "The Sparks Foundation logo"
+    },
+    "e47": {
+      "selector": "getByRole('link', { name: \"Web Development Intern The Sparks Foundation · Internship Sep 2022 - Oct 2022 · 2 mos\", exact: true })",
+      "role": "link",
+      "name": "Web Development Intern The Sparks Foundation · Internship Sep 2022 - Oct 2022 · 2 mos"
+    },
+    "e48": {
+      "selector": "getByRole('button', { name: \"Java, HTML5 and +2 skills\", exact: true })",
+      "role": "button",
+      "name": "Java, HTML5 and +2 skills"
+    },
+    "e49": {
+      "selector": "getByRole('link', { name: \"Java, HTML5 and +2 skills\", exact: true })",
+      "role": "link",
+      "name": "Java, HTML5 and +2 skills"
+    },
+    "e50": {
+      "selector": "getByRole('button', { name: \"Show all\", exact: true })",
+      "role": "button",
+      "name": "Show all",
+      "nth": 0
+    },
+    "e51": {
+      "selector": "getByRole('link', { name: \"Shri Vishnu Engineering College for Women, Vishnupur, Kovvada Village, Bhimavaram, PIN-534202(CC-B0) logo\", exact: true })",
+      "role": "link",
+      "name": "Shri Vishnu Engineering College for Women, Vishnupur, Kovvada Village, Bhimavaram, PIN-534202(CC-B0) logo"
+    },
+    "e52": {
+      "selector": "getByRole('link', { name: \"Shri Vishnu Engineering College for Women, Vishnupur, Kovvada Village, Bhimavaram, PIN-534202(CC-B0) Bachelor of Technology - BTech, Cse 2020 – 2024\", exact: true })",
+      "role": "link",
+      "name": "Shri Vishnu Engineering College for Women, Vishnupur, Kovvada Village, Bhimavaram, PIN-534202(CC-B0) Bachelor of Technology - BTech, Cse 2020 – 2024"
+    },
+    "e53": {
+      "selector": "getByRole('link', { name: \"LinkedIn logo\", exact: true })",
+      "role": "link",
+      "name": "LinkedIn logo"
+    },
+    "e54": {
+      "selector": "getByRole('link', { name: \"Show credential\", exact: true })",
+      "role": "link",
+      "name": "Show credential"
+    },
+    "e55": {
+      "selector": "getByRole('button', { name: \"Show all skills\", exact: true })",
+      "role": "button",
+      "name": "Show all skills"
+    },
+    "e56": {
+      "selector": "getByRole('radio', { name: \"Top Voices\", exact: true })",
+      "role": "radio",
+      "name": "Top Voices"
+    },
+    "e57": {
+      "selector": "getByRole('checkbox', { name: \"Top Voices\", exact: true })",
+      "role": "checkbox",
+      "name": "Top Voices"
+    },
+    "e58": {
+      "selector": "getByRole('radio', { name: \"Companies\", exact: true })",
+      "role": "radio",
+      "name": "Companies"
+    },
+    "e59": {
+      "selector": "getByRole('checkbox', { name: \"Companies\", exact: true })",
+      "role": "checkbox",
+      "name": "Companies"
+    },
+    "e60": {
+      "selector": "getByRole('radio', { name: \"Groups\", exact: true })",
+      "role": "radio",
+      "name": "Groups"
+    },
+    "e61": {
+      "selector": "getByRole('checkbox', { name: \"Groups\", exact: true })",
+      "role": "checkbox",
+      "name": "Groups"
+    },
+    "e62": {
+      "selector": "getByRole('radio', { name: \"Newsletters\", exact: true })",
+      "role": "radio",
+      "name": "Newsletters"
+    },
+    "e63": {
+      "selector": "getByRole('checkbox', { name: \"Newsletters\", exact: true })",
+      "role": "checkbox",
+      "name": "Newsletters"
+    },
+    "e64": {
+      "selector": "getByRole('radio', { name: \"Schools\", exact: true })",
+      "role": "radio",
+      "name": "Schools"
+    },
+    "e65": {
+      "selector": "getByRole('checkbox', { name: \"Schools\", exact: true })",
+      "role": "checkbox",
+      "name": "Schools"
+    },
+    "e66": {
+      "selector": "getByRole('link', { name: \"Rajat Taneja · 3rd President, Technology at Visa 123,404 followers Follow Rajat Taneja\", exact: true })",
+      "role": "link",
+      "name": "Rajat Taneja · 3rd President, Technology at Visa 123,404 followers Follow Rajat Taneja"
+    },
+    "e67": {
+      "selector": "getByRole('button', { name: \"Follow Rajat Taneja\", exact: true })",
+      "role": "button",
+      "name": "Follow Rajat Taneja"
+    },
+    "e68": {
+      "selector": "getByRole('link', { name: \"Pat Gelsinger · 2nd Electrical engineering expert with four+ decades of technology leadership and experience 299,925 followers Follow Pat Gelsinger\", exact: true })",
+      "role": "link",
+      "name": "Pat Gelsinger · 2nd Electrical engineering expert with four+ decades of technology leadership and experience 299,925 followers Follow Pat Gelsinger"
+    },
+    "e69": {
+      "selector": "getByRole('button', { name: \"Follow Pat Gelsinger\", exact: true })",
+      "role": "button",
+      "name": "Follow Pat Gelsinger"
+    },
+    "e70": {
+      "selector": "getByRole('button', { name: \"Show all\", exact: true })",
+      "role": "button",
+      "name": "Show all",
+      "nth": 1
+    },
+    "e71": {
+      "selector": "getByRole('link', { name: \"Vaishalini Vunnam · 2nd SW Engineer @VISA\", exact: true })",
+      "role": "link",
+      "name": "Vaishalini Vunnam · 2nd SW Engineer @VISA"
+    },
+    "e72": {
+      "selector": "getByRole('button', { name: \"Follow Vaishalini Vunnam\", exact: true })",
+      "role": "button",
+      "name": "Follow Vaishalini Vunnam"
+    },
+    "e73": {
+      "selector": "getByRole('link', { name: \"YIVVALA HARSHINI DEVI · 2nd Software Engineer @Visa || Summer Intern @Providence'23 || CSE, SVECW 🎓'24\", exact: true })",
+      "role": "link",
+      "name": "YIVVALA HARSHINI DEVI · 2nd Software Engineer @Visa || Summer Intern @Providence'23 || CSE, SVECW 🎓'24"
+    },
+    "e74": {
+      "selector": "getByRole('button', { name: \"Invite YIVVALA HARSHINI DEVI to connect\", exact: true })",
+      "role": "button",
+      "name": "Invite YIVVALA HARSHINI DEVI to connect"
+    },
+    "e75": {
+      "selector": "getByRole('link', { name: \"Koppineedi Meghana Pushpa Sri · 2nd Software Engineer @VISA | DSA mentor for Junior's @Smart Interviews | Amazon MLSS'23 | CSE' 24 @SVECW\", exact: true })",
+      "role": "link",
+      "name": "Koppineedi Meghana Pushpa Sri · 2nd Software Engineer @VISA | DSA mentor for Junior's @Smart Interviews | Amazon MLSS'23 | CSE' 24 @SVECW"
+    },
+    "e76": {
+      "selector": "getByRole('button', { name: \"Invite Koppineedi Meghana Pushpa Sri to connect\", exact: true })",
+      "role": "button",
+      "name": "Invite Koppineedi Meghana Pushpa Sri to connect"
+    },
+    "e77": {
+      "selector": "getByRole('link', { name: \"Kalyani Kaligotla · 3rd Software Engineer @VISA\", exact: true })",
+      "role": "link",
+      "name": "Kalyani Kaligotla · 3rd Software Engineer @VISA"
+    },
+    "e78": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 2
+    },
+    "e79": {
+      "selector": "getByRole('link', { name: \"Sri Sowmya Darapureddy · 2nd Software Engineer at VISA || Ex-Amazon || Google Women Techmakers member || Student at Sri Vishnu Educational Society For Women\", exact: true })",
+      "role": "link",
+      "name": "Sri Sowmya Darapureddy · 2nd Software Engineer at VISA || Ex-Amazon || Google Women Techmakers member || Student at Sri Vishnu Educational Society For Women"
+    },
+    "e80": {
+      "selector": "getByRole('button', { name: \"Invite Sri Sowmya Darapureddy to connect\", exact: true })",
+      "role": "button",
+      "name": "Invite Sri Sowmya Darapureddy to connect"
+    },
+    "e81": {
+      "selector": "getByRole('button', { name: \"Show all\", exact: true })",
+      "role": "button",
+      "name": "Show all",
+      "nth": 2
+    },
+    "e82": {
+      "selector": "getByRole('link', { name: \"Bikash Satpathy · 1st SDE III @Walmart | IIT BHU Varanasi\", exact: true })",
+      "role": "link",
+      "name": "Bikash Satpathy · 1st SDE III @Walmart | IIT BHU Varanasi"
+    },
+    "e83": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 3
+    },
+    "e84": {
+      "selector": "getByRole('link', { name: \"amit singh · 2nd Tech Lead @ HCLTech, IIITA Prayagraj\", exact: true })",
+      "role": "link",
+      "name": "amit singh · 2nd Tech Lead @ HCLTech, IIITA Prayagraj"
+    },
+    "e85": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 4
+    },
+    "e86": {
+      "selector": "getByRole('link', { name: \"Ankit Kumar · 2nd Tech @ Privado\", exact: true })",
+      "role": "link",
+      "name": "Ankit Kumar · 2nd Tech @ Privado"
+    },
+    "e87": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 5
+    },
+    "e88": {
+      "selector": "getByRole('link', { name: \"Gaurav Singh · 2nd Senior Backend engineer at Goldman Sachs | Ex-Samsung | Ex-Infosys | IIT(ISM) Dhanbad\", exact: true })",
+      "role": "link",
+      "name": "Gaurav Singh · 2nd Senior Backend engineer at Goldman Sachs | Ex-Samsung | Ex-Infosys | IIT(ISM) Dhanbad"
+    },
+    "e89": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 6
+    },
+    "e90": {
+      "selector": "getByRole('link', { name: \"About\", exact: true })",
+      "role": "link",
+      "name": "About"
+    },
+    "e91": {
+      "selector": "getByRole('link', { name: \"Accessibility\", exact: true })",
+      "role": "link",
+      "name": "Accessibility"
+    },
+    "e92": {
+      "selector": "getByRole('link', { name: \"Talent Solutions\", exact: true })",
+      "role": "link",
+      "name": "Talent Solutions"
+    },
+    "e93": {
+      "selector": "getByRole('link', { name: \"Community Guidelines\", exact: true })",
+      "role": "link",
+      "name": "Community Guidelines"
+    },
+    "e94": {
+      "selector": "getByRole('link', { name: \"Careers\", exact: true })",
+      "role": "link",
+      "name": "Careers"
+    },
+    "e95": {
+      "selector": "getByRole('link', { name: \"Marketing Solutions\", exact: true })",
+      "role": "link",
+      "name": "Marketing Solutions"
+    },
+    "e96": {
+      "selector": "getByRole('button', { name: \"Privacy & Terms\", exact: true })",
+      "role": "button",
+      "name": "Privacy & Terms"
+    },
+    "e97": {
+      "selector": "getByRole('link', { name: \"Ad Choices\", exact: true })",
+      "role": "link",
+      "name": "Ad Choices"
+    },
+    "e98": {
+      "selector": "getByRole('link', { name: \"Advertising\", exact: true })",
+      "role": "link",
+      "name": "Advertising"
+    },
+    "e99": {
+      "selector": "getByRole('link', { name: \"Sales Solutions\", exact: true })",
+      "role": "link",
+      "name": "Sales Solutions"
+    },
+    "e100": {
+      "selector": "getByRole('link', { name: \"Mobile\", exact: true })",
+      "role": "link",
+      "name": "Mobile"
+    },
+    "e101": {
+      "selector": "getByRole('link', { name: \"Small Business\", exact: true })",
+      "role": "link",
+      "name": "Small Business"
+    },
+    "e102": {
+      "selector": "getByRole('link', { name: \"Safety Center\", exact: true })",
+      "role": "link",
+      "name": "Safety Center"
+    },
+    "e103": {
+      "selector": "getByRole('link', { name: \"Questions?\", exact: true })",
+      "role": "link",
+      "name": "Questions?"
+    },
+    "e104": {
+      "selector": "getByRole('link', { name: \"Manage your account and privacy\", exact: true })",
+      "role": "link",
+      "name": "Manage your account and privacy"
+    },
+    "e105": {
+      "selector": "getByRole('link', { name: \"Recommendation transparency\", exact: true })",
+      "role": "link",
+      "name": "Recommendation transparency"
+    },
+    "e106": {
+      "selector": "getByRole('combobox', { name: \"Select language\", exact: true })",
+      "role": "combobox",
+      "name": "Select language"
+    },
+    "e107": {
+      "selector": "getByRole('option', { name: \"العربية (Arabic)\", exact: true })",
+      "role": "option",
+      "name": "العربية (Arabic)"
+    },
+    "e108": {
+      "selector": "getByRole('option', { name: \"বাংলা (Bangla)\", exact: true })",
+      "role": "option",
+      "name": "বাংলা (Bangla)"
+    },
+    "e109": {
+      "selector": "getByRole('option', { name: \"Čeština (Czech)\", exact: true })",
+      "role": "option",
+      "name": "Čeština (Czech)"
+    },
+    "e110": {
+      "selector": "getByRole('option', { name: \"Dansk (Danish)\", exact: true })",
+      "role": "option",
+      "name": "Dansk (Danish)"
+    },
+    "e111": {
+      "selector": "getByRole('option', { name: \"Deutsch (German)\", exact: true })",
+      "role": "option",
+      "name": "Deutsch (German)"
+    },
+    "e112": {
+      "selector": "getByRole('option', { name: \"Ελληνικά (Greek)\", exact: true })",
+      "role": "option",
+      "name": "Ελληνικά (Greek)"
+    },
+    "e113": {
+      "selector": "getByRole('option', { name: \"English (English)\", exact: true })",
+      "role": "option",
+      "name": "English (English)"
+    },
+    "e114": {
+      "selector": "getByRole('option', { name: \"Español (Spanish)\", exact: true })",
+      "role": "option",
+      "name": "Español (Spanish)"
+    },
+    "e115": {
+      "selector": "getByRole('option', { name: \"فارسی (Persian)\", exact: true })",
+      "role": "option",
+      "name": "فارسی (Persian)"
+    },
+    "e116": {
+      "selector": "getByRole('option', { name: \"Suomi (Finnish)\", exact: true })",
+      "role": "option",
+      "name": "Suomi (Finnish)"
+    },
+    "e117": {
+      "selector": "getByRole('option', { name: \"Français (French)\", exact: true })",
+      "role": "option",
+      "name": "Français (French)"
+    },
+    "e118": {
+      "selector": "getByRole('option', { name: \"हिंदी (Hindi)\", exact: true })",
+      "role": "option",
+      "name": "हिंदी (Hindi)"
+    },
+    "e119": {
+      "selector": "getByRole('option', { name: \"Magyar (Hungarian)\", exact: true })",
+      "role": "option",
+      "name": "Magyar (Hungarian)"
+    },
+    "e120": {
+      "selector": "getByRole('option', { name: \"Bahasa Indonesia (Indonesian)\", exact: true })",
+      "role": "option",
+      "name": "Bahasa Indonesia (Indonesian)"
+    },
+    "e121": {
+      "selector": "getByRole('option', { name: \"Italiano (Italian)\", exact: true })",
+      "role": "option",
+      "name": "Italiano (Italian)"
+    },
+    "e122": {
+      "selector": "getByRole('option', { name: \"עברית (Hebrew)\", exact: true })",
+      "role": "option",
+      "name": "עברית (Hebrew)"
+    },
+    "e123": {
+      "selector": "getByRole('option', { name: \"日本語 (Japanese)\", exact: true })",
+      "role": "option",
+      "name": "日本語 (Japanese)"
+    },
+    "e124": {
+      "selector": "getByRole('option', { name: \"한국어 (Korean)\", exact: true })",
+      "role": "option",
+      "name": "한국어 (Korean)"
+    },
+    "e125": {
+      "selector": "getByRole('option', { name: \"मराठी (Marathi)\", exact: true })",
+      "role": "option",
+      "name": "मराठी (Marathi)"
+    },
+    "e126": {
+      "selector": "getByRole('option', { name: \"Bahasa Malaysia (Malay)\", exact: true })",
+      "role": "option",
+      "name": "Bahasa Malaysia (Malay)"
+    },
+    "e127": {
+      "selector": "getByRole('option', { name: \"Nederlands (Dutch)\", exact: true })",
+      "role": "option",
+      "name": "Nederlands (Dutch)"
+    },
+    "e128": {
+      "selector": "getByRole('option', { name: \"Norsk (Norwegian)\", exact: true })",
+      "role": "option",
+      "name": "Norsk (Norwegian)"
+    },
+    "e129": {
+      "selector": "getByRole('option', { name: \"ਪੰਜਾਬੀ (Punjabi)\", exact: true })",
+      "role": "option",
+      "name": "ਪੰਜਾਬੀ (Punjabi)"
+    },
+    "e130": {
+      "selector": "getByRole('option', { name: \"Polski (Polish)\", exact: true })",
+      "role": "option",
+      "name": "Polski (Polish)"
+    },
+    "e131": {
+      "selector": "getByRole('option', { name: \"Português (Portuguese)\", exact: true })",
+      "role": "option",
+      "name": "Português (Portuguese)"
+    },
+    "e132": {
+      "selector": "getByRole('option', { name: \"Română (Romanian)\", exact: true })",
+      "role": "option",
+      "name": "Română (Romanian)"
+    },
+    "e133": {
+      "selector": "getByRole('option', { name: \"Русский (Russian)\", exact: true })",
+      "role": "option",
+      "name": "Русский (Russian)"
+    },
+    "e134": {
+      "selector": "getByRole('option', { name: \"Svenska (Swedish)\", exact: true })",
+      "role": "option",
+      "name": "Svenska (Swedish)"
+    },
+    "e135": {
+      "selector": "getByRole('option', { name: \"తెలుగు (Telugu)\", exact: true })",
+      "role": "option",
+      "name": "తెలుగు (Telugu)"
+    },
+    "e136": {
+      "selector": "getByRole('option', { name: \"ภาษาไทย (Thai)\", exact: true })",
+      "role": "option",
+      "name": "ภาษาไทย (Thai)"
+    },
+    "e137": {
+      "selector": "getByRole('option', { name: \"Tagalog (Tagalog)\", exact: true })",
+      "role": "option",
+      "name": "Tagalog (Tagalog)"
+    },
+    "e138": {
+      "selector": "getByRole('option', { name: \"Türkçe (Turkish)\", exact: true })",
+      "role": "option",
+      "name": "Türkçe (Turkish)"
+    },
+    "e139": {
+      "selector": "getByRole('option', { name: \"Українська (Ukrainian)\", exact: true })",
+      "role": "option",
+      "name": "Українська (Ukrainian)"
+    },
+    "e140": {
+      "selector": "getByRole('option', { name: \"Tiếng Việt (Vietnamese)\", exact: true })",
+      "role": "option",
+      "name": "Tiếng Việt (Vietnamese)"
+    },
+    "e141": {
+      "selector": "getByRole('option', { name: \"简体中文 (Chinese (Simplified))\", exact: true })",
+      "role": "option",
+      "name": "简体中文 (Chinese (Simplified))"
+    },
+    "e142": {
+      "selector": "getByRole('option', { name: \"正體中文 (Chinese (Traditional))\", exact: true })",
+      "role": "option",
+      "name": "正體中文 (Chinese (Traditional))"
+    }
+  }
+}

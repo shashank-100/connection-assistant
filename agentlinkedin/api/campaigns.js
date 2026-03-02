@@ -73,16 +73,17 @@ export default async function handler(req, res) {
       }
 
       // SAVE: Create or update campaign config
-      const { id, name, status, steps, settings } = req.body;
-      
+      const { id, name, status, steps, settings, linkedin_account_id } = req.body;
+
       if (!id || !steps) throw new Error('Invalid campaign data');
 
       await saveCampaign(userId, {
-        id, 
-        name, 
-        status: status || 'active', 
-        steps, 
-        settings: settings || {}
+        id,
+        name,
+        status: status || 'active',
+        steps,
+        settings: settings || {},
+        linkedin_account_id: linkedin_account_id || null,
       });
 
       return res.status(200).json({

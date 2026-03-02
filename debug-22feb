@@ -1,0 +1,520 @@
+{
+  "tree": "- button \"LinkedIn\" [ref=e1]\n- textbox \"Search\" [ref=e2]\n- button \"Home, 1 new notification\" [ref=e3]\n- button \"My Network, 0 new notifications\" [ref=e4]\n- button \"Jobs, 0 new notifications\" [ref=e5]\n- link \"Messaging, 0 new notifications\" [ref=e6]\n- link \"Notifications, 3 new notifications\" [ref=e7]\n- button \"Me\" [ref=e8]\n- button \"For Business\" [ref=e9]\n- button \"Dony Vincent\" [ref=e10]\n- button \"More\" [ref=e11]\n- link \"Message\" [ref=e12]\n- link \"Invite Dony Vincent to connect\" [ref=e13]\n- button \"Cover photo\" [ref=e14]\n- button \"Profile photo\" [ref=e15]\n- button \"Dony is a Premium member\" [ref=e16]\n- button \"Dony Vincent View Dony’s verifications\" [ref=e17]\n- button \"Dony Vincent View Dony’s verifications\" [ref=e18] [nth=1]\n- link \"Contact info\" [ref=e19]\n- button \"NullClass\" [ref=e20]\n- button \"Viswajyothi College of Engineering and Technology, Vazhakulam P.O., Muvattupuzha , Ernakulam- 686 670\" [ref=e21]\n- link \"Samiran is a mutual connection\" [ref=e22]\n- link \"Samiran is a mutual connection\" [ref=e23] [nth=1]\n- link \"Invite Dony Vincent to connect\" [ref=e24] [nth=1]\n- link \"Message\" [ref=e25] [nth=1]\n- button \"More\" [ref=e26] [nth=1]\n- link \"Open to work Cloud Engineer, Cloud Engineer, Cloud Consultant and Cloud Consultant roles Show details\" [ref=e27]\n- button [ref=e28]\n- link \"Amal s pillai · 3rd Jr. Cloud Engineer at Cygnoz | Linux | AWS | Docker | Kubernetes | Git | Ansible | Jenkins | Terraform\" [ref=e29]\n- link \"Message\" [ref=e30] [nth=2]\n- link \"Athul G · 2nd BTech Graduate | Aspiring Cloud Engineer | Cloud & Business Management Enthusiast\" [ref=e31]\n- button \"Invite Athul G to connect\" [ref=e32]\n- link \"Dibin Sabu · 3rd DevOps | Cloud Engineer\" [ref=e33]\n- link \"Message\" [ref=e34] [nth=3]\n- link \"SHYAMDEV K · 3rd Junior Cloud Monitoring Engineer at HAZERCLOUD® | AWS | DevOps | Cloud & Infrastructure Monitoring\" [ref=e35]\n- link \"Message\" [ref=e36] [nth=4]\n- link \"Anna susan jose · 2nd Analyst @ Deloitte USI\" [ref=e37]\n- button \"Invite Anna susan jose to connect\" [ref=e38]\n- button \"Show all\" [ref=e39]\n- link \"Suraj Gahatyari · 2nd Senior Software Engineer | IndiaMART InterMesh Ltd | B.Tech in Computer Science\" [ref=e40]\n- link \"Message\" [ref=e41] [nth=5]\n- link \"chinmay warwade · 1st Software Engineer @ Company | Operating Systems, Computer Architecture, AI and ML, Database ,Computer Security, Streaming Applications.\" [ref=e42]\n- link \"Message\" [ref=e43] [nth=6]\n- link \"Siva Bonthada · 2nd Data Scientist @ Mercedes-Benz R&D\" [ref=e44]\n- button \"Follow Siva Bonthada\" [ref=e45]\n- link \"Gaurav Singh · 2nd Senior Backend engineer at Goldman Sachs | Ex-Samsung | Ex-Infosys | IIT(ISM) Dhanbad\" [ref=e46]\n- link \"Message\" [ref=e47] [nth=7]\n- link \"About\" [ref=e48]\n- link \"Accessibility\" [ref=e49]\n- link \"Talent Solutions\" [ref=e50]\n- link \"Community Guidelines\" [ref=e51]\n- link \"Careers\" [ref=e52]\n- link \"Marketing Solutions\" [ref=e53]\n- button \"Privacy & Terms\" [ref=e54]\n- link \"Ad Choices\" [ref=e55]\n- link \"Advertising\" [ref=e56]\n- link \"Sales Solutions\" [ref=e57]\n- link \"Mobile\" [ref=e58]\n- link \"Small Business\" [ref=e59]\n- link \"Safety Center\" [ref=e60]\n- link \"Questions?\" [ref=e61]\n- link \"Manage your account and privacy\" [ref=e62]\n- link \"Recommendation transparency\" [ref=e63]\n- combobox \"Select language\" [ref=e64]\n- option \"العربية (Arabic)\" [ref=e65]\n- option \"বাংলা (Bangla)\" [ref=e66]\n- option \"Čeština (Czech)\" [ref=e67]\n- option \"Dansk (Danish)\" [ref=e68]\n- option \"Deutsch (German)\" [ref=e69]\n- option \"Ελληνικά (Greek)\" [ref=e70]\n- option \"English (English)\" [ref=e71] [selected]\n- option \"Español (Spanish)\" [ref=e72]\n- option \"فارسی (Persian)\" [ref=e73]\n- option \"Suomi (Finnish)\" [ref=e74]\n- option \"Français (French)\" [ref=e75]\n- option \"हिंदी (Hindi)\" [ref=e76]\n- option \"Magyar (Hungarian)\" [ref=e77]\n- option \"Bahasa Indonesia (Indonesian)\" [ref=e78]\n- option \"Italiano (Italian)\" [ref=e79]\n- option \"עברית (Hebrew)\" [ref=e80]\n- option \"日本語 (Japanese)\" [ref=e81]\n- option \"한국어 (Korean)\" [ref=e82]\n- option \"मराठी (Marathi)\" [ref=e83]\n- option \"Bahasa Malaysia (Malay)\" [ref=e84]\n- option \"Nederlands (Dutch)\" [ref=e85]\n- option \"Norsk (Norwegian)\" [ref=e86]\n- option \"ਪੰਜਾਬੀ (Punjabi)\" [ref=e87]\n- option \"Polski (Polish)\" [ref=e88]\n- option \"Português (Portuguese)\" [ref=e89]\n- option \"Română (Romanian)\" [ref=e90]\n- option \"Русский (Russian)\" [ref=e91]\n- option \"Svenska (Swedish)\" [ref=e92]\n- option \"తెలుగు (Telugu)\" [ref=e93]\n- option \"ภาษาไทย (Thai)\" [ref=e94]\n- option \"Tagalog (Tagalog)\" [ref=e95]\n- option \"Türkçe (Turkish)\" [ref=e96]\n- option \"Українська (Ukrainian)\" [ref=e97]\n- option \"Tiếng Việt (Vietnamese)\" [ref=e98]\n- option \"简体中文 (Chinese (Simplified))\" [ref=e99]\n- option \"正體中文 (Chinese (Traditional))\" [ref=e100]",
+  "refs": {
+    "e1": {
+      "selector": "getByRole('button', { name: \"LinkedIn\", exact: true })",
+      "role": "button",
+      "name": "LinkedIn"
+    },
+    "e2": {
+      "selector": "getByRole('textbox', { name: \"Search\", exact: true })",
+      "role": "textbox",
+      "name": "Search"
+    },
+    "e3": {
+      "selector": "getByRole('button', { name: \"Home, 1 new notification\", exact: true })",
+      "role": "button",
+      "name": "Home, 1 new notification"
+    },
+    "e4": {
+      "selector": "getByRole('button', { name: \"My Network, 0 new notifications\", exact: true })",
+      "role": "button",
+      "name": "My Network, 0 new notifications"
+    },
+    "e5": {
+      "selector": "getByRole('button', { name: \"Jobs, 0 new notifications\", exact: true })",
+      "role": "button",
+      "name": "Jobs, 0 new notifications"
+    },
+    "e6": {
+      "selector": "getByRole('link', { name: \"Messaging, 0 new notifications\", exact: true })",
+      "role": "link",
+      "name": "Messaging, 0 new notifications"
+    },
+    "e7": {
+      "selector": "getByRole('link', { name: \"Notifications, 3 new notifications\", exact: true })",
+      "role": "link",
+      "name": "Notifications, 3 new notifications"
+    },
+    "e8": {
+      "selector": "getByRole('button', { name: \"Me\", exact: true })",
+      "role": "button",
+      "name": "Me"
+    },
+    "e9": {
+      "selector": "getByRole('button', { name: \"For Business\", exact: true })",
+      "role": "button",
+      "name": "For Business"
+    },
+    "e10": {
+      "selector": "getByRole('button', { name: \"Dony Vincent\", exact: true })",
+      "role": "button",
+      "name": "Dony Vincent"
+    },
+    "e11": {
+      "selector": "getByRole('button', { name: \"More\", exact: true })",
+      "role": "button",
+      "name": "More",
+      "nth": 0
+    },
+    "e12": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 0
+    },
+    "e13": {
+      "selector": "getByRole('link', { name: \"Invite Dony Vincent to connect\", exact: true })",
+      "role": "link",
+      "name": "Invite Dony Vincent to connect",
+      "nth": 0
+    },
+    "e14": {
+      "selector": "getByRole('button', { name: \"Cover photo\", exact: true })",
+      "role": "button",
+      "name": "Cover photo"
+    },
+    "e15": {
+      "selector": "getByRole('button', { name: \"Profile photo\", exact: true })",
+      "role": "button",
+      "name": "Profile photo"
+    },
+    "e16": {
+      "selector": "getByRole('button', { name: \"Dony is a Premium member\", exact: true })",
+      "role": "button",
+      "name": "Dony is a Premium member"
+    },
+    "e17": {
+      "selector": "getByRole('button', { name: \"Dony Vincent View Dony’s verifications\", exact: true })",
+      "role": "button",
+      "name": "Dony Vincent View Dony’s verifications",
+      "nth": 0
+    },
+    "e18": {
+      "selector": "getByRole('button', { name: \"Dony Vincent View Dony’s verifications\", exact: true })",
+      "role": "button",
+      "name": "Dony Vincent View Dony’s verifications",
+      "nth": 1
+    },
+    "e19": {
+      "selector": "getByRole('link', { name: \"Contact info\", exact: true })",
+      "role": "link",
+      "name": "Contact info"
+    },
+    "e20": {
+      "selector": "getByRole('button', { name: \"NullClass\", exact: true })",
+      "role": "button",
+      "name": "NullClass"
+    },
+    "e21": {
+      "selector": "getByRole('button', { name: \"Viswajyothi College of Engineering and Technology, Vazhakulam P.O., Muvattupuzha , Ernakulam- 686 670\", exact: true })",
+      "role": "button",
+      "name": "Viswajyothi College of Engineering and Technology, Vazhakulam P.O., Muvattupuzha , Ernakulam- 686 670"
+    },
+    "e22": {
+      "selector": "getByRole('link', { name: \"Samiran is a mutual connection\", exact: true })",
+      "role": "link",
+      "name": "Samiran is a mutual connection",
+      "nth": 0
+    },
+    "e23": {
+      "selector": "getByRole('link', { name: \"Samiran is a mutual connection\", exact: true })",
+      "role": "link",
+      "name": "Samiran is a mutual connection",
+      "nth": 1
+    },
+    "e24": {
+      "selector": "getByRole('link', { name: \"Invite Dony Vincent to connect\", exact: true })",
+      "role": "link",
+      "name": "Invite Dony Vincent to connect",
+      "nth": 1
+    },
+    "e25": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 1
+    },
+    "e26": {
+      "selector": "getByRole('button', { name: \"More\", exact: true })",
+      "role": "button",
+      "name": "More",
+      "nth": 1
+    },
+    "e27": {
+      "selector": "getByRole('link', { name: \"Open to work Cloud Engineer, Cloud Engineer, Cloud Consultant and Cloud Consultant roles Show details\", exact: true })",
+      "role": "link",
+      "name": "Open to work Cloud Engineer, Cloud Engineer, Cloud Consultant and Cloud Consultant roles Show details"
+    },
+    "e28": {
+      "selector": "getByRole('button')",
+      "role": "button"
+    },
+    "e29": {
+      "selector": "getByRole('link', { name: \"Amal s pillai · 3rd Jr. Cloud Engineer at Cygnoz | Linux | AWS | Docker | Kubernetes | Git | Ansible | Jenkins | Terraform\", exact: true })",
+      "role": "link",
+      "name": "Amal s pillai · 3rd Jr. Cloud Engineer at Cygnoz | Linux | AWS | Docker | Kubernetes | Git | Ansible | Jenkins | Terraform"
+    },
+    "e30": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 2
+    },
+    "e31": {
+      "selector": "getByRole('link', { name: \"Athul G · 2nd BTech Graduate | Aspiring Cloud Engineer | Cloud & Business Management Enthusiast\", exact: true })",
+      "role": "link",
+      "name": "Athul G · 2nd BTech Graduate | Aspiring Cloud Engineer | Cloud & Business Management Enthusiast"
+    },
+    "e32": {
+      "selector": "getByRole('button', { name: \"Invite Athul G to connect\", exact: true })",
+      "role": "button",
+      "name": "Invite Athul G to connect"
+    },
+    "e33": {
+      "selector": "getByRole('link', { name: \"Dibin Sabu · 3rd DevOps | Cloud Engineer\", exact: true })",
+      "role": "link",
+      "name": "Dibin Sabu · 3rd DevOps | Cloud Engineer"
+    },
+    "e34": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 3
+    },
+    "e35": {
+      "selector": "getByRole('link', { name: \"SHYAMDEV K · 3rd Junior Cloud Monitoring Engineer at HAZERCLOUD® | AWS | DevOps | Cloud & Infrastructure Monitoring\", exact: true })",
+      "role": "link",
+      "name": "SHYAMDEV K · 3rd Junior Cloud Monitoring Engineer at HAZERCLOUD® | AWS | DevOps | Cloud & Infrastructure Monitoring"
+    },
+    "e36": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 4
+    },
+    "e37": {
+      "selector": "getByRole('link', { name: \"Anna susan jose · 2nd Analyst @ Deloitte USI\", exact: true })",
+      "role": "link",
+      "name": "Anna susan jose · 2nd Analyst @ Deloitte USI"
+    },
+    "e38": {
+      "selector": "getByRole('button', { name: \"Invite Anna susan jose to connect\", exact: true })",
+      "role": "button",
+      "name": "Invite Anna susan jose to connect"
+    },
+    "e39": {
+      "selector": "getByRole('button', { name: \"Show all\", exact: true })",
+      "role": "button",
+      "name": "Show all"
+    },
+    "e40": {
+      "selector": "getByRole('link', { name: \"Suraj Gahatyari · 2nd Senior Software Engineer | IndiaMART InterMesh Ltd | B.Tech in Computer Science\", exact: true })",
+      "role": "link",
+      "name": "Suraj Gahatyari · 2nd Senior Software Engineer | IndiaMART InterMesh Ltd | B.Tech in Computer Science"
+    },
+    "e41": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 5
+    },
+    "e42": {
+      "selector": "getByRole('link', { name: \"chinmay warwade · 1st Software Engineer @ Company | Operating Systems, Computer Architecture, AI and ML, Database ,Computer Security, Streaming Applications.\", exact: true })",
+      "role": "link",
+      "name": "chinmay warwade · 1st Software Engineer @ Company | Operating Systems, Computer Architecture, AI and ML, Database ,Computer Security, Streaming Applications."
+    },
+    "e43": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 6
+    },
+    "e44": {
+      "selector": "getByRole('link', { name: \"Siva Bonthada · 2nd Data Scientist @ Mercedes-Benz R&D\", exact: true })",
+      "role": "link",
+      "name": "Siva Bonthada · 2nd Data Scientist @ Mercedes-Benz R&D"
+    },
+    "e45": {
+      "selector": "getByRole('button', { name: \"Follow Siva Bonthada\", exact: true })",
+      "role": "button",
+      "name": "Follow Siva Bonthada"
+    },
+    "e46": {
+      "selector": "getByRole('link', { name: \"Gaurav Singh · 2nd Senior Backend engineer at Goldman Sachs | Ex-Samsung | Ex-Infosys | IIT(ISM) Dhanbad\", exact: true })",
+      "role": "link",
+      "name": "Gaurav Singh · 2nd Senior Backend engineer at Goldman Sachs | Ex-Samsung | Ex-Infosys | IIT(ISM) Dhanbad"
+    },
+    "e47": {
+      "selector": "getByRole('link', { name: \"Message\", exact: true })",
+      "role": "link",
+      "name": "Message",
+      "nth": 7
+    },
+    "e48": {
+      "selector": "getByRole('link', { name: \"About\", exact: true })",
+      "role": "link",
+      "name": "About"
+    },
+    "e49": {
+      "selector": "getByRole('link', { name: \"Accessibility\", exact: true })",
+      "role": "link",
+      "name": "Accessibility"
+    },
+    "e50": {
+      "selector": "getByRole('link', { name: \"Talent Solutions\", exact: true })",
+      "role": "link",
+      "name": "Talent Solutions"
+    },
+    "e51": {
+      "selector": "getByRole('link', { name: \"Community Guidelines\", exact: true })",
+      "role": "link",
+      "name": "Community Guidelines"
+    },
+    "e52": {
+      "selector": "getByRole('link', { name: \"Careers\", exact: true })",
+      "role": "link",
+      "name": "Careers"
+    },
+    "e53": {
+      "selector": "getByRole('link', { name: \"Marketing Solutions\", exact: true })",
+      "role": "link",
+      "name": "Marketing Solutions"
+    },
+    "e54": {
+      "selector": "getByRole('button', { name: \"Privacy & Terms\", exact: true })",
+      "role": "button",
+      "name": "Privacy & Terms"
+    },
+    "e55": {
+      "selector": "getByRole('link', { name: \"Ad Choices\", exact: true })",
+      "role": "link",
+      "name": "Ad Choices"
+    },
+    "e56": {
+      "selector": "getByRole('link', { name: \"Advertising\", exact: true })",
+      "role": "link",
+      "name": "Advertising"
+    },
+    "e57": {
+      "selector": "getByRole('link', { name: \"Sales Solutions\", exact: true })",
+      "role": "link",
+      "name": "Sales Solutions"
+    },
+    "e58": {
+      "selector": "getByRole('link', { name: \"Mobile\", exact: true })",
+      "role": "link",
+      "name": "Mobile"
+    },
+    "e59": {
+      "selector": "getByRole('link', { name: \"Small Business\", exact: true })",
+      "role": "link",
+      "name": "Small Business"
+    },
+    "e60": {
+      "selector": "getByRole('link', { name: \"Safety Center\", exact: true })",
+      "role": "link",
+      "name": "Safety Center"
+    },
+    "e61": {
+      "selector": "getByRole('link', { name: \"Questions?\", exact: true })",
+      "role": "link",
+      "name": "Questions?"
+    },
+    "e62": {
+      "selector": "getByRole('link', { name: \"Manage your account and privacy\", exact: true })",
+      "role": "link",
+      "name": "Manage your account and privacy"
+    },
+    "e63": {
+      "selector": "getByRole('link', { name: \"Recommendation transparency\", exact: true })",
+      "role": "link",
+      "name": "Recommendation transparency"
+    },
+    "e64": {
+      "selector": "getByRole('combobox', { name: \"Select language\", exact: true })",
+      "role": "combobox",
+      "name": "Select language"
+    },
+    "e65": {
+      "selector": "getByRole('option', { name: \"العربية (Arabic)\", exact: true })",
+      "role": "option",
+      "name": "العربية (Arabic)"
+    },
+    "e66": {
+      "selector": "getByRole('option', { name: \"বাংলা (Bangla)\", exact: true })",
+      "role": "option",
+      "name": "বাংলা (Bangla)"
+    },
+    "e67": {
+      "selector": "getByRole('option', { name: \"Čeština (Czech)\", exact: true })",
+      "role": "option",
+      "name": "Čeština (Czech)"
+    },
+    "e68": {
+      "selector": "getByRole('option', { name: \"Dansk (Danish)\", exact: true })",
+      "role": "option",
+      "name": "Dansk (Danish)"
+    },
+    "e69": {
+      "selector": "getByRole('option', { name: \"Deutsch (German)\", exact: true })",
+      "role": "option",
+      "name": "Deutsch (German)"
+    },
+    "e70": {
+      "selector": "getByRole('option', { name: \"Ελληνικά (Greek)\", exact: true })",
+      "role": "option",
+      "name": "Ελληνικά (Greek)"
+    },
+    "e71": {
+      "selector": "getByRole('option', { name: \"English (English)\", exact: true })",
+      "role": "option",
+      "name": "English (English)"
+    },
+    "e72": {
+      "selector": "getByRole('option', { name: \"Español (Spanish)\", exact: true })",
+      "role": "option",
+      "name": "Español (Spanish)"
+    },
+    "e73": {
+      "selector": "getByRole('option', { name: \"فارسی (Persian)\", exact: true })",
+      "role": "option",
+      "name": "فارسی (Persian)"
+    },
+    "e74": {
+      "selector": "getByRole('option', { name: \"Suomi (Finnish)\", exact: true })",
+      "role": "option",
+      "name": "Suomi (Finnish)"
+    },
+    "e75": {
+      "selector": "getByRole('option', { name: \"Français (French)\", exact: true })",
+      "role": "option",
+      "name": "Français (French)"
+    },
+    "e76": {
+      "selector": "getByRole('option', { name: \"हिंदी (Hindi)\", exact: true })",
+      "role": "option",
+      "name": "हिंदी (Hindi)"
+    },
+    "e77": {
+      "selector": "getByRole('option', { name: \"Magyar (Hungarian)\", exact: true })",
+      "role": "option",
+      "name": "Magyar (Hungarian)"
+    },
+    "e78": {
+      "selector": "getByRole('option', { name: \"Bahasa Indonesia (Indonesian)\", exact: true })",
+      "role": "option",
+      "name": "Bahasa Indonesia (Indonesian)"
+    },
+    "e79": {
+      "selector": "getByRole('option', { name: \"Italiano (Italian)\", exact: true })",
+      "role": "option",
+      "name": "Italiano (Italian)"
+    },
+    "e80": {
+      "selector": "getByRole('option', { name: \"עברית (Hebrew)\", exact: true })",
+      "role": "option",
+      "name": "עברית (Hebrew)"
+    },
+    "e81": {
+      "selector": "getByRole('option', { name: \"日本語 (Japanese)\", exact: true })",
+      "role": "option",
+      "name": "日本語 (Japanese)"
+    },
+    "e82": {
+      "selector": "getByRole('option', { name: \"한국어 (Korean)\", exact: true })",
+      "role": "option",
+      "name": "한국어 (Korean)"
+    },
+    "e83": {
+      "selector": "getByRole('option', { name: \"मराठी (Marathi)\", exact: true })",
+      "role": "option",
+      "name": "मराठी (Marathi)"
+    },
+    "e84": {
+      "selector": "getByRole('option', { name: \"Bahasa Malaysia (Malay)\", exact: true })",
+      "role": "option",
+      "name": "Bahasa Malaysia (Malay)"
+    },
+    "e85": {
+      "selector": "getByRole('option', { name: \"Nederlands (Dutch)\", exact: true })",
+      "role": "option",
+      "name": "Nederlands (Dutch)"
+    },
+    "e86": {
+      "selector": "getByRole('option', { name: \"Norsk (Norwegian)\", exact: true })",
+      "role": "option",
+      "name": "Norsk (Norwegian)"
+    },
+    "e87": {
+      "selector": "getByRole('option', { name: \"ਪੰਜਾਬੀ (Punjabi)\", exact: true })",
+      "role": "option",
+      "name": "ਪੰਜਾਬੀ (Punjabi)"
+    },
+    "e88": {
+      "selector": "getByRole('option', { name: \"Polski (Polish)\", exact: true })",
+      "role": "option",
+      "name": "Polski (Polish)"
+    },
+    "e89": {
+      "selector": "getByRole('option', { name: \"Português (Portuguese)\", exact: true })",
+      "role": "option",
+      "name": "Português (Portuguese)"
+    },
+    "e90": {
+      "selector": "getByRole('option', { name: \"Română (Romanian)\", exact: true })",
+      "role": "option",
+      "name": "Română (Romanian)"
+    },
+    "e91": {
+      "selector": "getByRole('option', { name: \"Русский (Russian)\", exact: true })",
+      "role": "option",
+      "name": "Русский (Russian)"
+    },
+    "e92": {
+      "selector": "getByRole('option', { name: \"Svenska (Swedish)\", exact: true })",
+      "role": "option",
+      "name": "Svenska (Swedish)"
+    },
+    "e93": {
+      "selector": "getByRole('option', { name: \"తెలుగు (Telugu)\", exact: true })",
+      "role": "option",
+      "name": "తెలుగు (Telugu)"
+    },
+    "e94": {
+      "selector": "getByRole('option', { name: \"ภาษาไทย (Thai)\", exact: true })",
+      "role": "option",
+      "name": "ภาษาไทย (Thai)"
+    },
+    "e95": {
+      "selector": "getByRole('option', { name: \"Tagalog (Tagalog)\", exact: true })",
+      "role": "option",
+      "name": "Tagalog (Tagalog)"
+    },
+    "e96": {
+      "selector": "getByRole('option', { name: \"Türkçe (Turkish)\", exact: true })",
+      "role": "option",
+      "name": "Türkçe (Turkish)"
+    },
+    "e97": {
+      "selector": "getByRole('option', { name: \"Українська (Ukrainian)\", exact: true })",
+      "role": "option",
+      "name": "Українська (Ukrainian)"
+    },
+    "e98": {
+      "selector": "getByRole('option', { name: \"Tiếng Việt (Vietnamese)\", exact: true })",
+      "role": "option",
+      "name": "Tiếng Việt (Vietnamese)"
+    },
+    "e99": {
+      "selector": "getByRole('option', { name: \"简体中文 (Chinese (Simplified))\", exact: true })",
+      "role": "option",
+      "name": "简体中文 (Chinese (Simplified))"
+    },
+    "e100": {
+      "selector": "getByRole('option', { name: \"正體中文 (Chinese (Traditional))\", exact: true })",
+      "role": "option",
+      "name": "正體中文 (Chinese (Traditional))"
+    }
+  }
+}

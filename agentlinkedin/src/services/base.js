@@ -9,7 +9,7 @@ export class BaseLinkedInService {
   async init() {
     console.log('[BaseLinkedInService] Launching browser...');
     await this.browser.launch({
-      headless: true,
+      headless: process.env.HEADLESS !== 'false',
       args: [
         '--disable-blink-features=AutomationControlled',
         '--disable-infobars',

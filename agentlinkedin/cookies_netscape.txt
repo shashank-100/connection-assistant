@@ -1,0 +1,32 @@
+# Netscape HTTP Cookie File
+# https://curl.haxx.se/rfc/cookie_spec.html
+# This is a generated file! Do not edit.
+
+.linkedin.com	TRUE	/	TRUE	1780216408	li_sugr	4acfc3c8-e940-4cbd-a4df-619da1b3c4cf
+.linkedin.com	TRUE	/	TRUE	1803976408	bcookie	"v=2&7a06ee3b-3910-4d08-88f6-ed2a221db1f3"
+.www.linkedin.com	TRUE	/	TRUE	1803976408	bscookie	"v=1&20251209154748f1aa34b7-426f-46aa-8f5f-e4a3c9cb80e4AQGkq4CzQ9lgJbtbzAU8OJ03g8YM8tRz"
+.www.linkedin.com	TRUE	/	TRUE	1787992406	li_theme	light
+.www.linkedin.com	TRUE	/	TRUE	1787992406	li_theme_set	app
+.linkedin.com	TRUE	/	TRUE	1777198966	_guid	cd9406e2-69ea-4ada-afc5-bbcfd80e1db1
+.linkedin.com	TRUE	/	FALSE	1777198967	_gcl_au	1.1.1222808995.1769422967
+.linkedin.com	TRUE	/	TRUE	1800958969	dfpfpt	f84ce0b414f84957a5fe6937223192cc
+.www.linkedin.com	TRUE	/	TRUE	1773650006	timezone	Asia/Calcutta
+www.linkedin.com	FALSE	/	FALSE	1803976406	_pxvid	6b10d9cc-d516-11f0-a441-778b758fe195
+www.linkedin.com	FALSE	/	FALSE	1772645014	fid	AQE5Cq-xLZXA6QAAAZyV09SShrkY82U9tP2aFX9VSoiks5Vh-XCDMg_sGeqgSZAvSvuLrBNovtTlqg
+.linkedin.com	TRUE	/	TRUE	1774935971	AnalyticsSyncHistory	AQI-CoEr8v4I9wAAAZyn7svlJCFc1hEa4MqwIN0JKUiQpmPtX7OYfVemGJQ7Ux-pVCnqGi9DtP2YcGBkKeOmtQ
+.linkedin.com	TRUE	/	TRUE	1774935971	lms_ads	AQG6MLrIMS0dRAAAAZyn7s0Grpg4i7NQyCLaW0O6m64kOTicfgTrjBcPOAO8YqnFwgyalWwHnX4YNnr4UdrEwtCOuXDE0tHU
+.linkedin.com	TRUE	/	TRUE	1774935971	lms_analytics	AQG6MLrIMS0dRAAAAZyn7s0Grpg4i7NQyCLaW0O6m64kOTicfgTrjBcPOAO8YqnFwgyalWwHnX4YNnr4UdrEwtCOuXDE0tHU
+.linkedin.com	TRUE	/	FALSE	1775032183	aam_uuid	39048213776955020670104849521665003222
+.linkedin.com	TRUE	/	FALSE	1803976407	sdui_ver	sdui-flagship:0.1.29229+SduiFlagship0
+.linkedin.com	TRUE	/	TRUE	1806928371	visit	v=1&M
+.www.linkedin.com	TRUE	/	TRUE	1803904368	li_rm	AQGbHYW4eCcsigAAAZypYw_ddc2eBwRNXN7d2smBGlMj07ZkaBTzZF-UzkJbFR8X6t23PtJhy-6WqQuDz_pp8kjnQ3tiAFv5mfvhbZbIQr6u-gR4fr8cKpMU
+www.linkedin.com	FALSE	/	FALSE	1787920377	g_state	{"i_l":1,"i_t":1772454775560,"i_p":1772375577446}
+.www.linkedin.com	TRUE	/	TRUE	1803904414	li_at	AQEDAWOKOLIB47HzAAABnKljwwcAAAGczXBHB00AAyq4B2FzUAtuG0MaXzcYoMlmo16wwItQl928EjIJyWEsiAioUW-ekZXqL_Od9yDDvaqZQlWCsfuBZBEZn19_9sVjwspWBoBtCNBllHh8xcMVvdn_
+.linkedin.com	TRUE	/	TRUE	1780144414	liap	true
+.www.linkedin.com	TRUE	/	TRUE	1780144414	JSESSIONID	"ajax:0586857781978429370"
+.linkedin.com	TRUE	/	TRUE	1772441100	__cf_bm	9_haws99mRYzApK6cKsb2ZMlWM4gLWPHzydMNmoDM7A-1772439299-1.0.1.1-tQ3qn5i2idg20RA5pnAmifegQhJY3Kw5.QLYNJBSwOV34z39F2JzA.izS1Zaq4FWvNo3h.fgwYwwJ5nDjFkzkNBfoX_yyj4gYwgskV4IxOE
+.linkedin.com	TRUE	/	FALSE	1787992183	AMCV_14215E3D5995C57C0A495C55%40AdobeOrg	-637568504%7CMCIDTS%7C20514%7CMCMID%7C39630548605436388400124886005869493533%7CMCAAMLH-1773044983%7C12%7CMCAAMB-1773044983%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1772447383s%7CNONE%7CvVersion%7C5.1.1%7CMCCIDH%7C1827069661
+.linkedin.com	TRUE	/	TRUE	0	lang	v=2&lang=en-us
+.linkedin.com	TRUE	/	TRUE	1775032406	UserMatchHistory	AQLjdTPxBldMPgAAAZytrkdRrplb9RMyt3YWdSIoKYghgdKOcsm_7wHe8I1me07Xw92D4HGtcm7ZSclTJiIzvfQW7_Gvy2yP9dl4ZLs4Vgppu53c1sCKlx2ZS2VwTRuXwY9trxM5HpYCj819zeplMJzWJH7BcyVS04QlhIee6USrRvcxDosBtur61Jn3NoQdo6SU1ujlSEQBOmBdQ68wrgeMDmxHCpofwKdR0rcHmy2FPhgfylR6TCapFBBChj1pl92YSRl58ef5v1-O3-l-MdwBNah0xp5TMS4xT2GiGDkgz6fWEi8DcTTMpsV0Tm80JPoJW6E3GIQWQXRjFX3CQk5nGtSa2gjuzTLOeKpvKqhd6nahJg
+.linkedin.com	TRUE	/	TRUE	1772523939	lidc	"b=OB66:s=O:r=O:a=O:p=O:g=49:u=7:x=1:i=1772440406:t=1772523938:v=2:sig=AQFEvyNskOvMzf4xQweBlT8I4xP4ydQO"
+.linkedin.com	TRUE	/	TRUE	0	fptctx2	taBcrIH61PuCVH7eNCyH0Iitb%252bEMfwlgK%252fM8w%252f28EbezC82JcVKsjWWPZ%252bQ8CWHyQJJAgd5FlFrf0d5MeNYL7KW4lfPCcpQ9N3T2wc98EaKz%252ftaehyERJzHM1i5q6BLMxrAVIRVIPUuXjMbA2JwH8ewXAz%252bUd7qeOlI2G1NaHyXo%252fMiDVVeMjvaOvVbpc5TXG8mcxBOasZumsL4jyzxplsWGK4Dl80KWlel8p1cNZ4GShZuLXSgwAFB4F%252b0wXSb9X0hx14j2tHveMpqSLlp1WTCHgnlctrhlLskjDvQQEorRAQaiB0JuoOkpipCJx%252futsTvTJd8ncM2cBRzm9kuR1h33OxAR3fkkSCsf%252fJOC7Nu3rqvc1KvRuRn16uoBbvSHEFdyulXthnLXD6h10wybFw%253d%253d

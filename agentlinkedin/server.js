@@ -4,6 +4,7 @@ import cors from 'cors';
 import handler from './api/index.js';
 import leadsHandler from './api/leads.js';
 import campaignsHandler from './api/campaigns.js';
+import linkedInAccountsHandler from './api/linkedin-accounts.js';
 import { CampaignRunner } from './src/campaign-runner.js';
 import { initDB, saveCookies, getCookies, deleteCookies } from './db-supabase.js';
 
@@ -15,7 +16,8 @@ const allowedOrigins = [
   process.env.FRONTEND_URL,
   'https://frontend-production-50ccc.up.railway.app',
   'http://localhost:3000',
-  'http://localhost:3001'
+  'http://localhost:3001',
+  'http://localhost:8080'
 ].filter(Boolean);
 
 app.use(cors({
@@ -137,6 +139,18 @@ app.get('/api/campaigns', async (req, res) => {
 });
 app.post('/api/campaigns', async (req, res) => {
   await campaignsHandler(req, res);
+});
+
+// LinkedIn Accounts (senders) API
+app.get('/api/linkedin-accounts', async (req, res) => {
+  await linkedInAccountsHandler(req, res);
+});
+app.post('/api/linkedin-accounts', async (req, res) => {
+  await linkedInAccountsHandler(req, res);
+});
+app.delete('/api/linkedin-accounts/:id', async (req, res) => {
+  req.params = req.params || {};
+  await linkedInAccountsHandler(req, res);
 });
 
 // Initialize database and start server

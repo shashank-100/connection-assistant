@@ -27,8 +27,8 @@ async function parseNetscapeCookies(filePath) {
 
 async function testConnectService() {
   const browser = new BrowserManager();
-  const cookies = await parseNetscapeCookies('cookies.txt');
-  const profileUrl = 'https://www.linkedin.com/in/aarshiyaguneja/';
+  const cookies = await parseNetscapeCookies('cookies_netscape.txt');
+  const profileUrl = 'https://www.linkedin.com/in/aditya-bagde-691a97233/';
 
   try {
     console.log('Launching browser with stealth flags...');

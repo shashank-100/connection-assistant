@@ -17,8 +17,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 
 // Initialize database schema (schema should be run manually in Supabase SQL Editor)
 export async function initDB() {
-  console.log('[DB] Connected to Supabase database');
-  console.log('[DB] Run supabase-schema.sql in Supabase SQL Editor to create tables');
+  console.log('[DB] Connected to Supabase');
   return { success: true };
 }
 
@@ -311,19 +310,22 @@ export async function getLeadLists(userId) {
 
 export async function saveCampaign(userId, campaignData) {
   try {
-    const { id, name, status, steps, settings } = campaignData;
+    const { id, name, status, steps, settings, linkedin_account_id } = campaignData;
+
+    const row = {
+      id,
+      user_id: userId,
+      name,
+      status,
+      steps,
+      settings,
+      updated_at: new Date().toISOString()
+    };
+    if (linkedin_account_id) row.linkedin_account_id = linkedin_account_id;
 
     const { error } = await supabase
       .from('campaigns')
-      .upsert({
-        id,
-        user_id: userId,
-        name,
-        status,
-        steps,
-        settings,
-        updated_at: new Date().toISOString()
-      }, {
+      .upsert(row, {
         onConflict: 'id'
       });
 
@@ -649,23 +651,118 @@ export async function getCampaigns(userId) {
 
 export async function getCampaignStats(campaignId) {
   try {
+    // Get campaign leads with their associated lead status
     const { data, error } = await supabase
       .from('campaign_leads')
-      .select('status')
+      .select(`
+        status,
+        lead_id,
+        leads (
+          status
+        )
+      `)
       .eq('campaign_id', campaignId);
 
     if (error) throw error;
 
     const rows = data || [];
-    return {
+
+    // Count based on lead status (from leads table)
+    const stats = {
       total: rows.length,
-      pending: rows.filter(r => r.status === 'pending').length,
-      processing: rows.filter(r => r.status === 'processing').length,
-      completed: rows.filter(r => r.status === 'completed').length,
-      failed: rows.filter(r => r.status === 'failed').length,
+      pending: 0,
+      sent: 0,
+      connected: 0,
+      replied: 0,
+      not_interested: 0
     };
+
+    rows.forEach(row => {
+      const leadStatus = row.leads?.status || 'pending';
+      if (stats.hasOwnProperty(leadStatus)) {
+        stats[leadStatus]++;
+      } else {
+        stats.pending++;
+      }
+    });
+
+    return stats;
   } catch (err) {
     console.error('[DB] Error getting campaign stats:', err);
+    throw err;
+  }
+}
+
+// --- LINKEDIN ACCOUNT (SENDER) FUNCTIONS ---
+
+export async function saveLinkedInAccount(userId, { id, label, cookies }) {
+  try {
+    const { error } = await supabase
+      .from('linkedin_accounts')
+      .upsert({ id, user_id: userId, label, cookies, updated_at: new Date().toISOString() }, { onConflict: 'id' });
+    if (error) throw error;
+    console.log(`[DB] Saved LinkedIn account: ${label} (${id})`);
+    return { success: true };
+  } catch (err) {
+    console.error('[DB] Error saving LinkedIn account:', err);
+    throw err;
+  }
+}
+
+export async function getLinkedInAccounts(userId) {
+  try {
+    const { data, error } = await supabase
+      .from('linkedin_accounts')
+      .select('id, user_id, label, status, created_at, updated_at')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: true });
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.error('[DB] Error getting LinkedIn accounts:', err);
+    throw err;
+  }
+}
+
+export async function getLinkedInAccount(accountId) {
+  try {
+    const { data, error } = await supabase
+      .from('linkedin_accounts')
+      .select('*')
+      .eq('id', accountId)
+      .single();
+    if (error && error.code !== 'PGRST116') throw error;
+    return data || null;
+  } catch (err) {
+    console.error('[DB] Error getting LinkedIn account:', err);
+    throw err;
+  }
+}
+
+export async function deleteLinkedInAccount(accountId) {
+  try {
+    const { error } = await supabase
+      .from('linkedin_accounts')
+      .delete()
+      .eq('id', accountId);
+    if (error) throw error;
+    return { success: true };
+  } catch (err) {
+    console.error('[DB] Error deleting LinkedIn account:', err);
+    throw err;
+  }
+}
+
+export async function countLinkedInAccounts(userId) {
+  try {
+    const { count, error } = await supabase
+      .from('linkedin_accounts')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId);
+    if (error) throw error;
+    return count || 0;
+  } catch (err) {
+    console.error('[DB] Error counting LinkedIn accounts:', err);
     throw err;
   }
 }

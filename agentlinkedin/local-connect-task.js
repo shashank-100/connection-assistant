@@ -1,12 +1,12 @@
 import fs from 'fs';
 import { parse } from 'csv-parse/sync';
-import { BrowserManager } from 'agent-browser';
+import { LinkedInConnectService } from './src/services/connect.js';
 
-async function runLocalConnect() {
+async function main() {
   const csvFilePath =
-    '/Users/shashank/geodo-vercel-agent-browser/referral_1-40.csv';
+    '/Users/shashank/Documents/GitHub/connection-assistant/agentlinkedin/test_leads.csv';
   const cookiesFilePath =
-    '/Users/shashank/geodo-vercel-agent-browser/agentlinkedin/cookies.json';
+    '/Users/shashank/Documents/GitHub/connection-assistant/agentlinkedin/cookies.json';
 
   console.log('Reading CSV file...');
   const fileContent = fs.readFileSync(csvFilePath);
@@ -16,7 +16,7 @@ async function runLocalConnect() {
   });
 
   const profiles = records
-    .map(r => r.linkedin_profile_url)
+    .map(r => r.linkedin_url)
     .filter(url => url && url.includes('linkedin.com/in/'));
 
   if (profiles.length === 0) {
@@ -24,109 +24,63 @@ async function runLocalConnect() {
     return;
   }
 
-  const targetProfile = profiles[0];
-  console.log('Target profile:', targetProfile);
+  console.log(`Found ${profiles.length} profiles to process\n`);
 
-  const browser = new BrowserManager();
+  // Load cookies
+  let cookies = null;
+  if (fs.existsSync(cookiesFilePath)) {
+    console.log('Loading cookies...');
+    cookies = JSON.parse(fs.readFileSync(cookiesFilePath, 'utf-8'));
+  }
+
+  const connectService = new LinkedInConnectService(cookies);
 
   try {
-    console.log('Launching browser...');
-    await browser.launch({
-      headless: false,
-      userDataDir: './linkedin-session',
-      args: [
-        '--disable-blink-features=AutomationControlled',
-        '--disable-infobars',
-      ],
-    });
+    console.log('Initializing browser...');
+    await connectService.init();
 
-    if (fs.existsSync(cookiesFilePath)) {
-      console.log('Loading cookies...');
-      await browser.loadState(cookiesFilePath);
-    }
+    const results = [];
 
-    console.log('Opening LinkedIn profile...');
-    await browser.open(targetProfile);
-    await browser.waitForLoad();
+    for (let i = 0; i < profiles.length; i++) {
+      console.log(`\n[${i + 1}/${profiles.length}] Processing: ${profiles[i]}`);
 
-    const currentUrl = await browser.getUrl();
-    console.log('Current URL:', currentUrl);
+      const result = await connectService.sendConnectRequest(profiles[i]);
+      results.push(result);
 
-    if (currentUrl.includes('login')) {
-      throw new Error('Not logged in – cookies expired');
-    }
-
-    console.log('Taking snapshot...');
-    let snapshot = await browser.snapshot();
-
-    // 1️⃣ Try direct Connect button
-    let connectRef = Object.entries(snapshot.refs).find(
-      ([_, el]) =>
-        el.role === 'button' &&
-        el.name &&
-        el.name.toLowerCase().includes('connect')
-    )?.[0];
-
-    if (!connectRef) {
-      // 2️⃣ Click "More"
-      const moreRef = Object.entries(snapshot.refs).find(
-        ([_, el]) =>
-          el.role === 'button' &&
-          el.name &&
-          el.name.toLowerCase().includes('more')
-      )?.[0];
-
-      if (!moreRef) {
-        throw new Error('Neither Connect nor More button found');
-      }
-
-      console.log('Clicking More...');
-      await browser.click(`@${moreRef}`);
-      await browser.wait(2000);
-
-      snapshot = await browser.snapshot();
-      connectRef = Object.entries(snapshot.refs).find(
-        ([_, el]) =>
-          el.name &&
-          el.name.toLowerCase().includes('connect')
-      )?.[0];
-
-      if (!connectRef) {
-        throw new Error('Connect not found in More dropdown');
+      // Wait between profiles to avoid rate limiting
+      if (i < profiles.length - 1) {
+        const waitTime = 5000 + Math.random() * 3000; // 5-8 seconds
+        console.log(`Waiting ${Math.round(waitTime/1000)}s before next profile...`);
+        await new Promise(r => setTimeout(r, waitTime));
       }
     }
 
-    console.log('Clicking Connect...');
-    await browser.click(`@${connectRef}`);
-    await browser.wait(2000);
+    console.log('\n' + '='.repeat(50));
+    console.log('SUMMARY');
+    console.log('='.repeat(50));
 
-    // Modal
-    snapshot = await browser.snapshot();
-    const sendRef = Object.entries(snapshot.refs).find(
-      ([_, el]) =>
-        el.role === 'button' &&
-        el.name &&
-        (
-          el.name.toLowerCase().includes('send without a note') ||
-          el.name.toLowerCase().includes('send now')
-        )
-    )?.[0];
+    const sent = results.filter(r => r.status === 'sent').length;
+    const alreadySent = results.filter(r => r.status === 'already_sent').length;
+    const failed = results.filter(r => !r.success).length;
 
-    if (!sendRef) {
-      console.log('Send button not found – maybe already connected');
-      return;
+    console.log(`✅ Sent: ${sent}`);
+    console.log(`⏭️  Already sent: ${alreadySent}`);
+    console.log(`❌ Failed: ${failed}`);
+
+    if (failed > 0) {
+      console.log('\nFailed profiles:');
+      results.filter(r => !r.success).forEach(r => {
+        console.log(`  - ${r.profileUrl}: ${r.status}`);
+      });
     }
-
-    console.log('Sending request...');
-    await browser.click(`@${sendRef}`);
-
-    console.log('✅ Connection request sent successfully');
 
   } catch (err) {
-    console.error('❌ Error:', err.message);
+    console.error('❌ Fatal error:', err.message);
+    console.error(err.stack);
   } finally {
-    console.log('Task finished');
+    await connectService.close();
+    console.log('\nTask finished');
   }
 }
 
-runLocalConnect();
+main();

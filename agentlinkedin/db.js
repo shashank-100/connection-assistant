@@ -479,4 +479,138 @@ export async function updateCampaignLeadStatus(id, updates) {
   }
 }
 
+// --- CAMPAIGN WORKER FUNCTIONS ---
+
+export async function getActiveCampaigns() {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      "SELECT * FROM campaigns WHERE status = 'active'"
+    );
+    return result.rows;
+  } catch (err) {
+    console.error('[DB] Error getting active campaigns:', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+// STEP 4: Atomic update to prevent double-sends
+export async function getNextPendingProspect(campaignId) {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    
+    // FOR UPDATE SKIP LOCKED is the gold standard for job queues
+    const query = `
+      UPDATE campaign_leads
+      SET status = 'processing', updated_at = NOW()
+      WHERE id = (
+        SELECT id FROM campaign_leads
+        WHERE campaign_id = $1 AND status = 'pending'
+        ORDER BY created_at ASC
+        LIMIT 1
+        FOR UPDATE SKIP LOCKED
+      )
+      RETURNING *
+    `;
+    
+    const result = await client.query(query, [campaignId]);
+    await client.query('COMMIT');
+
+    if (result.rows.length === 0) return null;
+    
+    // Join with lead info
+    const leadInfo = await client.query(
+      'SELECT profile_url, name FROM leads WHERE id = $1',
+      [result.rows[0].lead_id]
+    );
+
+    return {
+      ...result.rows[0],
+      profileUrl: leadInfo.rows[0]?.profile_url,
+      leadName: leadInfo.rows[0]?.name
+    };
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('[DB] Error getting next prospect:', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+export async function markProspectDone(id, historyEntry) {
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `UPDATE campaign_leads 
+       SET status = 'completed', 
+           history = history || $2::jsonb,
+           updated_at = NOW() 
+       WHERE id = $1`,
+      [id, JSON.stringify([historyEntry])]
+    );
+  } finally {
+    client.release();
+  }
+}
+
+export async function markProspectFailed(id, error) {
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `UPDATE campaign_leads 
+       SET status = 'failed', 
+           history = history || $2::jsonb,
+           updated_at = NOW() 
+       WHERE id = $1`,
+      [id, JSON.stringify([{ action: 'error', error, time: new Date() }])]
+    );
+  } finally {
+    client.release();
+  }
+}
+
+// STEP 5: Check if campaign is finished
+export async function checkAndCompleteCampaign(campaignId) {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      "SELECT COUNT(*) FROM campaign_leads WHERE campaign_id = $1 AND status = 'pending'",
+      [campaignId]
+    );
+    
+    if (parseInt(result.rows[0].count) === 0) {
+      await client.query(
+        "UPDATE campaigns SET status = 'completed', updated_at = NOW() WHERE id = $1",
+        [campaignId]
+      );
+      console.log(`[DB] Campaign ${campaignId} marked as COMPLETED`);
+      return true;
+    }
+    return false;
+  } finally {
+    client.release();
+  }
+}
+
+export async function updateCampaignStatus(campaignId, status) {
+  const client = await pool.connect();
+  try {
+    await client.query(
+      "UPDATE campaigns SET status = $1, updated_at = NOW() WHERE id = $2",
+      [status, campaignId]
+    );
+    console.log(`[DB] Campaign ${campaignId} status updated to: ${status}`);
+    return { success: true };
+  } catch (err) {
+    console.error('[DB] Error updating campaign status:', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 export default pool;
