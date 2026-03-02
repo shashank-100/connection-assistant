@@ -1,9 +1,19 @@
-import { saveCampaign, addLeadsToCampaign, getLeads, getLeadLists } from '../db-supabase.js';
+import { saveCampaign, addLeadsToCampaign, getLeads, getLeadLists, getCampaigns, getCampaignStats } from '../db-supabase.js';
 
 export default async function handler(req, res) {
   const { userId = 'shashank' } = req.body || req.query;
 
   try {
+    // GET /api/campaigns - List all campaigns with stats
+    if (req.method === 'GET') {
+      const campaigns = await getCampaigns(userId);
+      const withStats = await Promise.all(campaigns.map(async (c) => {
+        const stats = await getCampaignStats(c.id);
+        return { ...c, stats };
+      }));
+      return res.status(200).json({ success: true, data: withStats });
+    }
+
     // POST /api/campaigns - Create/Update/Start Campaign
     if (req.method === 'POST') {
       const { action } = req.body;
@@ -12,15 +22,27 @@ export default async function handler(req, res) {
       if (action === 'start') {
         const { campaignId } = req.body;
         if (!campaignId) throw new Error('Campaign ID required');
-        
         const { updateCampaignStatus } = await import('../db-supabase.js');
         await updateCampaignStatus(campaignId, 'active');
+        return res.status(200).json({ success: true, status: 'started', message: `Campaign ${campaignId} is now active` });
+      }
 
-        return res.status(200).json({
-          success: true,
-          status: 'started',
-          message: `Campaign ${campaignId} is now active`
-        });
+      // PAUSE
+      if (action === 'pause') {
+        const { campaignId } = req.body;
+        if (!campaignId) throw new Error('Campaign ID required');
+        const { updateCampaignStatus } = await import('../db-supabase.js');
+        await updateCampaignStatus(campaignId, 'paused');
+        return res.status(200).json({ success: true, status: 'paused' });
+      }
+
+      // RESUME
+      if (action === 'resume') {
+        const { campaignId } = req.body;
+        if (!campaignId) throw new Error('Campaign ID required');
+        const { updateCampaignStatus } = await import('../db-supabase.js');
+        await updateCampaignStatus(campaignId, 'active');
+        return res.status(200).json({ success: true, status: 'active' });
       }
 
       // LAUNCH: Add leads to campaign

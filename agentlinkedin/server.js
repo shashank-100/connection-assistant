@@ -132,6 +132,9 @@ app.delete('/api/leads', async (req, res) => {
 });
 
 // Campaigns API endpoint
+app.get('/api/campaigns', async (req, res) => {
+  await campaignsHandler(req, res);
+});
 app.post('/api/campaigns', async (req, res) => {
   await campaignsHandler(req, res);
 });

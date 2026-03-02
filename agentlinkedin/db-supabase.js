@@ -355,7 +355,7 @@ export async function addLeadsToCampaign(userId, campaignId, leadIds) {
 
       const { error } = await supabase
         .from('campaign_leads')
-        .insert({
+        .upsert({
           id,
           campaign_id: campaignId,
           lead_id: leadId,
@@ -364,9 +364,7 @@ export async function addLeadsToCampaign(userId, campaignId, leadIds) {
           current_step: 0,
           next_action_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
-        })
-        .onConflict(['campaign_id', 'lead_id'])
-        .ignoreDuplicates();
+        }, { onConflict: 'campaign_id,lead_id', ignoreDuplicates: true });
 
       if (!error) addedCount++;
     }
@@ -629,6 +627,45 @@ export async function updateCampaignStatus(campaignId, status) {
     return { success: true };
   } catch (err) {
     console.error('[DB] Error updating campaign status:', err);
+    throw err;
+  }
+}
+
+export async function getCampaigns(userId) {
+  try {
+    const { data, error } = await supabase
+      .from('campaigns')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.error('[DB] Error getting campaigns:', err);
+    throw err;
+  }
+}
+
+export async function getCampaignStats(campaignId) {
+  try {
+    const { data, error } = await supabase
+      .from('campaign_leads')
+      .select('status')
+      .eq('campaign_id', campaignId);
+
+    if (error) throw error;
+
+    const rows = data || [];
+    return {
+      total: rows.length,
+      pending: rows.filter(r => r.status === 'pending').length,
+      processing: rows.filter(r => r.status === 'processing').length,
+      completed: rows.filter(r => r.status === 'completed').length,
+      failed: rows.filter(r => r.status === 'failed').length,
+    };
+  } catch (err) {
+    console.error('[DB] Error getting campaign stats:', err);
     throw err;
   }
 }

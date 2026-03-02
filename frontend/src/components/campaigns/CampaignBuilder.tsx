@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SequenceStep } from '@/types/campaign';
 import { LeadVariable } from '@/types/template';
 import { Switch } from '@/components/ui/switch';
@@ -15,7 +15,6 @@ import { toast } from 'sonner';
 
 export function CampaignBuilder() {
   const [sequences, setSequences] = useState<SequenceStep[]>(defaultSequences);
-  const [recipientSource, setRecipientSource] = useState('list_of_leads');
   const [selectedList, setSelectedList] = useState('');
   const [excludeInNetwork, setExcludeInNetwork] = useState(false);
   const [selectedSequence, setSelectedSequence] = useState<SequenceStep | null>(null);
@@ -23,15 +22,19 @@ export function CampaignBuilder() {
   const [isRunning, setIsRunning] = useState(false);
   const [isLaunching, setIsLaunching] = useState(false);
   const [availableLists, setAvailableLists] = useState<any[]>([]);
+  const [campaignName, setCampaignName] = useState('');
+  const [activeCampaignId, setActiveCampaignId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchLists = async () => {
       try {
-        const response = await fetch('https://courteous-empathy-production-9e68.up.railway.app/api/leads?action=lists&userId=shashank');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        const userId = process.env.NEXT_PUBLIC_USER_ID || 'shashank';
+        const response = await fetch(`${apiUrl}/api/leads?action=lists&userId=${userId}`);
         const data = await response.json();
         if (data.success && data.data) {
           setAvailableLists(data.data);
-          if (data.data.length > 0) setSelectedList(data.data[0].source);
+          if (data.data.length > 0) setSelectedList(data.data[0].id);
         }
       } catch (err) {
         console.error('Error fetching lists:', err);
@@ -57,53 +60,79 @@ export function CampaignBuilder() {
   };
 
   const handleLaunchPause = async () => {
-    if (isRunning) {
-      setIsRunning(false);
-      // TODO: Call API to pause campaign
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const userId = process.env.NEXT_PUBLIC_USER_ID || 'shashank';
+
+    if (isRunning && activeCampaignId) {
+      try {
+        await fetch(`${apiUrl}/api/campaigns`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'pause', campaignId: activeCampaignId, userId })
+        });
+        setIsRunning(false);
+        toast.success('Campaign paused');
+      } catch {
+        toast.error('Failed to pause campaign');
+      }
       return;
     }
 
     try {
       setIsLaunching(true);
       const campaignId = 'campaign_' + Date.now();
-      
-      // 1. Save Campaign
-      const saveResponse = await fetch('https://courteous-empathy-production-9e68.up.railway.app/api/campaigns', {
+
+      // 1. Create Campaign Configuration
+      const saveResponse = await fetch(`${apiUrl}/api/campaigns`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: campaignId,
-          name: 'LinkedIn Campaign ' + new Date().toLocaleDateString(),
-          status: 'active',
+          name: campaignName || 'LinkedIn Campaign ' + new Date().toLocaleDateString(),
+          status: 'draft',
           steps: sequences.filter(s => s.enabled),
-          userId: 'shashank'
+          userId: userId
         })
       });
 
-      if (!saveResponse.ok) throw new Error('Failed to save campaign');
+      if (!saveResponse.ok) throw new Error('Failed to create campaign');
 
-      // 2. Launch (Add Leads)
-      const launchResponse = await fetch('https://courteous-empathy-production-9e68.up.railway.app/api/campaigns', {
+      // 2. Insert 50 Prospects (Step 1)
+      const launchResponse = await fetch(`${apiUrl}/api/campaigns`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'launch',
           campaignId: campaignId,
           source: selectedList,
-          userId: 'shashank'
+          userId: userId
         })
       });
 
-      if (!launchResponse.ok) throw new Error('Failed to launch campaign');
+      if (!launchResponse.ok) throw new Error('Failed to load prospects');
       
       const result = await launchResponse.json();
       
+      // 3. STEP 2: Only flip status to active
+      const startResponse = await fetch(`${apiUrl}/api/campaigns`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'start',
+          campaignId: campaignId,
+          userId: userId
+        })
+      });
+
+      if (!startResponse.ok) throw new Error('Failed to start campaign');
+      
       setIsRunning(true);
-      toast.success(`Campaign launched with ${result.count} leads!`);
+      setActiveCampaignId(campaignId);
+      toast.success(`Campaign started with ${result.count} prospects!`);
       
     } catch (error: any) {
       console.error('Launch error:', error);
-      toast.error(error.message || 'Failed to launch campaign');
+      toast.error(error.message || 'Failed to start campaign');
     } finally {
       setIsLaunching(false);
     }
@@ -179,7 +208,12 @@ export function CampaignBuilder() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-          <h1 className="text-lg font-semibold">New campaign</h1>
+          <Input
+            value={campaignName}
+            onChange={(e) => setCampaignName(e.target.value)}
+            placeholder="Campaign name..."
+            className="text-lg font-semibold border-none shadow-none focus-visible:ring-0 p-0 h-auto w-64"
+          />
           <div className="flex items-center gap-2">
             <Button variant="outline">Save draft</Button>
             <Button 
@@ -214,8 +248,6 @@ export function CampaignBuilder() {
         <div className="flex-1 overflow-auto p-6">
           {showRecipients ? (
             <RecipientsSection
-              recipientSource={recipientSource}
-              setRecipientSource={setRecipientSource}
               selectedList={selectedList}
               setSelectedList={setSelectedList}
               excludeInNetwork={excludeInNetwork}
@@ -453,8 +485,6 @@ function VariableRow({
 }
 
 interface RecipientsSectionProps {
-  recipientSource: string;
-  setRecipientSource: (value: string) => void;
   selectedList: string;
   setSelectedList: (value: string) => void;
   excludeInNetwork: boolean;
@@ -463,8 +493,6 @@ interface RecipientsSectionProps {
 }
 
 function RecipientsSection({
-  recipientSource,
-  setRecipientSource,
   selectedList,
   setSelectedList,
   excludeInNetwork,
@@ -520,6 +548,3 @@ function RecipientsSection({
   );
 }
 
-function cn(...classes: (string | boolean | undefined)[]) {
-  return classes.filter(Boolean).join(' ');
-}
